@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bảng Giá Sửa Chữa Chi Tiết - Khang Huy Apple 2026</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.5;
+            color: #333;
+            background: #f0f0f0;
+        }
+
+        header {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+
+        header p {
+            font-size: 14px;
+            opacity: 0.95;
+        }
+
+        .contact-bar {
+            background: #fff;
+            color: #e74c3c;
+            padding: 15px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            border-bottom: 2px solid #e74c3c;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .pricing-intro {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 5px solid #e74c3c;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .pricing-intro h2 {
+            color: #e74c3c;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .pricing-intro p {
+            color: #666;
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+        .note-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .note-item {
+            background: #f9f9f9;
+            padding: 10px;
+            border-radius: 5px;
+            border-left: 3px solid #27ae60;
+        }
+
+        .note-item strong {
+            color: #27ae60;
+        }
+
+        .table-wrapper {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+        }
+
+        .table-title {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            padding: 15px 20px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .price-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .price-table th {
+            background: #e74c3c;
+            color: white;
+            padding: 12px 8px;
+            text-align: center;
+            font-weight: bold;
+            border: 1px solid #d43f27;
+        }
+
+        .price-table td {
+            padding: 10px 8px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        .price-table .service {
+            text-align: left;
+            background: #fff9f0;
+            font-weight: 500;
+            color: #e74c3c;
+            padding-left: 12px;
+        }
+
+        .price-table tbody tr:hover {
+            background: #f9f9f9;
+        }
+
+        .price {
+            color: #27ae60;
+            font-weight: bold;
+        }
+
+        .price-small {
+            font-size: 11px;
+            color: #999;
+        }
+
+        .call-action {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            border-radius: 8px;
+            margin: 30px 0;
+        }
+
+        .call-action h2 {
+            font-size: 28px;
+            margin-bottom: 15px;
+        }
+
+        .phone-btn {
+            display: inline-block;
+            background: white;
+            color: #e74c3c;
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 8px;
+            text-decoration: none;
+            margin: 0 10px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .phone-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        footer {
+            background: #333;
+            color: white;
+            padding: 30px;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        footer h3 {
+            color: #e74c3c;
+            margin-bottom: 10px;
+        }
+
+        footer p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+        .print-note {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #856404;
+        }
+
+        @media print {
+            header, .contact-bar, .call-action, footer {
+                display: none;
+            }
+            .container {
+                padding: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .price-table {
+                font-size: 11px;
+            }
+
+            .price-table th,
+            .price-table td {
+                padding: 6px 4px;
+            }
+
+            header h1 {
+                font-size: 20px;
+            }
+
+            .phone-btn {
+                display: block;
+                margin: 10px auto;
+                width: 80%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>📱 BẢNG GIÁ SỬA CHỮA KHANG HUY APPLE 2026</h1>
+        <p>Giá cơ bản cho linh kiện chính hãng • Chẩn đoán miễn phí • Bảo hành 2 năm</p>
+    </header>
+
+    <div class="contact-bar">
+        📞 HOTLINE: <strong>0981.308.308</strong> | 📧 khanghuyphonerepair@gmail.com | 📍 296 Lê Văn Thọ, Q.11, TP.HCM
+    </div>
+
+    <div class="container">
+        <div class="print-note">
+            🖨️ In trang này để dễ tham khảo | Bảng giá này cập nhật 2026
+        </div>
+
+        <div class="pricing-intro">
+            <h2>ℹ️ HƯỚNG DẪN ĐỌC BẢNG GIÁ</h2>
+            <div class="note-list">
+                <div class="note-item">
+                    <strong>✓ Giá là tiền công sửa</strong><br>
+                    Nếu cần thay linh kiện, giá sẽ khác tùy loại
+                </div>
+                <div class="note-item">
+                    <strong>✓ Chẩn đoán MIỄN PHÍ</strong><br>
+                    Xác định vấn đề chính xác trước khi báo giá cuối
+                </div>
+                <div class="note-item">
+                    <strong>✓ Không phí ẩn</strong><br>
+                    Báo giá trước, khách có quyền từ chối
+                </div>
+                <div class="note-item">
+                    <strong>✓ Bảo hành 2 năm</strong><br>
+                    Nếu lỗi từ sửa, chúng tôi sửa lại miễn phí
+                </div>
+            </div>
+        </div>
+
+        <!-- iPhone X -->
+        <div class="table-wrapper">
+            <div class="table-title">iPhone X</div>
+            <table class="price-table">
+                <thead>
+                    <tr>
+                        <th>Dịch Vụ Sửa Chữa</th>
+                        <th>Giá (K)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td class="service">Ép kính / Ép cảm ứng</td><td class="price">400</td></tr>
+                    <tr><td class="service">Màn hình</td><td class="price">400 / 600</td></tr>
+                    <tr><td class="service">Phản quang</td><td class="price">250 / 300</td></tr>
+                    <tr><td class="service">Kính lưng</td><td class="price">250 / 300</td></tr>
+                    <tr><td class="service">Thay vỏ/Sưởn</td><td class="price">350 / 400</td></tr>
+                    <tr><td class="service">Độ vỏ/Sưởn</td><td class="price">100 / 150</td></tr>
+                    <tr><td class="service">Thay pin</td><td class="price">350</td></tr>
+                    <tr><td class="service">Kính Camera sau</td><td class="price">250</td></tr>
+                    <tr><td class="service">Camera trước</td><td class="price">350</td></tr>
+                    <tr><td class="service">Camera sau</td><td class="price">350</td></tr>
+                    <tr><td class="service">Dây chân sạc</td><td class="price">200</td></tr>
+                    <tr><td class="service">Dây cảm biến</td><td class="price">200</td></tr>
+                    <tr><td class="service">Dây nguồn / Dây volume</td><td class="price">300</td></tr>
+                    <tr><td class="service">Thay rung</td><td class="price">200</td></tr>
+                    <tr><td class="service">Loa trong</td><td class="price">200</td></tr>
+                    <tr><td class="service">Loa ngoài</td><td class="price">200</td></tr>
+                    <tr><td class="service">Anten wifi</td><td class="price">300</td></tr>
+                    <tr><td class="service">IC nguồn</td><td class="price">300</td></tr>
+                    <tr><td class="service">Audio Main</td><td class="price">300</td></tr>
+                    <tr><td class="service">Hiển thị / Cảm ứng</td><td class="price">300</td></tr>
+                    <tr><td class="service">Cảm biến</td><td class="price">300</td></tr>
+                    <tr><td class="service">Camera Main</td><td class="price">400</td></tr>
+                    <tr><td class="service">IC sống / Mặt imei</td><td class="price">400</td></tr>
+                    <tr><td class="service">USB sạc</td><td class="price">300</td></tr>
+                    <tr><td class="service">IC wifi</td><td class="price">600</td></tr>
+                    <tr><td class="service">IC đèn</td><td class="price">600</td></tr>
+                    <tr><td class="service">Face ID</td><td class="price">Call</td></tr>
+                    <tr><td class="service">Mở icloud</td><td class="price">Call</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- iPhone XS Max -->
+        <div class="table-wrapper">
+            <div class="table-title">iPhone XS Max</div>
+            <table class="price-table">
+                <thead>
+                    <tr>
+                        <th>Dịch Vụ Sửa Chữa</th>
+                        <th>Giá (K)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td class="service">Ép kính / Ép cảm ứng</td><td class="price">400 / 600</td></tr>
+                    <tr><td class="service">Màn hình</td><td class="price">400 / 600</td></tr>
+                    <tr><td class="service">Phản quang</td><td class="price">300 / 350</td></tr>
+                    <tr><td class="service">Kính lưng</td><td class="price">300 / 350</td></tr>
+                    <tr><td class="service">Thay vỏ/Sưởn</td><td class="price">400 / 500</td></tr>
+                    <tr><td class="service">Độ vỏ/Sưởn</td><td class="price">150 / 200</td></tr>
+                    <tr><td class="service">Thay pin</td><td class="price">350</td></tr>
+                    <tr><td class="service">Kính Camera sau</td><td class="price">250</td></tr>
+                    <tr><td class="service">Camera trước</td><td class="price">350</td></tr>
+                    <tr><td class="service">Camera sau</td><td class="price">350</td></tr>
+                    <tr><td class="service">Dây chân sạc</td><td class="price">200</td></tr>
+                    <tr><td class="service">Dây cảm biến</td><td class="price">200</td></tr>
+                    <tr><td class="service">Dây nguồn / Dây volume</td><td class="price">300</td></tr>
+                    <tr><td class="service">Thay rung</td><td class="price">200</td></tr>
+                    <tr><td class="service">Loa trong</td><td class="price">200</td></tr>
+                    <tr><td class="service">Loa ngoài</td><td class="price">200</td></tr>
+                    <tr><td class="service">Anten wifi</td><td class="price">300</td></tr>
+                    <tr><td class="service">IC nguồn</td><td class="price">300</td></tr>
+                    <tr><td class="service">Audio Main</td><td class="price">300</td></tr>
+                    <tr><td class="service">Hiển thị / Cảm ứng</td><td class="price">300</td></tr>
+                    <tr><td class="service">Cảm biến</td><td class="price">300</td></tr>
+                    <tr><td class="service">Camera Main</td><td class="price">400</td></tr>
+                    <tr><td class="service">IC sống / Mặt imei</td><td class="price">400</td></tr>
+                    <tr><td class="service">USB sạc</td><td class="price">300</td></tr>
+                    <tr><td class="service">IC wifi</td><td class="price">600</td></tr>
+                    <tr><td class="service">IC đèn</td><td class="price">600</td></tr>
+                    <tr><td class="service">Face ID</td><td class="price">Call</td></tr>
+                    <tr><td class="service">Mở icloud</td><td class="price">Call</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- iPhone 11 -->
+        <div class="table-wrapper">
+            <div class="table-title">iPhone 11</div>
+            <table class="price-table">
+                <thead>
+                    <tr>
+                        <th>Dịch Vụ Sửa Chữa</th>
+                        <th>Giá (K)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td class="service">Ép kính / Ép cảm ứng</td><td class="price">450</td></tr>
+                    <tr><td class="service">Màn hình</td><td class="price">450</td></tr>
+                    <tr><td class="service">Phản quang</td><td class="price">300 / 350</td></tr>
+                    <tr><td class="service">Kính lưng</td><td class="price">300 / 350</td></tr>
+                    <tr><td class="service">Thay vỏ/Sưởn</td><td class="price">400 / 500</td></tr>
+                    <tr><td class="service">Độ vỏ/Sưởn</td><td class="price">150 / 200</td></tr>
+                    <tr><td class="service">Thay pin</td><td class="price">350</td></tr>
+                    <tr><td class="service">Kính Camera sau</td><td class="price">300</td></tr>
+                    <tr><td class="service">Camera trước</td><td class="price">400</td></tr>
+                    <tr><td class="service">Camera sau</td><td class="price">400</td></tr>
+                    <tr><td class="service">Dây chân sạc</td><td class="price">200</td></tr>
+                    <tr><td class="service">Dây cảm biến</td><td class="price">200</td></tr>
+                    <tr><td class="service">Dây nguồn / Dây volume</td><td class="price">300</td></tr>
+                    <tr><td class="service">Thay rung</td><td class="price">200</td></tr>
+                    <tr><td class="service">Loa trong</td><td class="price">200</td></tr>
+                    <tr><td class="service">Loa ngoài</td><td class="price">200</td></tr>
+                    <tr><td class="service">Anten wifi</td><td class="price">400</td></tr>
+                    <tr><td class="service">IC nguồn</td><td class="price">400</td></tr>
+                    <tr><td class="service">Audio Main</td><td class="price">400</td></tr>
+                    <tr><td class="service">Hiển thị / Cảm ứng</td><td class="price">400</td></tr>
+                    <tr><td class="service">Cảm biến</td><td class="price">400</td></tr>
+                    <tr><td class="service">Camera Main</td><td class="price">500</td></tr>
+                    <tr><td class="service">IC sống / Mặt imei</td><td class="price">500</td></tr>
+                    <tr><td class="service">USB sạc</td><td class="price">400</td></tr>
+                    <tr><td class="service">IC wifi</td><td class="price">700</td></tr>
+                    <tr><td class="service">IC đèn</td><td class="price">700</td></tr>
+                    <tr><td class="service">Face ID</td><td class="price">Call</td></tr>
+                    <tr><td class="service">Mở icloud</td><td class="price">Call</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- iPhone 12 -->
+        <div class="table-wrapper">
+            <div class="table-title">iPhone 12</div>
+            <table class="price-table">
+                <thead>
+                    <tr>
+                        <th>Dịch Vụ Sửa Chữa</th>
+                        <th>Giá (K)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td class="service">Ép kính / Ép cảm ứng</td><td class="price">500</td></tr>
+                    <tr><td class="service">Màn hình</td><td class="price">500</td></tr>
+                    <tr><td class="service">Phản quang</td><td class="price">350 / 400</td></tr>
+                    <tr><td class="service">Kính lưng</td><td class="price">400 / 450</td></tr>
+                    <tr><td class="service">Thay vỏ/Sưởn</td><td class="price">450 / 550</td></tr>
+                    <tr><td class="service">Độ vỏ/Sưởn</td><td class="price">200 / 250</td></tr>
+                    <tr><td class="service">Thay pin</td><td class="price">400</td></tr>
+                    <tr><td class="service">Kính Camera sau</td><td class="price">350</td></tr>
+                    <tr><td class="service">Camera trước</td><td class="price">450</td></tr>
+                    <tr><td class="service">Camera sau</td><td class="price">450</td></tr>
+                    <tr><td class="service">Dây chân sạc</td><td class="price">250</td></tr>
+                    <tr><td class="service">Dây cảm biến</td><td class="price">250</td></tr>
+                    <tr><td class="service">Dây nguồn / Dây volume</td><td class="price">400</td></tr>
+                    <tr><td class="service">Thay rung</td><td class="price">250</td></tr>
+                    <tr><td class="service">Loa trong</td><td class="price">250</td></tr>
+                    <tr><td class="service">Loa ngoài</td><td class="price">250</td></tr>
+                    <tr><td class="service">Anten wifi</td><td class="price">500</td></tr>
+                    <tr><td class="service">IC nguồn</td><td class="price">500</td></tr>
+                    <tr><td class="service">Audio Main</td><td class="price">500</td></tr>
+                    <tr><td class="service">Hiển thị / Cảm ứng</td><td class="price">500</td></tr>
+                    <tr><td class="service">Cảm biến</td><td class="price">500</td></tr>
+                    <tr><td class="service">Camera Main</td><td class="price">600</td></tr>
+                    <tr><td class="service">IC sống / Mặt imei</td><td class="price">600</td></tr>
+                    <tr><td class="service">USB sạc</td><td class="price">500</td></tr>
+                    <tr><td class="service">IC wifi</td><td class="price">800</td></tr>
+                    <tr><td class="service">IC đèn</td><td class="price">800</td></tr>
+                    <tr><td class="service">Face ID</td><td class="price">Call</td></tr>
+                    <tr><td class="service">Mở icloud</td><td class="price">Call</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- iPhone 12 Pro Max -->
+        <div class="table-wrapper">
+            <div class="table-title">iPhone 12 Pro Max</div>
+            <table class="price-table">
+                <thead>
+                    <tr>
+                        <th>Dịch Vụ Sửa Chữa</th>
+                        <th>Giá (K)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td class="service">Ép kính / Ép cảm ứng</td><td class="price">600</td></tr>
+                    <tr><td class="service">Màn hình</td><td class="price">600</td></tr>
+                    <tr><td class="service">Phản quang</td><td class="price">400 / 450</td></tr>
+                    <tr><td class="service">Kính lưng</td><td class="price">450 / 500</td></tr>
+                    <tr><td class="service">Thay vỏ/Sưởn</td><td class="price">500 / 600</td></tr>
+                    <tr><td class="service">Độ vỏ/Sưởn</td><td class="price">250 / 300</td></tr>
+                    <tr><td class="service">Thay pin</td><td class="price">400</td></tr>
+                    <tr><td class="service">Kính Camera sau</td><td class="price">400</td></tr>
+                    <tr><td class="service">Camera trước</td><td class="price">500</td></tr>
+                    <tr><td class="service">Camera sau</td><td class="price">500</td></tr>
+                    <tr><td class="service">Dây chân sạc</td><td class="price">300</td></tr>
+                    <tr><td class="service">Dây cảm biến</td><td class="price">300</td></tr>
+                    <tr><td class="service">Dây nguồn / Dây volume</td><td class="price">400</td></tr>
+                    <tr><td class="service">Thay rung</td><td class="price">300</td></tr>
+                    <tr><td class="service">Loa trong</td><td class="price">300</td></tr>
+                    <tr><td class="service">Loa ngoài</td><td class="price">300</td></tr>
+                    <tr><td class="service">Anten wifi</td><td class="price">600</td></tr>
+                    <tr><td class="service">IC nguồn</td><td class="price">600</td></tr>
+                    <tr><td class="service">Audio Main</td><td class="price">600</td></tr>
+                    <tr><td class="service">Hiển thị / Cảm ứng</td><td class="price">600</td></tr>
+                    <tr><td class="service">Cảm biến</td><td class="price">600</td></tr>
+                    <tr><td class="service">Camera Main</td><td class="price">700</td></tr>
+                    <tr><td class="service">IC sống / Mặt imei</td><td class="price">700</td></tr>
+                    <tr><td class="service">USB sạc</td><td class="price">600</td></tr>
+                    <tr><td class="service">IC wifi</td><td class="price">900</td></tr>
+                    <tr><td class="service">IC đèn</td><td class="price">900</td></tr>
+                    <tr><td class="service">Face ID</td><td class="price">Call</td></tr>
+                    <tr><td class="service">Mở icloud</td><td class="price">Call</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- iPhone 14 -->
+        <div class="table-wrapper">
+            <div class="table-title">iPhone 14</div>
+            <table class="price-table">
+                <thead>
+                    <tr>
+                        <th>Dịch Vụ Sửa Chữa</th>
+                        <th>Giá (K)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td class="service">Ép kính / Ép cảm ứng</td><td class="price">600</td></tr>
+                    <tr><td class="service">Màn hình</td><td class="price">600</td></tr>
+                    <tr><td class="service">Phản quang</td><td class="price">450 / 500</td></tr>
+                    <tr><td class="service">Kính lưng</td><td class="price">500 / 550</td></tr>
+                    <tr><td class="service">Thay vỏ/Sưởn</td><td class="price">550 / 650</td></tr>
+                    <tr><td class="service">Độ vỏ/Sưởn</td><td class="price">300 / 350</td></tr>
+                    <tr><td class="service">Thay pin</td><td class="price">450</td></tr>
+                    <tr><td class="service">Kính Camera sau</td><td class="price">450</td></tr>
+                    <tr><td class="service">Camera trước</td><td class="price">550</td></tr>
+                    <tr><td class="service">Camera sau</td><td class="price">550</td></tr>
+                    <tr><td class="service">Dây chân sạc</td><td class="price">350</td></tr>
+                    <tr><td class="service">Dây cảm biến</td><td class="price">350</td></tr>
+                    <tr><td class="service">Dây nguồn / Dây volume</td><td class="price">450</td></tr>
+                    <tr><td class="service">Thay rung</td><td class="price">350</td></tr>
+                    <tr><td class="service">Loa trong</td><td class="price">350</td></tr>
+                    <tr><td class="service">Loa ngoài</td><td class="price">350</td></tr>
+                    <tr><td class="service">Anten wifi</td><td class="price">700</td></tr>
+                    <tr><td class="service">IC nguồn</td><td class="price">700</td></tr>
+                    <tr><td class="service">Audio Main</td><td class="price">700</td></tr>
+                    <tr><td class="service">Hiển thị / Cảm ứng</td><td class="price">700</td></tr>
+                    <tr><td class="service">Cảm biến</td><td class="price">700</td></tr>
+                    <tr><td class="service">Camera Main</td><td class="price">800</td></tr>
+                    <tr><td class="service">IC sống / Mặt imei</td><td class="price">800</td></tr>
+                    <tr><td class="service">USB sạc</td><td class="price">700</td></tr>
+                    <tr><td class="service">IC wifi</td><td class="price">1000</td></tr>
+                    <tr><td class="service">IC đèn</td><td class="price">1000</td></tr>
+                    <tr><td class="service">Face ID</td><td class="price">Call</td></tr>
+                    <tr><td class="service">Mở icloud</td><td class="price">Call</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- iPhone 14 Pro Max -->
+        <div class="table-wrapper">
+            <div class="table-title">iPhone 14 Pro Max</div>
+            <table class="price-table">
+                <thead>
+                    <tr>
+                        <th>Dịch Vụ Sửa Chữa</th>
+                        <th>Giá (K)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td class="service">Ép kính / Ép cảm ứng</td><td class="price">700</td></tr>
+                    <tr><td class="service">Màn hình</td><td class="price">700</td></tr>
+                    <tr><td class="service">Phản quang</td><td class="price">500 / 550</td></tr>
+                    <tr><td class="service">Kính lưng</td><td class="price">550 / 600</td></tr>
+                    <tr><td class="service">Thay vỏ/Sưởn</td><td class="price">600 / 700</td></tr>
+                    <tr><td class="service">Độ vỏ/Sưởn</td><td class="price">350 / 400</td></tr>
+                    <tr><td class="service">Thay pin</td><td class="price">500</td></tr>
+                    <tr><td class="service">Kính Camera sau</td><td class="price">500</td></tr>
+                    <tr><td class="service">Camera trước</td><td class="price">600</td></tr>
+                    <tr><td class="service">Camera sau</td><td class="price">600</td></tr>
+                    <tr><td class="service">Dây chân sạc</td><td class="price">400</td></tr>
+                    <tr><td class="service">Dây cảm biến</td><td class="price">400</td></tr>
+                    <tr><td class="service">Dây nguồn / Dây volume</td><td class="price">500</td></tr>
+                    <tr><td class="service">Thay rung</td><td class="price">400</td></tr>
+                    <tr><td class="service">Loa trong</td><td class="price">400</td></tr>
+                    <tr><td class="service">Loa ngoài</td><td class="price">400</td></tr>
+                    <tr><td class="service">Anten wifi</td><td class="price">800</td></tr>
+                    <tr><td class="service">IC nguồn</td><td class="price">800</td></tr>
+                    <tr><td class="service">Audio Main</td><td class="price">800</td></tr>
+                    <tr><td class="service">Hiển thị / Cảm ứng</td><td class="price">800</td></tr>
+                    <tr><td class="service">Cảm biến</td><td class="price">800</td></tr>
+                    <tr><td class="service">Camera Main</td><td class="price">900</td></tr>
+                    <tr><td class="service">IC sống / Mặt imei</td><td class="price">900</td></tr>
+                    <tr><td class="service">USB sạc</td><td class="price">800</td></tr>
+                    <tr><td class="service">IC wifi</td><td class="price">1100</td></tr>
+                    <tr><td class="service">IC đèn</td><td class="price">1100</td></tr>
+                    <tr><td class="service">Face ID</td><td class="price">Call</td></tr>
+                    <tr><td class="service">Mở icloud</td><td class="price">Call</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- iPhone 15 -->
+        <div class="table-wrapper">
+            <div class="table-title">iPhone 15</div>
+            <table class="price-table">
+                <thead>
+                    <tr>
+                        <th>Dịch Vụ Sửa Chữa</th>
+                        <th>Giá (K)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td class="service">Ép kính / Ép cảm ứng</td><td class="price">700</td></tr>
+                    <tr><td class="service">Màn hình</td><td class="price">700</td></tr>
+                    <tr><td class="service">Phản quang</td><td class="price">550 / 600</td></tr>
+                    <tr><td class="service">Kính lưng</td><td class="price">600 / 650</td></tr>
+                    <tr><td class="service">Thay vỏ/Sưởn</td><td class="price">650 / 750</td></tr>
+                    <tr><td class="service">Độ vỏ/Sưởn</td><td class="price">400 / 450</td></tr>
+                    <tr><td class="service">Thay pin</td><td class="price">500</td></tr>
+                    <tr><td class="service">Kính Camera sau</td><td class="price">500</td></tr>
+                    <tr><td class="service">Camera trước</td><td class="price">600</td></tr>
+                    <tr><td class="service">Camera sau</td><td class="price">600</td></tr>
+                    <tr><td class="service">Dây chân sạc</td><td class="price">400</td></tr>
+                    <tr><td class="service">Dây cảm biến</td><td class="price">400</td></tr>
+                    <tr><td class="service">Dây nguồn / Dây volume</td><td class="price">500</td></tr>
+                    <tr><td class="service">Thay rung</td><td class="price">400</td></tr>
+                    <tr><td class="service">Loa trong</td><td class="price">400</td></tr>
+                    <tr><td class="service">Loa ngoài</td><td class="price">400</td></tr>
+                    <tr><td class="service">Anten wifi</td><td class="price">800</td></tr>
+                    <tr><td class="service">IC nguồn</td><td class="price">800</td></tr>
+                    <tr><td class="service">Audio Main</td><td class="price">800</td></tr>
+                    <tr><td class="service">Hiển thị / Cảm ứng</td><td class="price">800</td></tr>
+                    <tr><td class="service">Cảm biến</td><td class="price">800</td></tr>
+                    <tr><td class="service">Camera Main</td><td class="price">900</td></tr>
+                    <tr><td class="service">IC sống / Mặt imei</td><td class="price">900</td></tr>
+                    <tr><td class="service">USB sạc</td><td class="price">800</td></tr>
+                    <tr><td class="service">IC wifi</td><td class="price">1100</td></tr>
+                    <tr><td class="service">IC đèn</td><td class="price">1100</td></tr>
+                    <tr><td class="service">Face ID</td><td class="price">Call</td></tr>
+                    <tr><td class="service">Mở icloud</td><td class="price">Call</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- iPhone 15 Pro Max -->
+        <div class="table-wrapper">
+            <div class="table-title">iPhone 15 Pro Max</div>
+            <table class="price-table">
+                <thead>
+                    <tr>
+                        <th>Dịch Vụ Sửa Chữa</th>
+                        <th>Giá (K)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td class="service">Ép kính / Ép cảm ứng</td><td class="price">800</td></tr>
+                    <tr><td class="service">Màn hình</td><td class="price">800</td></tr>
+                    <tr><td class="service">Phản quang</td><td class="price">600 / 650</td></tr>
+                    <tr><td class="service">Kính lưng</td><td class="price">650 / 700</td></tr>
+                    <tr><td class="service">Thay vỏ/Sưởn</td><td class="price">700 / 800</td></tr>
+                    <tr><td class="service">Độ vỏ/Sưởn</td><td class="price">450 / 500</td></tr>
+                    <tr><td class="service">Thay pin</td><td class="price">550</td></tr>
+                    <tr><td class="service">Kính Camera sau</td><td class="price">550</td></tr>
+                    <tr><td class="service">Camera trước</td><td class="price">650</td></tr>
+                    <tr><td class="service">Camera sau</td><td class="price">650</td></tr>
+                    <tr><td class="service">Dây chân sạc</td><td class="price">450</td></tr>
+                    <tr><td class="service">Dây cảm biến</td><td class="price">450</td></tr>
+                    <tr><td class="service">Dây nguồn / Dây volume</td><td class="price">550</td></tr>
+                    <tr><td class="service">Thay rung</td><td class="price">450</td></tr>
+                    <tr><td class="service">Loa trong</td><td class="price">450</td></tr>
+                    <tr><td class="service">Loa ngoài</td><td class="price">450</td></tr>
+                    <tr><td class="service">Anten wifi</td><td class="price">900</td></tr>
+                    <tr><td class="service">IC nguồn</td><td class="price">900</td></tr>
+                    <tr><td class="service">Audio Main</td><td class="price">900</td></tr>
+                    <tr><td class="service">Hiển thị / Cảm ứng</td><td class="price">900</td></tr>
+                    <tr><td class="service">Cảm biến</td><td class="price">900</td></tr>
+                    <tr><td class="service">Camera Main</td><td class="price">1000</td></tr>
+                    <tr><td class="service">IC sống / Mặt imei</td><td class="price">1000</td></tr>
+                    <tr><td class="service">USB sạc</td><td class="price">900</td></tr>
+                    <tr><td class="service">IC wifi</td><td class="price">1200</td></tr>
+                    <tr><td class="service">IC đèn</td><td class="price">1200</td></tr>
+                    <tr><td class="service">Face ID</td><td class="price">Call</td></tr>
+                    <tr><td class="service">Mở icloud</td><td class="price">Call</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="call-action">
+            <h2>📞 LIÊN HỆ NGAY ĐỂ NHẬN CHẨN ĐOÁN MIỄN PHÍ</h2>
+            <a href="tel:0981308308" class="phone-btn">☎️ HOTLINE: 0981.308.308</a>
+            <a href="sms:0981308308" class="phone-btn">💬 NHẮN TIN</a>
+        </div>
+    </div>
+
+    <footer>
+        <h3>📱 KHANG HUY APPLE - SỬA CHỮA ĐIỆN THOẠI UY TÍN</h3>
+        <p><strong>Địa chỉ:</strong> 296 Lê Văn Thọ Thông Tây Hội, Quận 11, TP.HCM</p>
+        <p><strong>Hotline:</strong> 0981.308.308 | <strong>Email:</strong> khanghuyphonerepair@gmail.com</p>
+        <p><strong>Giờ mở cửa:</strong> 8AM - 9PM (Thứ 2 - CN)</p>
+        <p style="margin-top: 15px; border-top: 1px solid #666; padding-top: 15px;">
+            ✓ Chẩn đoán MIỄN PHÍ | ✓ Không phí ẩn | ✓ Bảo hành 2 năm | ✓ Đảm bảo chất lượng
+        </p>
+        <p style="margin-top: 15px; font-size: 12px; color: #999;">
+            &copy; 2026 Khang Huy Apple. Tất cả quyền được bảo lưu.
+        </p>
+    </footer>
+</body>
+</html>
