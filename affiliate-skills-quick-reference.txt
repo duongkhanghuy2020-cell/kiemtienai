@@ -1,0 +1,278 @@
+═══════════════════════════════════════════════════════════════════════════════
+                    AFFILIATE SKILLS - QUICK REFERENCE (52)
+                     https://github.com/Affitor/affiliate-skills
+═══════════════════════════════════════════════════════════════════════════════
+
+STAGE 1: RESEARCH & DISCOVERY (9 SKILLS)
+───────────────────────────────────────────────────────────────────────────────
+
+1.  affiliate-program-search
+    → Tìm affiliate programs có hoa hồng cao
+
+2.  niche-opportunity-finder
+    → Tìm thị trường ít người cạnh tranh, nhiều nhu cầu
+
+3.  competitor-spy
+    → Phân tích chiến lược, content, engagement của đối thủ
+
+4.  commission-calculator
+    → So sánh hoa hồng giữa các programs
+
+5.  monopoly-niche-finder
+    → Tìm thị trường độc quyền (bạn là duy nhất)
+
+6.  purple-cow-audit
+    → Đánh giá sản phẩm khác biệt so với đối thủ (1-10)
+
+7.  trending-content-scout
+    → Tìm content viral trên YouTube, TikTok, Reddit, X
+
+8.  content-angle-ranker
+    → Xếp hạng topics theo độ cạnh tranh & engagement
+
+9.  traffic-analyzer
+    → Phân tích traffic, ranking, SEO health của đối thủ
+
+
+STAGE 2: CONTENT CREATION (7 SKILLS)
+───────────────────────────────────────────────────────────────────────────────
+
+10. viral-post-writer
+    → Viết posts cho từng nền tảng cách để viral
+
+11. twitter-thread-writer
+    → Viết chuỗi tweets có hook mạnh
+
+12. reddit-post-writer
+    → Viết posts Reddit "tự nhiên" không spam
+
+13. tiktok-script-writer
+    → Viết kịch bản video ngắn từ trends
+
+14. content-pillar-atomizer
+    → Lấy 1 bài → biến thành 15-30 bài nhiều nền tảng
+
+15. content-research-brief
+    → Tìm sources, stats, citations cho bài viết
+
+16. infographic-generator
+    → Thiết kế infographics tối ưu cho LinkedIn/Facebook
+
+
+STAGE 3: BLOG & SEO (7 SKILLS)
+───────────────────────────────────────────────────────────────────────────────
+
+17. affiliate-blog-builder
+    → Viết reviews & guides chuẩn SEO
+
+18. comparison-post-writer
+    → Viết so sánh sản phẩm (A vs B vs C)
+
+19. listicle-generator
+    → Viết "Top 10...", "Ranking..." được Google yêu thích
+
+20. how-to-tutorial-writer
+    → Viết hướng dẫn chi tiết cách dùng sản phẩm
+
+21. keyword-cluster-architect
+    → Tổ chức 50-200 keywords thành nhóm chủ đề
+
+22. content-moat-calculator
+    → Tính cần viết bao nhiêu bài để chiếm lĩnh topic
+
+23. content-decay-detector
+    → Theo dõi bài cũ bị drop ranking, refresh lại
+
+
+STAGE 4: OFFERS & LANDING PAGES (8 SKILLS)
+───────────────────────────────────────────────────────────────────────────────
+
+24. landing-page-creator
+    → Tạo landing page chuyên nghiệp (AIDA framework)
+
+25. product-showcase-page
+    → Thiết kế trang giới thiệu 1 sản phẩm
+
+26. squeeze-page-builder
+    → Tạo trang "Email để nhận tài liệu miễn phí"
+
+27. webinar-registration-page
+    → Tạo trang đăng ký webinar/hội thảo
+
+28. grand-slam-offer
+    → Thiết kế offer siêu hấp dẫn (Hormozi Value Equation)
+
+29. bonus-stack-builder
+    → Tạo bonus package độc quyền cho referral link
+
+30. guarantee-generator
+    → Viết bảo đảm cá nhân giảm rủi ro
+
+31. value-ladder-architect
+    → Thiết kế hành trình: miễn phí → nhỏ → chính → upsell
+
+
+STAGE 5: DISTRIBUTION & DEPLOYMENT (4 SKILLS)
+───────────────────────────────────────────────────────────────────────────────
+
+32. bio-link-deployer
+    → Tạo link aggregator page (nhiều links trong 1 trang)
+
+33. email-drip-sequence
+    → Thiết kế email automation (5-7 emails nurture)
+
+34. social-media-scheduler
+    → Lập lịch post trên mạng xã hội
+
+35. github-pages-deployer
+    → Đẩy landing page lên GitHub Pages (miễn phí)
+
+
+STAGE 6: ANALYTICS & OPTIMIZATION (5 SKILLS)
+───────────────────────────────────────────────────────────────────────────────
+
+36. conversion-tracker
+    → Tạo UTM links, tracking source conversion
+
+37. ab-test-generator
+    → Tạo nhiều versions headline/CTA để test
+
+38. performance-report
+    → Tạo dashboard KPI hàng tuần/tháng
+
+39. seo-audit
+    → Kiểm tra SEO theo 10 tiêu chí
+
+40. internal-linking-optimizer
+    → Xây dựng cấu trúc links (hub & spoke)
+
+
+STAGE 7: AUTOMATION & SCALE (5 SKILLS)
+───────────────────────────────────────────────────────────────────────────────
+
+41. email-automation-builder
+    → Thiết kế email flows có điều kiện
+
+42. content-repurposer
+    → Lấy 1 content → biến thành video, podcast, infographic
+
+43. multi-program-manager
+    → Quản lý affiliate portfolio 10+ programs
+
+44. paid-ad-copy-writer
+    → Viết quảng cáo Facebook, Google, TikTok
+
+45. proprietary-data-generator
+    → Tạo surveys độc quyền, benchmark reports
+
+
+STAGE 8: META/STRATEGY (5+ SKILLS)
+───────────────────────────────────────────────────────────────────────────────
+
+46. skill-finder
+    → Giúp bạn chọn đúng skill cho mục tiêu
+
+47. funnel-planner
+    → Vẽ sơ đồ affiliate funnel hoàn chỉnh
+
+48. compliance-checker
+    → Kiểm tra tuân thủ FTC, chính sách nền tảng
+
+49. self-improver
+    → Viết retrospective, tìm cơ hội tối ưu
+
+50. category-designer
+    → Định nghĩa danh mục để sản phẩm thống trị
+
+51. strategy-optimizer
+    → Tối ưu toàn bộ affiliate strategy
+
+52. revenue-multiplier
+    → Tìm cách tăng revenue từ khách hiện tại
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                            QUICK FLOW RECOMMENDATIONS
+═══════════════════════════════════════════════════════════════════════════════
+
+👶 BEGINNER FLOW (Mới bắt đầu)
+─────────────────────────────
+1. niche-opportunity-finder    → Tìm thị trường
+2. competitor-spy              → Phân tích đối thủ
+3. trending-content-scout      → Tìm ideas
+4. viral-post-writer           → Viết content
+5. landing-page-creator        → Tạo landing page
+6. email-drip-sequence         → Nurture leads
+7. conversion-tracker          → Theo dõi kết quả
+
+
+📚 CONTENT CREATOR FLOW (Đã có content)
+────────────────────────────────────
+1. content-angle-ranker        → Xếp hạng topics
+2. keyword-cluster-architect   → Organize keywords
+3. affiliate-blog-builder      → Viết blogs
+4. comparison-post-writer      → Viết comparisons
+5. internal-linking-optimizer  → Build links
+6. ab-test-generator           → Test & optimize
+7. performance-report          → Track metrics
+
+
+🚀 SCALE FLOW (Muốn mở rộng)
+────────────────────────────
+1. content-repurposer          → 1 → 30 variations
+2. email-automation-builder    → Automate
+3. multi-program-manager       → Manage portfolio
+4. paid-ad-copy-writer         → Paid traffic
+5. proprietary-data-generator  → Build authority
+6. self-improver               → Optimize
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                              USAGE METHODS
+═══════════════════════════════════════════════════════════════════════════════
+
+METHOD 1: QUICK START (Nhanh nhất)
+──────────────────────────────────
+1. Go to: https://github.com/Affitor/affiliate-skills
+2. Find skill you want
+3. Copy the prompt
+4. Paste into Claude/ChatGPT/Gemini
+5. Run & get results
+
+
+METHOD 2: CLAUDE CODE INTEGRATION
+──────────────────────────────────
+1. Clone repo
+2. Run setup in Claude Code
+3. Use affiliate-check CLI
+4. Access all skills
+
+
+METHOD 3: MANUAL APPROACH
+────────────────────────
+1. Read skill description
+2. Understand what it does
+3. Adapt for your needs
+4. Run with your favorite AI
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                          SKILL STATISTICS
+═══════════════════════════════════════════════════════════════════════════════
+
+Total Skills:              52
+Total Stages:              8
+Research Skills:           9
+Content Creation:          7
+Blog & SEO:                7
+Landing Pages:             8
+Distribution:              4
+Analytics:                 5
+Automation:                5
+Strategy:                  5
+
+Repository:  https://github.com/Affitor/affiliate-skills
+Programs DB: https://list.affitor.com
+Works With:  Claude, ChatGPT, Gemini, Any AI
+
+═══════════════════════════════════════════════════════════════════════════════

@@ -1,0 +1,23 @@
+{
+  "skill_name": "xao-content",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Mở video YouTube về Phật pháp 'Lời Phật Dạy về Lo Âu và Mất Ngủ' ở đây: https://youtube.com/watch?v=mẫu_video_pháp_thoại. Xào nấu content này thành kịch bản chuyên nghiệp với tiêu đề, thumbnail, description và tags.",
+      "expected_output": "Phân tích + dàn ý + kịch bản hoàn chỉnh + 5 tiêu đề + 3 thumbnail + description + tags",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Tôi có một video YouTube mở về Phật pháp. Dùng /xao-content để tự động tạo content gốc này thành kịch bản Phật pháp tiếng Việt chuẩn.",
+      "expected_output": "Toàn bộ pipeline: transcript → phân tích → dàn ý → kịch bản → 5 tiêu đề → 3 thumbnail → description → tags",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Hãy xào nấu video YouTube hiện tại (có phụ đề tiếng Việt) thành bài pháp thoại chuyên sâu về tâm linh. Cần đầy đủ: kịch bản, tiêu đề hấp dẫn, mô tả video SEO-friendly, và tags YouTube.",
+      "expected_output": "Kịch bản hoàn chỉnh + 5 tiêu đề YouTube + 3 ý tưởng thumbnail (mô tả + AI prompt) + description video + tags",
+      "files": []
+    }
+  ]
+}

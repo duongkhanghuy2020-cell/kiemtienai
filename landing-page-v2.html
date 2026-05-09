@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sửa Điện Thoại Miễn Phí - Lấy Lại Chiếc Máy Của Bạn Trong 24h</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        /* Header/Navigation */
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .contact-info {
+            font-size: 14px;
+            display: flex;
+            gap: 20px;
+        }
+
+        /* Hero Section - Premium */
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-text h1 {
+            font-size: 48px;
+            margin-bottom: 15px;
+            font-weight: bold;
+            line-height: 1.2;
+        }
+
+        .hero-text .subheading {
+            font-size: 20px;
+            margin-bottom: 20px;
+            opacity: 0.95;
+            color: #ffd700;
+        }
+
+        .hero-text p {
+            font-size: 16px;
+            margin-bottom: 15px;
+            opacity: 0.9;
+        }
+
+        .trust-badges {
+            display: flex;
+            gap: 15px;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            background: rgba(255,255,255,0.2);
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Form Section - Optimized */
+        .form-container {
+            background: white;
+            padding: 35px;
+            border-radius: 15px;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.15);
+            position: relative;
+        }
+
+        .urgency-banner {
+            background: #ff6b6b;
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: bold;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .form-container h2 {
+            font-size: 24px;
+            margin-bottom: 8px;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .form-container .subtitle {
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 11px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            font-family: inherit;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 70px;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+
+        .cta-text {
+            text-align: center;
+            font-size: 12px;
+            color: #999;
+            margin-top: 10px;
+        }
+
+        /* Social Proof Section */
+        .social-proof {
+            background: #f8f9fa;
+            padding: 40px 20px;
+            border-top: 1px solid #e0e0e0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .social-proof-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            text-align: center;
+        }
+
+        .proof-item h3 {
+            font-size: 28px;
+            color: #667eea;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .proof-item p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .testimonial-section {
+            padding: 60px 20px;
+            background: white;
+        }
+
+        .testimonial-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .testimonial-content h2 {
+            text-align: center;
+            font-size: 32px;
+            margin-bottom: 40px;
+            color: #333;
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .testimonial-card {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .stars {
+            color: #ffd700;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .testimonial-text {
+            font-style: italic;
+            color: #555;
+            margin-bottom: 12px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .testimonial-author {
+            font-weight: bold;
+            color: #333;
+            font-size: 14px;
+        }
+
+        /* Benefits Section */
+        .benefits {
+            padding: 60px 20px;
+            background: #f8f9fa;
+        }
+
+        .benefits-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .benefits h2 {
+            text-align: center;
+            font-size: 32px;
+            margin-bottom: 40px;
+            color: #333;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 25px;
+        }
+
+        .benefit-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .benefit-icon {
+            font-size: 40px;
+            margin-bottom: 12px;
+        }
+
+        .benefit-card h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .benefit-card p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        /* FAQ Section */
+        .faq {
+            padding: 60px 20px;
+            background: white;
+        }
+
+        .faq-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq h2 {
+            text-align: center;
+            font-size: 32px;
+            margin-bottom: 40px;
+            color: #333;
+        }
+
+        .faq-item {
+            margin-bottom: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 15px;
+            background: #f8f9fa;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s;
+        }
+
+        .faq-question:hover {
+            background: #e8e8f0;
+        }
+
+        .faq-answer {
+            padding: 15px;
+            background: white;
+            display: none;
+            border-top: 1px solid #e0e0e0;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .faq-item.active .faq-answer {
+            display: block;
+        }
+
+        .faq-toggle {
+            font-size: 18px;
+            transition: transform 0.3s;
+        }
+
+        .faq-item.active .faq-toggle {
+            transform: rotate(180deg);
+        }
+
+        /* Footer */
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 30px;
+            margin-top: 0;
+        }
+
+        footer p {
+            margin: 5px 0;
+            font-size: 13px;
+        }
+
+        /* Messages */
+        .success-message {
+            display: none;
+            padding: 15px;
+            background: #4caf50;
+            color: white;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .error-message {
+            display: none;
+            padding: 15px;
+            background: #f44336;
+            color: white;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-text h1 {
+                font-size: 32px;
+            }
+
+            .hero-text .subheading {
+                font-size: 18px;
+            }
+
+            .contact-info {
+                flex-direction: column;
+                gap: 5px;
+                font-size: 12px;
+            }
+
+            .benefits h2,
+            .testimonial-content h2,
+            .faq h2 {
+                font-size: 24px;
+            }
+
+            .form-container {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav>
+            <div class="logo">📱 Sửa Điện Thoại Pro</div>
+            <div class="contact-info">
+                <span>📞 1900.0000</span>
+                <span>⏰ Mở 8AM - 10PM</span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1>Lấy Lại Chiếc Điện Thoại Của Bạn <span style="color: #ffd700;">MIỄN PHÍ</span></h1>
+                <p class="subheading">Chẩn đoán & ước tính giá hoàn toàn miễn phí</p>
+                <p>✓ Sửa xong trong 24-48 giờ</p>
+                <p>✓ Bảo hành 2 năm</p>
+                <p>✓ Kỹ thuật viên 10+ năm kinh nghiệm</p>
+
+                <div class="trust-badges">
+                    <div class="badge">⭐ 5 sao (320 đánh giá)</div>
+                    <div class="badge">✅ Tin cậy 100%</div>
+                </div>
+            </div>
+            <div class="form-container">
+                <div class="urgency-banner">
+                    🎁 Khuyến mãi: Giảm 10% nếu gửi ngay hôm nay
+                </div>
+                <h2>Nhận Chẩn Đoán Miễn Phí</h2>
+                <p class="subtitle">Điền thông tin dưới - chúng tôi sẽ gọi bạn trong 1 giờ</p>
+
+                <div class="success-message" id="successMsg">
+                    ✓ Cảm ơn! Chúng tôi sẽ gọi bạn ngay
+                </div>
+                <div class="error-message" id="errorMsg"></div>
+
+                <form id="leadForm">
+                    <div class="form-group">
+                        <label for="name">Họ và tên *</label>
+                        <input type="text" id="name" name="name" placeholder="Ví dụ: Nguyễn Văn A" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Số điện thoại *</label>
+                        <input type="tel" id="phone" name="phone" placeholder="09xxxxxxxxx" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="device">Hãng điện thoại *</label>
+                        <select id="device" name="device" required>
+                            <option value="">-- Chọn hãng --</option>
+                            <option value="iphone">iPhone</option>
+                            <option value="samsung">Samsung</option>
+                            <option value="xiaomi">Xiaomi</option>
+                            <option value="oppo">OPPO</option>
+                            <option value="vivo">Vivo</option>
+                            <option value="realme">Realme</option>
+                            <option value="other">Khác</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="problem">Vấn đề chính *</label>
+                        <select id="problem" name="problem" required>
+                            <option value="">-- Chọn vấn đề --</option>
+                            <option value="man-hinh">Màn hình bị vỡ</option>
+                            <option value="pin">Pin yếu/hết dung lượng nhanh</option>
+                            <option value="camera">Camera bị hỏng</option>
+                            <option value="khong-bat">Không bật được</option>
+                            <option value="sac">Không sạc được</option>
+                            <option value="nuoc">Bị vào nước</option>
+                            <option value="khong-den">Không lên đèn</option>
+                            <option value="other">Khác</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="notes">Mô tả thêm (tùy chọn)</label>
+                        <textarea id="notes" name="notes" placeholder="Ví dụ: Vỡ từ hôm qua, vẫn bật được..."></textarea>
+                    </div>
+                    <button type="submit" class="btn-submit">✓ Yêu Cầu Chẩn Đoán Miễn Phí</button>
+                    <p class="cta-text">Không cần thẻ tín dụng • Không bị tính phí • Lập tức</p>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Social Proof -->
+    <section class="social-proof">
+        <div class="social-proof-content">
+            <div class="proof-item">
+                <h3>5,234+</h3>
+                <p>Thiết bị được sửa</p>
+            </div>
+            <div class="proof-item">
+                <h3>98%</h3>
+                <p>Tỷ lệ sửa thành công</p>
+            </div>
+            <div class="proof-item">
+                <h3>4.9/5⭐</h3>
+                <p>Đánh giá trung bình</p>
+            </div>
+            <div class="proof-item">
+                <h3>24/7</h3>
+                <p>Hỗ trợ khách hàng</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonial-section">
+        <div class="testimonial-content">
+            <h2>Khách Hàng Nói Gì Về Chúng Tôi</h2>
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="stars">⭐⭐⭐⭐⭐</div>
+                    <p class="testimonial-text">"Màn hình iPhone của tôi bị vỡ hoàn toàn, họ sửa xong trong 3 giờ. Giá cả hợp lý, thợ chuyên nghiệp!"</p>
+                    <p class="testimonial-author">— Trần Hương</p>
+                </div>
+                <div class="testimonial-card">
+                    <div class="stars">⭐⭐⭐⭐⭐</div>
+                    <p class="testimonial-text">"Samsung của tôi không bật được, chứng tỏ là do IC chủ. Họ thay thế nhanh chóng. Rất hài lòng!"</p>
+                    <p class="testimonial-author">— Lê Minh Tuấn</p>
+                </div>
+                <div class="testimonial-card">
+                    <div class="stars">⭐⭐⭐⭐⭐</div>
+                    <p class="testimonial-text">"Dịch vụ tuyệt vời! Chẩn đoán miễn phí giúp tôi hiểu rõ vấn đề. Không gây áp lực bán hàng."</p>
+                    <p class="testimonial-author">— Phạm Thị Lan</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits -->
+    <section class="benefits">
+        <div class="benefits-content">
+            <h2>Tại Sao Chọn Chúng Tôi?</h2>
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="benefit-icon">💰</div>
+                    <h3>Chẩn Đoán Miễn Phí</h3>
+                    <p>Xác định vấn đề chính xác không tính tiền. Báo giá cụ thể trước khi sửa.</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">⚡</div>
+                    <h3>Nhanh Chóng</h3>
+                    <p>Hầu hết các vấn đề được sửa xong trong 24-48 giờ.</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">👨‍💼</div>
+                    <h3>Kỹ Thuật Viên Giỏi</h3>
+                    <p>Nhóm chuyên gia có 10+ năm kinh nghiệm sửa chữa các loại thiết bị.</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">✅</div>
+                    <h3>Bảo Hành 2 Năm</h3>
+                    <p>Bảo hành toàn bộ dịch vụ trong 2 năm. Hư hỏng gì thì sửa miễn phí.</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">🔒</div>
+                    <h3>An Toàn Dữ Liệu</h3>
+                    <p>Bảo mật thông tin của bạn. Không lưu bất kỳ dữ liệu cá nhân nào.</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">🌐</div>
+                    <h3>Mọi Hãng Điện Thoại</h3>
+                    <p>Sửa iPhone, Samsung, Xiaomi, OPPO, Vivo, Realme và hầu hết các loại.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="faq">
+        <div class="faq-content">
+            <h2>Câu Hỏi Thường Gặp</h2>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Chẩn đoán miễn phí có thật không?</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-answer">
+                    Có hoàn toàn! Chúng tôi kiểm tra thiết bị của bạn, xác định vấn đề và báo giá chi tiết. Bạn hoàn toàn có thể từ chối nếu giá không hợp lý. Chúng tôi không tính một xu nào.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Mất bao lâu để sửa xong?</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-answer">
+                    Phụ thuộc vào vấn đề. Một số vấn đề được sửa trong vài giờ (vỡ màn hình, sạc không vào). Những vấn đề phức tạp hơn có thể mất 24-48 giờ.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Bảo hành 2 năm có điều kiện gì?</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-answer">
+                    Bảo hành bao gồm các hư hỏng liên quan đến dịch vụ sửa chữa. Không bao gồm hư hỏng do ngã, va đập hoặc tiếp xúc với nước sau khi sửa.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Làm sao tôi biết chắc giá sửa?</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-answer">
+                    Sau khi kiểm tra, chúng tôi sẽ báo giá chi tiết (chi phí linh kiện + công thợ). Bạn có thể xem giá và quyết định. Không có chi phí ẩn.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Điện thoại của tôi bị vào nước, có sửa được không?</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-answer">
+                    Có thể sửa được tùy mức độ. Liên hệ chúng tôi để kiểm tra và xác định tình trạng. Càng sửa sớm càng tốt để hạn chế hư hỏng.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Địa chỉ cửa hàng ở đâu?</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-answer">
+                    Chúng tôi có cửa hàng tại 123 Đường Lê Lợi, Quận 1, TP.HCM. Bạn có thể đến trực tiếp hoặc gửi điện thoại qua đơn vị chuyển phát.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p><strong>Sửa Điện Thoại Pro</strong> - Dịch vụ uy tín &amp; chuyên nghiệp</p>
+        <p>📞 Hotline: <strong>1900.0000</strong> | 📧 support@suadienthoai.com</p>
+        <p>🏢 123 Đường Lê Lợi, Quận 1, TP.HCM | ⏰ 8AM - 10PM Hằng Ngày</p>
+        <p style="margin-top: 15px; opacity: 0.8;">© 2026 Sửa Điện Thoại Pro. Tất cả quyền được bảo lưu.</p>
+    </footer>
+
+    <script>
+        const form = document.getElementById('leadForm');
+        const successMsg = document.getElementById('successMsg');
+        const errorMsg = document.getElementById('errorMsg');
+
+        // Form submission handler
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const name = document.getElementById('name').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const device = document.getElementById('device').value;
+            const problem = document.getElementById('problem').value;
+            const notes = document.getElementById('notes').value.trim();
+
+            // Validate phone
+            const phoneRegex = /^[0-9]{10,11}$/;
+            const cleanPhone = phone.replace(/\D/g, '');
+
+            if (!phoneRegex.test(cleanPhone)) {
+                errorMsg.textContent = '❌ Vui lòng nhập số điện thoại hợp lệ (10-11 chữ số)';
+                errorMsg.style.display = 'block';
+                successMsg.style.display = 'none';
+                return;
+            }
+
+            // Prepare lead data
+            const leadData = {
+                name,
+                phone,
+                device,
+                problem,
+                notes,
+                timestamp: new Date().toISOString(),
+                source: 'landing-page'
+            };
+
+            console.log('Lead submitted:', leadData);
+
+            // Show success
+            errorMsg.style.display = 'none';
+            successMsg.style.display = 'block';
+            form.reset();
+
+            // Hide success message after 5 seconds
+            setTimeout(() => {
+                successMsg.style.display = 'none';
+            }, 5000);
+
+            // TODO: Send to server
+            // fetch('https://your-api.com/leads', {
+            //     method: 'POST',
+            //     headers: { 'Content-Type': 'application/json' },
+            //     body: JSON.stringify(leadData)
+            // })
+        });
+
+        // FAQ accordion
+        const faqItems = document.querySelectorAll('.faq-item');
+        faqItems.forEach(item => {
+            const question = item.querySelector('.faq-question');
+            question.addEventListener('click', () => {
+                item.classList.toggle('active');
+            });
+        });
+    </script>
+</body>
+</html>
