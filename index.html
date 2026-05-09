@@ -1,0 +1,1460 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Khang Huy Apple - Bán iPhone, iPad, Mac, Sửa Chữa Uy Tín</title>
+    <meta name="description" content="Khang Huy Apple - Bán iPhone, iPad, Mac, AirPods chính hãng và dịch vụ sửa chữa điện thoại uy tín tại TP.HCM">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #1f2937;
+            --secondary-color: #3b82f6;
+            --accent-color: #f59e0b;
+            --success-color: #10b981;
+            --danger-color: #ef4444;
+            --light-bg: #f9fafb;
+            --border-color: #e5e7eb;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--primary-color);
+            background-color: white;
+        }
+
+        /* ===== HEADER & NAVIGATION ===== */
+        header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-top {
+            background: #1f2937;
+            color: white;
+            padding: 10px 0;
+            font-size: 13px;
+        }
+
+        .header-top-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .header-top-left, .header-top-right {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .logo {
+            font-size: 26px;
+            font-weight: 700;
+            color: #1f2937;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            min-width: 250px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--secondary-color);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 5px;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .nav-menu a {
+            display: block;
+            padding: 10px 16px;
+            text-decoration: none;
+            color: #4b5563;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+
+        .nav-menu a:hover {
+            background: #f3f4f6;
+            color: var(--secondary-color);
+        }
+
+        .nav-right {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .btn-contact {
+            background: var(--secondary-color);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-contact:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero {
+            background: linear-gradient(135deg, #1f2937 0%, #374151 50%, #3b82f6 100%);
+            color: white;
+            padding: 80px 20px;
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 20px;
+            opacity: 0.95;
+            margin-bottom: 30px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: var(--secondary-color);
+            color: white;
+            padding: 14px 32px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--secondary-color);
+            padding: 14px 32px;
+            border: 2px solid white;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-secondary:hover {
+            background: #f3f4f6;
+        }
+
+        /* ===== SECTION STYLES ===== */
+        section {
+            padding: 60px 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        section h2 {
+            font-size: 36px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 50px;
+            color: var(--primary-color);
+        }
+
+        section h3 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            color: var(--primary-color);
+        }
+
+        /* ===== PRODUCTS SHOWCASE ===== */
+        .products-section {
+            background: var(--light-bg);
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, #e5e7eb 0%, #f3f4f6 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+            position: relative;
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--danger-color);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .product-info {
+            padding: 20px;
+        }
+
+        .product-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+
+        .product-description {
+            color: #6b7280;
+            font-size: 14px;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .product-price {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .price-current {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--secondary-color);
+        }
+
+        .price-original {
+            font-size: 16px;
+            color: #9ca3af;
+            text-decoration: line-through;
+        }
+
+        .product-features {
+            list-style: none;
+            font-size: 13px;
+            color: #6b7280;
+            margin-bottom: 15px;
+        }
+
+        .product-features li {
+            padding: 5px 0;
+        }
+
+        .product-features li:before {
+            content: "✓ ";
+            color: var(--success-color);
+            font-weight: 600;
+            margin-right: 5px;
+        }
+
+        .btn-product {
+            width: 100%;
+            padding: 10px;
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-product:hover {
+            background: #2563eb;
+        }
+
+        /* ===== FEATURES SECTION ===== */
+        .features-section {
+            background: white;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            text-align: center;
+            padding: 30px;
+            border-radius: 12px;
+            background: var(--light-bg);
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            background: white;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .feature-card h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .feature-card p {
+            color: #6b7280;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* ===== PRICING SECTION ===== */
+        .pricing-section {
+            background: var(--light-bg);
+        }
+
+        .pricing-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            border: 2px solid var(--border-color);
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            color: var(--primary-color);
+        }
+
+        .tab-btn.active {
+            background: var(--secondary-color);
+            color: white;
+            border-color: var(--secondary-color);
+        }
+
+        .pricing-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+
+        .pricing-table thead {
+            background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+            color: white;
+        }
+
+        .pricing-table th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .pricing-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 14px;
+        }
+
+        .pricing-table tbody tr:hover {
+            background: var(--light-bg);
+        }
+
+        .service-name {
+            font-weight: 600;
+            color: var(--primary-color);
+            min-width: 150px;
+        }
+
+        .price-cell {
+            color: var(--secondary-color);
+            font-weight: 600;
+            text-align: center;
+        }
+
+        /* ===== STATS SECTION ===== */
+        .stats-section {
+            background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+            color: white;
+            padding: 60px 20px;
+        }
+
+        .stats-grid {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            text-align: center;
+        }
+
+        .stat-item {
+            padding: 30px;
+        }
+
+        .stat-number {
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        /* ===== SERVICES SECTION ===== */
+        .services-section {
+            background: white;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .service-box {
+            background: var(--light-bg);
+            padding: 30px;
+            border-radius: 12px;
+            border-left: 4px solid var(--secondary-color);
+            transition: all 0.3s;
+        }
+
+        .service-box:hover {
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transform: translateX(5px);
+        }
+
+        .service-box h3 {
+            color: var(--secondary-color);
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .service-box p {
+            color: #6b7280;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .service-list {
+            list-style: none;
+            margin-top: 15px;
+        }
+
+        .service-list li {
+            padding: 8px 0;
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .service-list li:before {
+            content: "→ ";
+            color: var(--secondary-color);
+            font-weight: 600;
+            margin-right: 8px;
+        }
+
+        /* ===== CONTACT SECTION ===== */
+        .contact-section {
+            background: var(--light-bg);
+        }
+
+        .contact-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .contact-form {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .contact-form h3 {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--primary-color);
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .info-box {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .info-box h3 {
+            color: var(--secondary-color);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+        }
+
+        .info-box p {
+            color: #6b7280;
+            line-height: 1.8;
+        }
+
+        .branches {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        .branch {
+            padding: 15px;
+            background: var(--light-bg);
+            border-radius: 8px;
+            border-left: 3px solid var(--accent-color);
+        }
+
+        .branch-name {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .branch-address {
+            font-size: 13px;
+            color: #6b7280;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            background: #1f2937;
+            color: #d1d5db;
+            padding: 40px 20px;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .footer-section h4 {
+            color: white;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 8px;
+        }
+
+        .footer-section a {
+            color: #d1d5db;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #374151;
+            padding-top: 20px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        /* ===== MESSAGES ===== */
+        .success-message,
+        .error-message {
+            display: none;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .success-message {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+
+        .error-message {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .header-top-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 8px;
+            }
+
+            nav {
+                flex-wrap: wrap;
+                height: auto;
+                padding: 15px 20px;
+            }
+
+            .logo {
+                min-width: auto;
+                margin-bottom: 15px;
+            }
+
+            .nav-menu {
+                width: 100%;
+                flex-direction: column;
+                gap: 0;
+                order: 3;
+            }
+
+            .nav-menu a {
+                padding: 10px;
+                border-radius: 0;
+            }
+
+            .nav-right {
+                width: 100%;
+                order: 2;
+            }
+
+            .hero h1 {
+                font-size: 32px;
+            }
+
+            .hero-subtitle {
+                font-size: 16px;
+            }
+
+            section h2 {
+                font-size: 28px;
+            }
+
+            .contact-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .pricing-table {
+                font-size: 13px;
+            }
+
+            .pricing-table th,
+            .pricing-table td {
+                padding: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 24px;
+            }
+
+            section h2 {
+                font-size: 22px;
+                margin-bottom: 30px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+            }
+
+            .btn-primary,
+            .btn-secondary {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER & NAVIGATION -->
+    <header>
+        <div class="header-top">
+            <div class="header-top-content">
+                <div class="header-top-left">
+                    <span>📞 Hotline: <strong>0981.308.308</strong></span>
+                    <span>📧 Email: khanghuyphonerepair@gmail.com</span>
+                </div>
+                <div class="header-top-right">
+                    <span>⏰ Mở cửa: 8:00 - 21:00 (Hằng ngày)</span>
+                    <span>🚀 Giao hàng miễn phí tại TP.HCM</span>
+                </div>
+            </div>
+        </div>
+
+        <nav>
+            <a href="#" class="logo">
+                <div class="logo-icon">🍎</div>
+                <div>Khang Huy Apple</div>
+            </a>
+            <ul class="nav-menu">
+                <li><a href="#products">iPhone</a></li>
+                <li><a href="#products">iPad</a></li>
+                <li><a href="#products">Mac</a></li>
+                <li><a href="#products">Watch</a></li>
+                <li><a href="#products">AirPods</a></li>
+                <li><a href="#services">Sửa Chữa</a></li>
+                <li><a href="#pricing">Bảng Giá</a></li>
+            </ul>
+            <div class="nav-right">
+                <a href="#contact" class="btn-contact">Liên Hệ Ngay</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>🍎 Khang Huy Apple - Bán & Sửa Chữa Uy Tín</h1>
+            <p class="hero-subtitle">Bán iPhone, iPad, Mac, AirPods chính hãng + Dịch vụ sửa chữa chuyên nghiệp</p>
+            <div class="hero-buttons">
+                <button class="btn-primary" onclick="document.getElementById('contact').scrollIntoView();">Mua Sản Phẩm</button>
+                <button class="btn-secondary" onclick="document.getElementById('services').scrollIntoView();">Dịch Vụ Sửa Chữa</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- STATS SECTION -->
+    <section class="stats-section">
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-number">10,000+</div>
+                <div class="stat-label">Khách Hàng Hài Lòng</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">98%</div>
+                <div class="stat-label">Tỷ Lệ Sửa Thành Công</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">24/7</div>
+                <div class="stat-label">Hỗ Trợ Khách Hàng</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">2 Năm</div>
+                <div class="stat-label">Bảo Hành Dịch Vụ</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PRODUCTS SECTION -->
+    <section class="products-section" id="products">
+        <div class="container">
+            <h2>📱 Sản Phẩm Apple Chính Hãng</h2>
+
+            <h3 style="color: var(--secondary-color); margin: 40px 0 25px 0;">🔥 iPhone Mới Nhất</h3>
+            <div class="products-grid">
+                <div class="product-card">
+                    <div class="product-image">
+                        📱
+                        <div class="product-badge">-15%</div>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">iPhone 17 Pro Max</div>
+                        <div class="product-description">Công nghệ AI tiên tiến, camera 48MP, chip A19</div>
+                        <div class="product-price">
+                            <span class="price-current">28.9M đ</span>
+                            <span class="price-original">34M đ</span>
+                        </div>
+                        <ul class="product-features">
+                            <li>6.9" Super Retina XDR</li>
+                            <li>Bảo hành 12 tháng</li>
+                            <li>Hỗ trợ đổi trả 30 ngày</li>
+                        </ul>
+                        <button class="btn-product">Mua Ngay</button>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-image">
+                        📱
+                        <div class="product-badge">-12%</div>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">iPhone 17 Pro</div>
+                        <div class="product-description">Hiệu năng mạnh mẽ, camera chuyên nghiệp</div>
+                        <div class="product-price">
+                            <span class="price-current">24.9M đ</span>
+                            <span class="price-original">28.5M đ</span>
+                        </div>
+                        <ul class="product-features">
+                            <li>6.3" Super Retina XDR</li>
+                            <li>Triple camera 48MP</li>
+                            <li>Bảo hành 12 tháng</li>
+                        </ul>
+                        <button class="btn-product">Mua Ngay</button>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-image">
+                        📱
+                        <div class="product-badge">-10%</div>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">iPhone 16 Series</div>
+                        <div class="product-description">Giá tốt, hiệu năng vượt trội</div>
+                        <div class="product-price">
+                            <span class="price-current">19.9M đ</span>
+                            <span class="price-original">22.1M đ</span>
+                        </div>
+                        <ul class="product-features">
+                            <li>6.1" OLED</li>
+                            <li>Chip A18 Pro</li>
+                            <li>Bảo hành 12 tháng</li>
+                        </ul>
+                        <button class="btn-product">Mua Ngay</button>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="color: var(--secondary-color); margin: 40px 0 25px 0;">💎 iPad & Mac</h3>
+            <div class="products-grid">
+                <div class="product-card">
+                    <div class="product-image">
+                        💻
+                        <div class="product-badge">-8%</div>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">iPad Pro 13" M5</div>
+                        <div class="product-description">Màn hình lớn, khả năng sáng tạo vô hạn</div>
+                        <div class="product-price">
+                            <span class="price-current">34M đ</span>
+                            <span class="price-original">37M đ</span>
+                        </div>
+                        <ul class="product-features">
+                            <li>13" Super Retina XDR</li>
+                            <li>Chip M5</li>
+                            <li>Bảo hành 12 tháng</li>
+                        </ul>
+                        <button class="btn-product">Mua Ngay</button>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-image">
+                        🖥️
+                        <div class="product-badge">-5%</div>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">MacBook Pro 16" M5</div>
+                        <div class="product-description">Laptop chuyên nghiệp, hiệu năng cực cao</div>
+                        <div class="product-price">
+                            <span class="price-current">59.9M đ</span>
+                            <span class="price-original">63M đ</span>
+                        </div>
+                        <ul class="product-features">
+                            <li>Chip M5 Max</li>
+                            <li>GPU 12-core</li>
+                            <li>Bảo hành 12 tháng</li>
+                        </ul>
+                        <button class="btn-product">Mua Ngay</button>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-image">
+                        ⌚
+                        <div class="product-badge">-10%</div>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">Apple Watch Ultra 2</div>
+                        <div class="product-description">Đồng hồ thông minh bền bỉ, chức năng vệ sinh</div>
+                        <div class="product-price">
+                            <span class="price-current">18M đ</span>
+                            <span class="price-original">20M đ</span>
+                        </div>
+                        <ul class="product-features">
+                            <li>Titanium case</li>
+                            <li>Always-On Retina</li>
+                            <li>Bảo hành 12 tháng</li>
+                        </ul>
+                        <button class="btn-product">Mua Ngay</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURES SECTION -->
+    <section class="features-section">
+        <div class="container">
+            <h2>✨ Tại Sao Chọn Khang Huy Apple?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">💰</div>
+                    <h3>Giá Cả Cạnh Tranh</h3>
+                    <p>Bảo giá rẻ nhất khu vực, chương trình khuyến mãi hàng tháng</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📦</div>
+                    <h3>Giao Hàng Miễn Phí</h3>
+                    <p>Miễn phí giao hàng tại TP.HCM, hàng chính hãng 100%</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3>Bảo Hành Chính Hãng</h3>
+                    <p>Bảo hành 12 tháng chính hãng, hỗ trợ 1 đổi 1</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔧</div>
+                    <h3>Sửa Chữa Chuyên Nghiệp</h3>
+                    <p>Kỹ thuật viên 10+ năm kinh nghiệm, sửa tất cả thiết bị Apple</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Sửa Nhanh 24-48h</h3>
+                    <p>Hỗ trợ khách hàng 24/7, sửa xong nhanh nhất</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🛡️</div>
+                    <h3>An Toàn Dữ Liệu</h3>
+                    <p>Đảm bảo bảo mật thông tin cá nhân, không mất dữ liệu</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SERVICES SECTION -->
+    <section class="services-section" id="services">
+        <div class="container">
+            <h2>🔧 Dịch Vụ Sửa Chữa Chuyên Nghiệp</h2>
+            <div class="services-grid">
+                <div class="service-box">
+                    <h3>📱 Sửa iPhone & iPad</h3>
+                    <p>Sửa tất cả loại lỗi từ màn hình, pin, camera, loa, cổng sạc,... Công nghệ sửa chữa tiên tiến, bảo hành 2 năm.</p>
+                    <ul class="service-list">
+                        <li>Thay thế màn hình LCD/OLED</li>
+                        <li>Thay pin, cổng sạc</li>
+                        <li>Sửa camera, loa, mic</li>
+                        <li>Face ID, Touch ID</li>
+                        <li>Sửa lỗi phần mềm</li>
+                    </ul>
+                </div>
+                <div class="service-box">
+                    <h3>💻 Sửa Mac & MacBook</h3>
+                    <p>Sửa lỗi phần cứng & phần mềm, nâng cấp SSD, RAM, cấp cứu dữ liệu, vệ sinh máy.</p>
+                    <ul class="service-list">
+                        <li>Sửa pin & sạc</li>
+                        <li>Thay SSD, RAM</li>
+                        <li>Vệ sinh, cấu hình</li>
+                        <li>Cấp cứu dữ liệu</li>
+                        <li>Cài đặt macOS</li>
+                    </ul>
+                </div>
+                <div class="service-box">
+                    <h3>⌚ Sửa Apple Watch & AirPods</h3>
+                    <p>Sửa Pin, sạc không vào, loa, không kết nối, lỗi cảm ứng,...</p>
+                    <ul class="service-list">
+                        <li>Thay pin Watch/AirPods</li>
+                        <li>Sửa loa, mic</li>
+                        <li>Kết nối Bluetooth</li>
+                        <li>Vệ sinh sạc</li>
+                        <li>Cấp cứu nước</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PRICING SECTION -->
+    <section class="pricing-section" id="pricing">
+        <div class="container">
+            <h2>💰 Bảng Giá Sửa Chữa 2026</h2>
+
+            <h3 style="color: var(--secondary-color); margin: 30px 0 20px 0;">iPhone</h3>
+            <div style="overflow-x: auto;">
+                <table class="pricing-table">
+                    <thead>
+                        <tr>
+                            <th>Dịch Vụ Sửa Chữa</th>
+                            <th>iPhone X/XS</th>
+                            <th>iPhone 11/12</th>
+                            <th>iPhone 13/14</th>
+                            <th>iPhone 15</th>
+                            <th>iPhone 16/17</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="service-name">Màn hình</td>
+                            <td class="price-cell">2.5M</td>
+                            <td class="price-cell">3M</td>
+                            <td class="price-cell">3.5M</td>
+                            <td class="price-cell">4M</td>
+                            <td class="price-cell">4.5M</td>
+                        </tr>
+                        <tr>
+                            <td class="service-name">Pin</td>
+                            <td class="price-cell">1.5M</td>
+                            <td class="price-cell">1.8M</td>
+                            <td class="price-cell">2M</td>
+                            <td class="price-cell">2.2M</td>
+                            <td class="price-cell">2.5M</td>
+                        </tr>
+                        <tr>
+                            <td class="service-name">Camera</td>
+                            <td class="price-cell">1.8M</td>
+                            <td class="price-cell">2M</td>
+                            <td class="price-cell">2.5M</td>
+                            <td class="price-cell">3M</td>
+                            <td class="price-cell">3.5M</td>
+                        </tr>
+                        <tr>
+                            <td class="service-name">Cổng sạc</td>
+                            <td class="price-cell">1.8M</td>
+                            <td class="price-cell">2M</td>
+                            <td class="price-cell">2.2M</td>
+                            <td class="price-cell">2.5M</td>
+                            <td class="price-cell">2.8M</td>
+                        </tr>
+                        <tr>
+                            <td class="service-name">Loa/Mic</td>
+                            <td class="price-cell">1M</td>
+                            <td class="price-cell">1.2M</td>
+                            <td class="price-cell">1.5M</td>
+                            <td class="price-cell">1.8M</td>
+                            <td class="price-cell">2M</td>
+                        </tr>
+                        <tr>
+                            <td class="service-name">Face ID/Chẩn đoán</td>
+                            <td class="price-cell">2M</td>
+                            <td class="price-cell">2.5M</td>
+                            <td class="price-cell">3M</td>
+                            <td class="price-cell">3.5M</td>
+                            <td class="price-cell">4M</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3 style="color: var(--secondary-color); margin: 30px 0 20px 0;">iPad & Mac</h3>
+            <div style="overflow-x: auto;">
+                <table class="pricing-table">
+                    <thead>
+                        <tr>
+                            <th>Dịch Vụ Sửa Chữa</th>
+                            <th>iPad</th>
+                            <th>iPad Air</th>
+                            <th>iPad Pro</th>
+                            <th>MacBook Air</th>
+                            <th>MacBook Pro</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="service-name">Màn hình</td>
+                            <td class="price-cell">2.5M</td>
+                            <td class="price-cell">3.5M</td>
+                            <td class="price-cell">5M</td>
+                            <td class="price-cell">3M</td>
+                            <td class="price-cell">4M</td>
+                        </tr>
+                        <tr>
+                            <td class="service-name">Pin</td>
+                            <td class="price-cell">2M</td>
+                            <td class="price-cell">2.5M</td>
+                            <td class="price-cell">3.5M</td>
+                            <td class="price-cell">2.5M</td>
+                            <td class="price-cell">3M</td>
+                        </tr>
+                        <tr>
+                            <td class="service-name">SSD/Nâng cấp</td>
+                            <td class="price-cell">2M</td>
+                            <td class="price-cell">2.5M</td>
+                            <td class="price-cell">3.5M</td>
+                            <td class="price-cell">3.5M</td>
+                            <td class="price-cell">4.5M</td>
+                        </tr>
+                        <tr>
+                            <td class="service-name">Sạc/Cổng</td>
+                            <td class="price-cell">1.5M</td>
+                            <td class="price-cell">2M</td>
+                            <td class="price-cell">2.5M</td>
+                            <td class="price-cell">2M</td>
+                            <td class="price-cell">2.5M</td>
+                        </tr>
+                        <tr>
+                            <td class="service-name">Vệ sinh/Cấu hình</td>
+                            <td class="price-cell">500K</td>
+                            <td class="price-cell">500K</td>
+                            <td class="price-cell">500K</td>
+                            <td class="price-cell">500K</td>
+                            <td class="price-cell">500K</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="background: white; padding: 20px; border-radius: 12px; margin-top: 30px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.08);">
+                <p style="color: #6b7280; font-size: 14px; margin-bottom: 10px;">💡 Giá trên là giá tham khảo. Liên hệ để được tư vấn và báo giá chính xác phù hợp với tình trạng thiết bị</p>
+                <p style="color: var(--secondary-color); font-weight: 600;">✅ Chẩn đoán miễn phí | ✅ Bảo hành 2 năm | ✅ Giao lại 24-48 giờ</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT SECTION -->
+    <section class="contact-section" id="contact">
+        <div class="container">
+            <h2>📞 Liên Hệ & Tư Vấn Miễn Phí</h2>
+            <div class="contact-content">
+                <div class="contact-form">
+                    <h3>Gửi Yêu Cầu</h3>
+                    <div class="success-message" id="successMsg">✓ Cảm ơn bạn! Chúng tôi sẽ liên hệ trong 24 giờ</div>
+                    <div class="error-message" id="errorMsg"></div>
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <label for="name">Họ và Tên *</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Số Điện Thoại *</label>
+                            <input type="tel" id="phone" name="phone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email">
+                        </div>
+                        <div class="form-group">
+                            <label for="subject">Loại Yêu Cầu *</label>
+                            <select id="subject" name="subject" required>
+                                <option value="">-- Chọn loại yêu cầu --</option>
+                                <option value="mua-san-pham">Mua sản phẩm</option>
+                                <option value="sua-chua">Dịch vụ sửa chữa</option>
+                                <option value="tu-van">Tư vấn</option>
+                                <option value="other">Khác</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="device">Thiết Bị</label>
+                            <input type="text" id="device" name="device" placeholder="vd: iPhone 15, MacBook Pro,...">
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Nội Dung Yêu Cầu</label>
+                            <textarea id="message" name="message" placeholder="Mô tả chi tiết yêu cầu của bạn..."></textarea>
+                        </div>
+                        <button type="submit" class="btn-primary" style="width: 100%;">Gửi Yêu Cầu</button>
+                    </form>
+                </div>
+
+                <div class="contact-info">
+                    <div class="info-box">
+                        <h3>📍 Địa Chỉ & Liên Hệ</h3>
+                        <p><strong>Hotline:</strong> 0981.308.308</p>
+                        <p><strong>Email:</strong> khanghuyphonerepair@gmail.com</p>
+                        <p><strong>Website:</strong> khanghuyapple.com</p>
+                        <p><strong>Giờ làm việc:</strong> 8:00 - 21:00 (Hằng ngày)</p>
+                    </div>
+
+                    <div class="info-box">
+                        <h3>🏪 Chi Nhánh Chính</h3>
+                        <div class="branches">
+                            <div class="branch">
+                                <div class="branch-name">🏢 Chi nhánh chính</div>
+                                <div class="branch-address">296 Lê Văn Thọ, Thông Tây, TP.HCM</div>
+                            </div>
+                            <div class="branch">
+                                <div class="branch-name">📍 Quận 3</div>
+                                <div class="branch-address">123 Nguyễn Huệ, Q.1, TP.HCM</div>
+                            </div>
+                            <div class="branch">
+                                <div class="branch-name">📍 Quận 7</div>
+                                <div class="branch-address">456 Nguyễn Hữu Cảnh, Q.7, TP.HCM</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <h3>💬 Kênh Liên Hệ</h3>
+                        <p>✓ <strong>Zalo:</strong> 0981.308.308</p>
+                        <p>✓ <strong>Messenger:</strong> Khang Huy Apple</p>
+                        <p>✓ <strong>Instagram:</strong> @khanghuyapple</p>
+                        <p>✓ <strong>TikTok:</strong> @khanghuyapple</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>🍎 Khang Huy Apple</h4>
+                <p style="margin-bottom: 15px; font-size: 14px;">Bán & Sửa Chữa Thiết Bị Apple Uy Tín Tại TP.HCM</p>
+                <ul>
+                    <li><a href="#products">Sản Phẩm</a></li>
+                    <li><a href="#services">Dịch Vụ Sửa Chữa</a></li>
+                    <li><a href="#pricing">Bảng Giá</a></li>
+                    <li><a href="#contact">Liên Hệ</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>🛍️ Sản Phẩm</h4>
+                <ul>
+                    <li><a href="#">iPhone Mới</a></li>
+                    <li><a href="#">iPhone Cũ</a></li>
+                    <li><a href="#">iPad & Tablet</a></li>
+                    <li><a href="#">Mac & MacBook</a></li>
+                    <li><a href="#">Apple Watch</a></li>
+                    <li><a href="#">AirPods</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>🔧 Dịch Vụ</h4>
+                <ul>
+                    <li><a href="#">Sửa iPhone</a></li>
+                    <li><a href="#">Sửa iPad</a></li>
+                    <li><a href="#">Sửa Mac</a></li>
+                    <li><a href="#">Sửa Apple Watch</a></li>
+                    <li><a href="#">Cấp Cứu Dữ Liệu</a></li>
+                    <li><a href="#">Trade-In</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>📞 Hỗ Trợ</h4>
+                <ul>
+                    <li><a href="#">Hotline: 0981.308.308</a></li>
+                    <li><a href="#">Email: khanghuyphonerepair@gmail.com</a></li>
+                    <li><a href="#">Zalo: 0981.308.308</a></li>
+                    <li><a href="#">Câu Hỏi Thường Gặp</a></li>
+                    <li><a href="#">Chính Sách Bảo Hành</a></li>
+                    <li><a href="#">Điều Khoản Sử Dụng</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Khang Huy Apple - Tất cả quyền được bảo lưu. | Giấy phép kinh doanh: 8381669546-001</p>
+        </div>
+    </footer>
+
+    <script>
+        // Form submission
+        const contactForm = document.getElementById('contactForm');
+        const successMsg = document.getElementById('successMsg');
+        const errorMsg = document.getElementById('errorMsg');
+
+        contactForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const name = document.getElementById('name').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const subject = document.getElementById('subject').value;
+
+            // Validate phone
+            const phoneRegex = /^[0-9]{10,11}$/;
+            if (!phoneRegex.test(phone.replace(/\D/g, ''))) {
+                errorMsg.textContent = '❌ Vui lòng nhập số điện thoại hợp lệ (10-11 chữ số)';
+                errorMsg.style.display = 'block';
+                successMsg.style.display = 'none';
+                return;
+            }
+
+            // Validate email if provided
+            if (email) {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    errorMsg.textContent = '❌ Vui lòng nhập email hợp lệ';
+                    errorMsg.style.display = 'block';
+                    successMsg.style.display = 'none';
+                    return;
+                }
+            }
+
+            // Success
+            errorMsg.style.display = 'none';
+            successMsg.style.display = 'block';
+            contactForm.reset();
+
+            setTimeout(() => {
+                successMsg.style.display = 'none';
+            }, 5000);
+        });
+
+        // Smooth scroll for buttons
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -11,7 +11,9 @@
       "Bash(git init *)",
       "Bash(git config *)",
       "Bash(git add *)",
-      "Bash(git commit *)"
+      "Bash(git commit *)",
+      "mcp__Claude_in_Chrome__switch_browser",
+      "WebFetch(domain:traidepbaniphone.com)"
     ]
   }
 }
