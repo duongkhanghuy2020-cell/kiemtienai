@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dịch Vụ Sửa Chữa Apple - Khang Huy Apple</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #1f2937;
+            background: white;
+        }
+
+        header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-top {
+            background: #1f2937;
+            color: white;
+            padding: 10px 0;
+            font-size: 13px;
+        }
+
+        .header-top-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1f2937;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: #3b82f6;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 5px;
+        }
+
+        .nav-menu a {
+            display: block;
+            padding: 10px 16px;
+            text-decoration: none;
+            color: #4b5563;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+
+        .nav-menu a:hover {
+            background: #f3f4f6;
+            color: #3b82f6;
+        }
+
+        .btn-contact {
+            background: #3b82f6;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-contact:hover {
+            background: #2563eb;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        section {
+            padding: 60px 20px;
+        }
+
+        section h2 {
+            font-size: 36px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .services-intro {
+            background: #f9fafb;
+        }
+
+        .intro-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .intro-text h3 {
+            font-size: 28px;
+            color: #3b82f6;
+            margin-bottom: 20px;
+        }
+
+        .intro-text p {
+            color: #6b7280;
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+
+        .intro-image {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            height: 350px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 120px;
+            color: rgba(255,255,255,0.2);
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .service-detail-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .service-detail-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+        }
+
+        .service-header {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+            font-size: 48px;
+        }
+
+        .service-body {
+            padding: 25px;
+        }
+
+        .service-body h3 {
+            font-size: 20px;
+            color: #1f2937;
+            margin-bottom: 15px;
+        }
+
+        .service-description {
+            color: #6b7280;
+            margin-bottom: 20px;
+            line-height: 1.8;
+            font-size: 14px;
+        }
+
+        .service-features {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+
+        .service-features li {
+            color: #6b7280;
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+            font-size: 14px;
+        }
+
+        .service-features li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #10b981;
+            font-weight: bold;
+        }
+
+        .service-price {
+            background: #f9fafb;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+            color: #3b82f6;
+        }
+
+        .process-section {
+            background: white;
+        }
+
+        .process-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .step-card {
+            background: #f9fafb;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            position: relative;
+        }
+
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background: #3b82f6;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0 auto 15px;
+        }
+
+        .step-card h3 {
+            font-size: 18px;
+            color: #1f2937;
+            margin-bottom: 10px;
+        }
+
+        .step-card p {
+            color: #6b7280;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .why-choose-section {
+            background: #f9fafb;
+        }
+
+        .why-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .why-card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .why-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .why-card h3 {
+            font-size: 18px;
+            color: #1f2937;
+            margin-bottom: 10px;
+        }
+
+        .why-card p {
+            color: #6b7280;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .cta-section {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .cta-section h2 {
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: white;
+            color: #3b82f6;
+            padding: 14px 32px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        footer {
+            background: #1f2937;
+            color: #d1d5db;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .intro-content {
+                grid-template-columns: 1fr;
+            }
+
+            .intro-image {
+                height: 250px;
+            }
+
+            section h2 {
+                font-size: 28px;
+            }
+
+            .hero h1 {
+                font-size: 28px;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+            }
+
+            .btn-primary {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <header>
+        <div class="header-top">
+            <div class="header-top-content">
+                <div>📞 Hotline: <strong>0981.308.308</strong> | 📧 khanghuyphonerepair@gmail.com</div>
+                <div>⏰ 8:00 - 21:00 | 🚀 Giao hàng miễn phí</div>
+            </div>
+        </div>
+
+        <nav>
+            <a href="index.html" class="logo">
+                <div class="logo-icon">🍎</div>
+                <div>Khang Huy Apple</div>
+            </a>
+            <ul class="nav-menu">
+                <li><a href="index.html">Trang Chủ</a></li>
+                <li><a href="products.html">Sản Phẩm</a></li>
+                <li><a href="services.html">Sửa Chữa</a></li>
+                <li><a href="testimonials.html">Đánh Giá</a></li>
+                <li><a href="about.html">Về Chúng Tôi</a></li>
+                <li><a href="faq.html">Hỏi Đáp</a></li>
+            </ul>
+            <a href="index.html#contact" class="btn-contact">Liên Hệ</a>
+        </nav>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+        <h1>🔧 Dịch Vụ Sửa Chữa Chuyên Nghiệp</h1>
+        <p>Sửa chữa Apple Products với tỷ lệ thành công 98% - Bảo hành 2 năm</p>
+    </section>
+
+    <!-- INTRO -->
+    <section class="services-intro">
+        <div class="intro-content">
+            <div class="intro-text">
+                <h3>Dịch Vụ Sửa Chữa Uy Tín</h3>
+                <p>Khang Huy Apple cung cấp dịch vụ sửa chữa toàn diện cho tất cả sản phẩm Apple. Với đội ngũ kỹ thuật viên có 10+ năm kinh nghiệm, chúng tôi đảm bảo chất lượng sửa chữa cao nhất.</p>
+                <p>Tất cả dịch vụ sửa chữa được bảo hành 2 năm. Nếu lỗi tái phát, chúng tôi sẽ sửa miễn phí.</p>
+                <p>Chúng tôi cam kết bảo vệ dữ liệu cá nhân của bạn và sử dụng linh kiện chính hãng trong tất cả các dịch vụ sửa chữa.</p>
+            </div>
+            <div class="intro-image">🔧</div>
+        </div>
+    </section>
+
+    <!-- SERVICE DETAILS -->
+    <section>
+        <div class="container">
+            <h2>📱 Chi Tiết Các Dịch Vụ</h2>
+            <div class="services-grid">
+
+                <!-- iPhone & iPad Service -->
+                <div class="service-detail-card">
+                    <div class="service-header">📱</div>
+                    <div class="service-body">
+                        <h3>Sửa iPhone & iPad</h3>
+                        <div class="service-description">
+                            Sửa tất cả loại lỗi iPhone từ iPhone 6 đến iPhone 17 mới nhất, và iPad tất cả dòng sản phẩm.
+                        </div>
+                        <ul class="service-features">
+                            <li>Thay thế màn hình LCD/OLED</li>
+                            <li>Thay pin, cổng sạc Lightning/USB-C</li>
+                            <li>Sửa camera trước/sau</li>
+                            <li>Sửa loa/mic</li>
+                            <li>Sửa Face ID/Touch ID</li>
+                            <li>Sửa WiFi/Bluetooth</li>
+                            <li>Cứu dữ liệu nước bị</li>
+                        </ul>
+                        <div class="service-price">
+                            Giá từ 250K - 4M VND
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mac & MacBook Service -->
+                <div class="service-detail-card">
+                    <div class="service-header">💻</div>
+                    <div class="service-body">
+                        <h3>Sửa Mac & MacBook</h3>
+                        <div class="service-description">
+                            Sửa chữa Mac Mini, Mac Pro, MacBook Air, MacBook Pro tất cả phiên bản.
+                        </div>
+                        <ul class="service-features">
+                            <li>Sửa pin, sạc không vào</li>
+                            <li>Thay SSD, nâng cấp RAM</li>
+                            <li>Sửa keyboard, touchpad</li>
+                            <li>Vệ sinh, tháo lắp, cấu hình</li>
+                            <li>Cấp cứu dữ liệu ổ cứng</li>
+                            <li>Cài đặt macOS, update</li>
+                            <li>Xử lý nước bị, quạt kêu</li>
+                        </ul>
+                        <div class="service-price">
+                            Giá từ 500K - 4.5M VND
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Apple Watch & AirPods Service -->
+                <div class="service-detail-card">
+                    <div class="service-header">⌚</div>
+                    <div class="service-body">
+                        <h3>Sửa Watch & AirPods</h3>
+                        <div class="service-description">
+                            Sửa Apple Watch tất cả dòng và AirPods tất cả phiên bản (AirPods 2/3, AirPods Pro/Max).
+                        </div>
+                        <ul class="service-features">
+                            <li>Thay pin Watch/AirPods</li>
+                            <li>Sửa loa, mic không tiếng</li>
+                            <li>Thay màn hình Watch</li>
+                            <li>Sửa cổng sạc</li>
+                            <li>Kết nối Bluetooth</li>
+                            <li>Vệ sinh, cấp cứu nước</li>
+                            <li>Reset, cấu hình</li>
+                        </ul>
+                        <div class="service-price">
+                            Giá từ 500K - 2M VND
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROCESS SECTION -->
+    <section class="process-section">
+        <div class="container">
+            <h2>🚀 Quy Trình Sửa Chữa</h2>
+            <div class="process-steps">
+                <div class="step-card">
+                    <div class="step-number">1️⃣</div>
+                    <h3>Báo Lỗi & Tiếp Nhận</h3>
+                    <p>Mang thiết bị hoặc liên hệ hotline để báo lỗi. Chúng tôi sẽ hỗ trợ tư vấn và tiếp nhận máy.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">2️⃣</div>
+                    <h3>Chẩn Đoán Miễn Phí</h3>
+                    <p>Kiểm tra chi tiết lỗi của thiết bị. Chẩn đoán 100% miễn phí, không bắt buộc sửa.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">3️⃣</div>
+                    <h3>Báo Giá & Xác Nhận</h3>
+                    <p>Báo giá cụ thể trước khi sửa. Bạn có quyền quyết định sửa hay không.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">4️⃣</div>
+                    <h3>Sửa Chữa Chuyên Nghiệp</h3>
+                    <p>Sửa với linh kiện chính hãng. Hoàn tất trong 2-48h tùy lỗi.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">5️⃣</div>
+                    <h3>Kiểm Tra Chất Lượng</h3>
+                    <p>Test kỹ lưỡng trước khi giao. Đảm bảo hoạt động 100%.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">6️⃣</div>
+                    <h3>Bảo Hành 2 Năm</h3>
+                    <p>Bảo hành 2 năm dịch vụ sửa. Sửa miễn phí nếu lỗi tái phát.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- WHY CHOOSE US -->
+    <section class="why-choose-section">
+        <div class="container">
+            <h2>⭐ Tại Sao Chọn Khang Huy Apple?</h2>
+            <div class="why-grid">
+                <div class="why-card">
+                    <div class="why-icon">🏆</div>
+                    <h3>Kinh Nghiệm 10+</h3>
+                    <p>Đội ngũ kỹ thuật viên có 10+ năm sửa chữa Apple products. Tỷ lệ thành công 98%.</p>
+                </div>
+                <div class="why-card">
+                    <div class="why-icon">⚡</div>
+                    <h3>Nhanh 24-48h</h3>
+                    <p>Sửa xong trong 24-48 giờ. Giao lại nhanh chóng. Có thể nhận ngay trong ngày.</p>
+                </div>
+                <div class="why-card">
+                    <div class="why-icon">💯</div>
+                    <h3>Linh Kiện Chính Hãng</h3>
+                    <p>100% sử dụng linh kiện chính hãng Apple. Không dùng hàng replicate hay tái chế.</p>
+                </div>
+                <div class="why-card">
+                    <div class="why-icon">🔐</div>
+                    <h3>An Toàn Dữ Liệu</h3>
+                    <p>Cam kết bảo vệ dữ liệu cá nhân. Không sao chép hoặc truy cập không cần thiết.</p>
+                </div>
+                <div class="why-card">
+                    <div class="why-icon">💰</div>
+                    <h3>Giá Cạnh Tranh</h3>
+                    <p>Giá rẻ nhất khu vực. Chẩn đoán miễn phí. Không phí ẩn.</p>
+                </div>
+                <div class="why-card">
+                    <div class="why-icon">🛡️</div>
+                    <h3>Bảo Hành 2 Năm</h3>
+                    <p>Bảo hành 2 năm sửa chữa. Sửa miễn phí nếu lỗi tái phát.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA SECTION -->
+    <section class="cta-section">
+        <h2>Cần Sửa Thiết Bị Apple? Liên Hệ Ngay!</h2>
+        <p style="margin-bottom: 30px; font-size: 18px;">Chẩn đoán miễn phí - Bảo hành 2 năm - Sửa nhanh chóng</p>
+        <div class="cta-buttons">
+            <button class="btn-primary" onclick="window.location.href='index.html#contact'">Đặt Lịch Sửa Ngay</button>
+            <button class="btn-primary" onclick="window.location.href='faq.html'">Xem Câu Hỏi Thường Gặp</button>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; 2026 Khang Huy Apple - Bán & Sửa Chữa Apple Products Uy Tín</p>
+        <p>📞 0981.308.308 | 📧 khanghuyphonerepair@gmail.com | 🏪 9 chi nhánh khắp TP.HCM</p>
+    </footer>
+</body>
+</html>

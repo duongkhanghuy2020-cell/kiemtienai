@@ -13,7 +13,10 @@
       "Bash(git add *)",
       "Bash(git commit *)",
       "mcp__Claude_in_Chrome__switch_browser",
-      "WebFetch(domain:traidepbaniphone.com)"
+      "WebFetch(domain:traidepbaniphone.com)",
+      "Bash(git push *)",
+      "Bash(winget install *)",
+      "PowerShell(Get-Command gh -ErrorAction SilentlyContinue)"
     ]
   }
 }

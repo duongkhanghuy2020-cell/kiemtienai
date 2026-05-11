@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chính Sách & Điều Khoản - Khang Huy Apple</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.7;
+            color: #1f2937;
+            background: #f9fafb;
+        }
+
+        header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-top {
+            background: #1f2937;
+            color: white;
+            padding: 10px 0;
+            font-size: 13px;
+        }
+
+        .header-top-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1f2937;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: #3b82f6;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 5px;
+        }
+
+        .nav-menu a {
+            display: block;
+            padding: 10px 16px;
+            text-decoration: none;
+            color: #4b5563;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+
+        .nav-menu a:hover {
+            background: #f3f4f6;
+            color: #3b82f6;
+        }
+
+        .btn-contact {
+            background: #3b82f6;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-contact:hover {
+            background: #2563eb;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        section {
+            padding: 60px 20px;
+        }
+
+        .policy-content {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .policy-section {
+            margin-bottom: 40px;
+        }
+
+        .policy-section h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .policy-section h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #3b82f6;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .policy-section p {
+            color: #6b7280;
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+
+        .policy-section ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .policy-section li {
+            color: #6b7280;
+            margin-bottom: 10px;
+            line-height: 1.8;
+        }
+
+        .highlight-box {
+            background: #eff6ff;
+            border-left: 4px solid #3b82f6;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .highlight-box strong {
+            color: #1f2937;
+        }
+
+        footer {
+            background: #1f2937;
+            color: #d1d5db;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        footer p {
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 28px;
+            }
+
+            .policy-content {
+                padding: 20px;
+            }
+
+            .policy-section h2 {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <header>
+        <div class="header-top">
+            <div class="header-top-content">
+                <div>📞 Hotline: <strong>0981.308.308</strong> | 📧 khanghuyphonerepair@gmail.com</div>
+                <div>⏰ 8:00 - 21:00 | 🚀 Giao hàng miễn phí</div>
+            </div>
+        </div>
+
+        <nav>
+            <a href="index.html" class="logo">
+                <div class="logo-icon">🍎</div>
+                <div>Khang Huy Apple</div>
+            </a>
+            <ul class="nav-menu">
+                <li><a href="index.html">Trang Chủ</a></li>
+                <li><a href="products.html">Sản Phẩm</a></li>
+                <li><a href="services.html">Sửa Chữa</a></li>
+                <li><a href="testimonials.html">Đánh Giá</a></li>
+                <li><a href="about.html">Về Chúng Tôi</a></li>
+                <li><a href="faq.html">Hỏi Đáp</a></li>
+            </ul>
+            <a href="index.html#contact" class="btn-contact">Liên Hệ</a>
+        </nav>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+        <h1>📋 Chính Sách & Điều Khoản</h1>
+        <p>Điều khoản sử dụng, chính sách bảo hành và bảo vệ dữ liệu khách hàng</p>
+    </section>
+
+    <!-- POLICY CONTENT -->
+    <section>
+        <div class="container">
+            <div class="policy-content">
+
+                <!-- WARRANTY POLICY -->
+                <div class="policy-section">
+                    <h2>🛡️ Chính Sách Bảo Hành</h2>
+
+                    <h3>Bảo Hành Sản Phẩm</h3>
+                    <p>Tất cả sản phẩm được bảo hành 12 tháng từ ngày mua từ Apple hoặc nhà phân phối chính hãng.</p>
+                    <ul>
+                        <li><strong>Phạm vi bảo hành:</strong> Lỗi do nhà sản xuất, cấu phần bị hỏng do khiếm khuyết</li>
+                        <li><strong>Không bao gồm:</strong> Hư hỏng do va đập, rơi vỡ, nước bị, sử dụng không đúng cách</li>
+                        <li><strong>Thủ tục:</strong> Mang thiết bị + hóa đơn đến chi nhánh, chúng tôi sẽ xử lý theo quy định Apple</li>
+                        <li><strong>Thời gian xử lý:</strong> 3-7 ngày làm việc tùy tình trạng</li>
+                    </ul>
+
+                    <h3>Bảo Hành Dịch Vụ Sửa Chữa</h3>
+                    <p>Tất cả dịch vụ sửa chữa từ Khang Huy Apple được bảo hành 2 năm.</p>
+                    <ul>
+                        <li><strong>Phạm vi:</strong> Nếu lỗi sửa tái phát trong 2 năm, chúng tôi sửa miễn phí</li>
+                        <li><strong>Điều kiện:</strong> Thiết bị phải được sử dụng bình thường, không va đập hoặc nước bị</li>
+                        <li><strong>Hỗ trợ:</strong> Sửa được thực hiện tại bất kỳ chi nhánh nào của Khang Huy Apple</li>
+                        <li><strong>Chứng chỉ:</strong> Mang phiếu bảo hành khi đến sửa (hoặc số điện thoại đăng ký)</li>
+                    </ul>
+
+                    <div class="highlight-box">
+                        <strong>⚠️ Lưu ý quan trọng:</strong> Bảo hành không bao gồm các hư hỏng từ:
+                        <ul style="margin-top: 10px; margin-left: 20px;">
+                            <li>Va đập, rơi vỡ, hư hỏng vật lý</li>
+                            <li>Nước hoặc chất lỏng bị vào thiết bị</li>
+                            <li>Sửa chữa bởi bên thứ ba không phải Khang Huy Apple</li>
+                            <li>Sử dụng linh kiện không chính hãng</li>
+                            <li>Lỗi do người dùng (cài đặt sai, xóa dữ liệu)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- RETURN & EXCHANGE -->
+                <div class="policy-section">
+                    <h2>🔄 Chính Sách Đổi Trả</h2>
+
+                    <h3>Điều Kiện Đổi Trả</h3>
+                    <ul>
+                        <li><strong>Thời gian:</strong> 30 ngày từ ngày mua</li>
+                        <li><strong>Lý do:</strong> Sản phẩm lỗi do nhà sản xuất, không đáp ứng mô tả</li>
+                        <li><strong>Điều kiện sản phẩm:</strong> Chưa sử dụng hoặc sử dụng rất ít, nguyên vẹn</li>
+                        <li><strong>Giấy tờ:</strong> Cần hóa đơn/phiếu mua hàng gốc</li>
+                    </ul>
+
+                    <h3>Quy Trình Đổi Trả</h3>
+                    <ol style="margin-left: 20px;">
+                        <li>Liên hệ Khang Huy Apple trong 30 ngày để báo lỗi</li>
+                        <li>Mang sản phẩm + hóa đơn đến chi nhánh để kiểm tra</li>
+                        <li>Nếu đủ điều kiện, sẽ đổi sản phẩm hoặc hoàn tiền trong 7 ngày</li>
+                        <li>Nếu không đủ điều kiện, sẽ thông báo lý do và hỗ trợ sửa chữa</li>
+                    </ol>
+
+                    <div class="highlight-box">
+                        <strong>📌 Lưu ý:</strong> Không đổi trả nếu sản phẩm bị hư hỏng từ rơi vỡ, nước bị, hay lỗi do người dùng.
+                    </div>
+                </div>
+
+                <!-- PAYMENT POLICY -->
+                <div class="policy-section">
+                    <h2>💰 Chính Sách Thanh Toán</h2>
+
+                    <h3>Phương Thức Thanh Toán</h3>
+                    <ul>
+                        <li><strong>Tiền mặt:</strong> Thanh toán trực tiếp tại chi nhánh</li>
+                        <li><strong>Chuyển khoản:</strong> Chuyển vào tài khoản ngân hàng (sẽ cung cấp sau đặt hàng)</li>
+                        <li><strong>Thẻ tín dụng:</strong> Thanh toán qua cơ sở bán hàng (Visa, Mastercard)</li>
+                        <li><strong>Trả góp:</strong> Hợp tác với các ngân hàng (0% lãi suất 3-12 tháng)</li>
+                        <li><strong>Ví điện tử:</strong> Momo, ZaloPay, ViettelPay (hỗ trợ tại chi nhánh)</li>
+                    </ul>
+
+                    <h3>Thanh Toán Trước & Hậu Thanh Toán</h3>
+                    <ul>
+                        <li>Mua hàng lẻ: Thanh toán tại chi nhánh</li>
+                        <li>Giao hàng: Thanh toán COD (trả khi nhận hàng) hoặc chuyển khoản trước</li>
+                        <li>Sửa chữa: Thanh toán sau khi kiểm tra, báo giá rõ ràng trước sửa</li>
+                    </ul>
+                </div>
+
+                <!-- DELIVERY POLICY -->
+                <div class="policy-section">
+                    <h2>🚚 Chính Sách Giao Hàng</h2>
+
+                    <h3>Miễn Phí Giao Hàng</h3>
+                    <ul>
+                        <li><strong>Khu vực:</strong> Miễn phí giao hàng toàn TP.HCM</li>
+                        <li><strong>Thời gian:</strong> 1-2 ngày làm việc</li>
+                        <li><strong>Địa điểm:</strong> Giao tại nhà, văn phòng hoặc địa điểm bạn chỉ định</li>
+                        <li><strong>Điều kiện:</strong> Áp dụng cho đơn hàng từ 1 sản phẩm trở lên</li>
+                    </ul>
+
+                    <h3>Giao Hàng Ngoài TP.HCM</h3>
+                    <ul>
+                        <li><strong>Thời gian:</strong> 3-5 ngày làm việc (tùy vị trí)</li>
+                        <li><strong>Phí giao hàng:</strong> Tính theo khoảng cách, bình thường 30,000 - 150,000 VND</li>
+                        <li><strong>Hỗ trợ:</strong> Liên hệ trước để xác nhận phí giao hàng</li>
+                    </ul>
+
+                    <h3>Bảo Vệ Hàng Vận Chuyển</h3>
+                    <ul>
+                        <li>Tất cả sản phẩm được đóng gói an toàn, chắc chắn</li>
+                        <li>Nếu hàng bị hư hỏng trong vận chuyển, chúng tôi chịu trách nhiệm</li>
+                        <li>Kiểm tra hàng khi nhận, nếu có vấn đề báo ngay cho chúng tôi</li>
+                    </ul>
+                </div>
+
+                <!-- PRIVACY POLICY -->
+                <div class="policy-section">
+                    <h2>🔐 Chính Sách Bảo Vệ Dữ Liệu</h2>
+
+                    <h3>Thông Tin Cá Nhân</h3>
+                    <p>Khang Huy Apple cam kết bảo vệ thông tin cá nhân của khách hàng theo quy định pháp luật.</p>
+                    <ul>
+                        <li><strong>Thông tin thu thập:</strong> Tên, số điện thoại, địa chỉ, email (để xử lý đơn hàng/dịch vụ)</li>
+                        <li><strong>Mục đích sử dụng:</strong> Giao hàng, liên hệ khách hàng, hỗ trợ sau bán</li>
+                        <li><strong>Chia sẻ thông tin:</strong> Không chia sẻ với bên thứ ba ngoại trừ nhà vận chuyển</li>
+                        <li><strong>Bảo mật:</strong> Dữ liệu được lưu trữ an toàn, chỉ nhân viên có thể truy cập</li>
+                    </ul>
+
+                    <h3>Dữ Liệu Thiết Bị Khi Sửa Chữa</h3>
+                    <ul>
+                        <li><strong>An toàn:</strong> Cam kết bảo mật dữ liệu cá nhân trên thiết bị</li>
+                        <li><strong>Không sao chép:</strong> Không sao chép hoặc truy cập dữ liệu không cần thiết</li>
+                        <li><strong>Khuyến cáo:</strong> Nên backup dữ liệu trước khi đem sửa</li>
+                        <li><strong>Xóa dữ liệu:</strong> Sau sửa xong, dữ liệu được bảo lưu, bạn có thể yêu cầu xóa</li>
+                    </ul>
+
+                    <div class="highlight-box">
+                        <strong>⚠️ Trách nhiệm:</strong> Khang Huy Apple không chịu trách nhiệm về dữ liệu bị mất do:
+                        <ul style="margin-top: 10px; margin-left: 20px;">
+                            <li>Ổ cứng bị hư hỏng vật lý trước khi đem sửa</li>
+                            <li>Không có bản backup từ khách hàng</li>
+                            <li>Khách hàng yêu cầu xóa dữ liệu</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- DISPUTE RESOLUTION -->
+                <div class="policy-section">
+                    <h2>⚖️ Giải Quyết Tranh Chấp</h2>
+
+                    <h3>Quy Trình Khiếu Nại</h3>
+                    <ol style="margin-left: 20px;">
+                        <li><strong>Báo cáo vấn đề:</strong> Liên hệ chi nhánh hoặc hotline 0981.308.308 trong 7 ngày</li>
+                        <li><strong>Điều tra:</strong> Chúng tôi sẽ kiểm tra và liên hệ lại trong 3 ngày làm việc</li>
+                        <li><strong>Giải quyết:</strong> Sửa, đổi, hoàn tiền hoặc bồi thường tùy tình huống</li>
+                        <li><strong>Phúc đáp:</strong> Nếu không hài lòng, có thể khiếu nại cấp cao</li>
+                    </ol>
+
+                    <h3>Liên Hệ Phòng Khiếu Nại</h3>
+                    <ul>
+                        <li>📞 Hotline: 0981.308.308</li>
+                        <li>📧 Email: khanghuyphonerepair@gmail.com</li>
+                        <li>💬 Zalo: 0981.308.308</li>
+                        <li>🏪 Trực tiếp tại chi nhánh gần bạn</li>
+                    </ul>
+                </div>
+
+                <!-- EFFECTIVE DATE -->
+                <div class="policy-section">
+                    <p style="color: #9ca3af; font-size: 14px; text-align: center; border-top: 1px solid #e5e7eb; padding-top: 20px;">
+                        Chính sách này có hiệu lực từ ngày 01/01/2026<br>
+                        Khang Huy Apple có quyền cập nhật chính sách mà không cần thông báo trước
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; 2026 Khang Huy Apple - Bán & Sửa Chữa Apple Products Uy Tín</p>
+        <p>📞 0981.308.308 | 📧 khanghuyphonerepair@gmail.com | 🏪 9 chi nhánh khắp TP.HCM</p>
+    </footer>
+</body>
+</html>

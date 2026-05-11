@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Câu Hỏi Thường Gặp - Khang Huy Apple</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #1f2937;
+            background: white;
+        }
+
+        header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-top {
+            background: #1f2937;
+            color: white;
+            padding: 10px 0;
+            font-size: 13px;
+        }
+
+        .header-top-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1f2937;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: #3b82f6;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 5px;
+        }
+
+        .nav-menu a {
+            display: block;
+            padding: 10px 16px;
+            text-decoration: none;
+            color: #4b5563;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+
+        .nav-menu a:hover {
+            background: #f3f4f6;
+            color: #3b82f6;
+        }
+
+        .btn-contact {
+            background: #3b82f6;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-contact:hover {
+            background: #2563eb;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        section {
+            padding: 60px 20px;
+        }
+
+        section h2 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .faq-category {
+            margin-bottom: 50px;
+        }
+
+        .faq-category h3 {
+            font-size: 24px;
+            color: #3b82f6;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .faq-item {
+            margin-bottom: 20px;
+            border-radius: 12px;
+            border: 2px solid #e5e7eb;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .faq-item:hover {
+            border-color: #3b82f6;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.1);
+        }
+
+        .faq-question {
+            padding: 20px;
+            background: #f9fafb;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: #1f2937;
+            transition: all 0.3s;
+        }
+
+        .faq-question:hover {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .faq-arrow {
+            font-size: 20px;
+            transition: transform 0.3s;
+        }
+
+        .faq-item.active .faq-arrow {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            display: none;
+            padding: 20px;
+            background: white;
+            color: #6b7280;
+            line-height: 1.8;
+        }
+
+        .faq-item.active .faq-answer {
+            display: block;
+        }
+
+        .search-box {
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+
+        footer {
+            background: #1f2937;
+            color: #d1d5db;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            section h2 {
+                font-size: 28px;
+            }
+
+            .hero h1 {
+                font-size: 28px;
+            }
+
+            .faq-question {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <header>
+        <div class="header-top">
+            <div class="header-top-content">
+                <div>📞 Hotline: <strong>0981.308.308</strong> | 📧 khanghuyphonerepair@gmail.com</div>
+                <div>⏰ 8:00 - 21:00 | 🚀 Giao hàng miễn phí</div>
+            </div>
+        </div>
+
+        <nav>
+            <a href="index.html" class="logo">
+                <div class="logo-icon">🍎</div>
+                <div>Khang Huy Apple</div>
+            </a>
+            <ul class="nav-menu">
+                <li><a href="index.html">Trang Chủ</a></li>
+                <li><a href="products.html">Sản Phẩm</a></li>
+                <li><a href="services.html">Sửa Chữa</a></li>
+                <li><a href="testimonials.html">Đánh Giá</a></li>
+                <li><a href="about.html">Về Chúng Tôi</a></li>
+                <li><a href="faq.html">Hỏi Đáp</a></li>
+            </ul>
+            <a href="index.html#contact" class="btn-contact">Liên Hệ</a>
+        </nav>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+        <h1>❓ Câu Hỏi Thường Gặp</h1>
+        <p>Tìm câu trả lời cho những thắc mắc của bạn về sản phẩm & dịch vụ</p>
+    </section>
+
+    <!-- FAQ CONTENT -->
+    <section>
+        <div class="container">
+            <div class="search-box">
+                <input type="text" id="searchFaq" placeholder="🔍 Tìm kiếm câu hỏi..." />
+            </div>
+
+            <!-- BUY PRODUCTS FAQ -->
+            <div class="faq-category">
+                <h3>🛍️ Mua Sản Phẩm</h3>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Sản phẩm của bạn có chính hãng không?</span>
+                        <span class="faq-arrow">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        Có, 100% sản phẩm của chúng tôi đều là chính hãng Apple. Tất cả đều có bảo hành chính thức từ Apple hoặc nhà phân phối chính hãng. Bạn có thể yên tâm về chất lượng.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Giá của bạn có rẻ nhất không?</span>
+                        <span class="faq-arrow">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        Chúng tôi luôn cập nhật giá theo thị trường và cạnh tranh tốt nhất. Ngoài ra, có các chương trình khuyến mãi, giảm giá hàng tháng. Bạn có thể so sánh giá với các cửa hàng khác, chúng tôi cam kết không bán cao hơn.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Bao lâu thì giao hàng?</span>
+                        <span class="faq-arrow">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        Giao hàng miễn phí tại TP.HCM trong 1-2 ngày làm việc. Nếu gấp, bạn có thể đến chi nhánh để mua và nhận hàng ngay trong ngày. Các tỉnh khác mất 3-5 ngày.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Có đổi trả được không?</span>
+                        <span class="faq-arrow">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        Có, bạn có thể đổi/trả trong 30 ngày nếu sản phẩm bị lỗi do nhà sản xuất. Nếu lỗi do khách hàng, chúng tôi sẽ hỗ trợ sửa chữa. Điều kiện chi tiết xem tại chính sách bảo hành.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Có hỗ trợ trả góp không?</span>
+                        <span class="faq-arrow">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        Có, chúng tôi hợp tác với nhiều ngân hàng hỗ trợ trả góp 0% lãi suất từ 3-12 tháng. Liên hệ hotline để biết chi tiết và điều kiện.
+                    </div>
+                </div>
+            </div>
+
+            <!-- REPAIR SERVICE FAQ -->
+            <div class="faq-category">
+                <h3>🔧 Dịch Vụ Sửa Chữa</h3>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Sửa xong bao lâu?</span>
+                        <span class="faq-arrow">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        Tùy loại lỗi. Lỗi đơn giản (thay pin, màn hình) mất 2-4 giờ. Lỗi phức tạp (sửa bo mạch, lấy lại dữ liệu) mất 24-48 giờ. Chúng tôi sẽ báo giờ xong chính xác khi nhận máy.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Bảo hành sửa chữa bao lâu?</span>
+                        <span class="faq-arrow">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        Tất cả dịch vụ sửa chữa có bảo hành 2 năm. Nếu lỗi sửa tái phát trong thời gian bảo hành, chúng tôi sẽ sửa miễn phí.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Liệu có mất dữ liệu không?</span>
+                        <span class="faq-arrow">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        Chúng tôi cam kết bảo mật dữ liệu. Dữ liệu của bạn không bị mất trừ khi ổ cứng bị hư hỏng vật lý. Tư vấn backup trước khi sửa để an toàn.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Có chẩn đoán miễn phí không?</span>
+                        <span class="faq-arrow">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        Có, chẩn đoán miễn phí 100%. Chúng tôi sẽ kiểm tra máy và báo giá chi tiết trước khi sửa. Bạn có thể quyết định sửa hay không.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Sửa thiết bị nước bị có được không?</span>
+                        <span class="faq-arrow">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        Có, chúng tôi có kỹ thuật xử lý thiết bị bị nước tương đối tốt. Nếu sửa được sẽ báo giá, nếu không thể sửa cũng sẽ thợ báo ngay để bạn không mất thời gian.
+                    </div>
+                </div>
+            </div>
+
+            <!-- WARRANTY FAQ -->
+            <div class="faq-category">
+                <h3>✅ Bảo Hành & Chính Sách</h3>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Sản phẩm bảo hành bao lâu?</span>
+                        <span class="faq-arrow">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        Tất cả sản phẩm bảo hành 12 tháng chính thức từ Apple hoặc nhà phân phối. Ngoài ra, dịch vụ sửa chữa có bảo hành thêm 2 năm.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Bảo hành có yêu cầu gì không?</span>
+                        <span class="faq-arrow">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        Bảo hành áp dụng cho lỗi do nhà sản xuất. Nếu lỗi do khách hàng (rơi vỡ, nước bị, tự tháo dỡ), bảo hành không áp dụng nhưng chúng tôi vẫn hỗ trợ sửa với giá phù hợp.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Làm sao để sử dụng bảo hành?</span>
+                        <span class="faq-arrow">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        Mang thiết bị + hóa đơn mua hàng đến chi nhánh Khang Huy Apple. Chúng tôi sẽ kiểm tra, xử lý theo bảo hành chính thức. Không cần có hóa đơn, chỉ cần biết nơi mua có thể tra cứu.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Có chính sách giá khách hàng thân thiết không?</span>
+                        <span class="faq-arrow">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        Có, khách hàng mua nhiều hoặc sửa liên tục sẽ được chiết khấu hoặc ưu đãi. Liên hệ với quản lý chi nhánh để biết chi tiết.
+                    </div>
+                </div>
+            </div>
+
+            <!-- CONTACT FAQ -->
+            <div class="faq-category">
+                <h3>📞 Liên Hệ & Hỗ Trợ</h3>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Giờ làm việc của bạn là mấy giờ?</span>
+                        <span class="faq-arrow">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        Khang Huy Apple mở cửa từ 8:00 sáng đến 21:00 tối hàng ngày, không có ngày nghỉ. Hỗ trợ 24/7 qua Zalo/Messenger.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Có bao nhiêu chi nhánh?</span>
+                        <span class="faq-arrow">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        Hiện tại có 9 chi nhánh: 3 ở Quận 1, 2 ở Quận 3, 2 ở Quận 7, 1 ở Bình Thạnh, 1 ở Đồng Tháp. Xem địa chỉ chi tiết trên trang chủ.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Liên hệ bằng cách nào tốt nhất?</span>
+                        <span class="faq-arrow">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        Zalo/Messenger nhanh nhất vì có phản hồi tức thời. Hotline 0981.308.308 để nói chuyện trực tiếp. Email khanghuyphonerepair@gmail.com để gửi tài liệu. Hoặc đến trực tiếp chi nhánh gần bạn.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Có hỗ trợ tiếng Anh không?</span>
+                        <span class="faq-arrow">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        Có, đội ngũ của chúng tôi hỗ trợ tiếng Anh cơ bản. Nếu cần tư vấn chi tiết, nên liên hệ trước hoặc đến trực tiếp.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; 2026 Khang Huy Apple - Bán & Sửa Chữa Apple Products Uy Tín</p>
+        <p>📞 0981.308.308 | 📧 khanghuyphonerepair@gmail.com | 🏪 9 chi nhánh khắp TP.HCM</p>
+    </footer>
+
+    <script>
+        // FAQ Toggle
+        const faqItems = document.querySelectorAll('.faq-item');
+        faqItems.forEach(item => {
+            item.querySelector('.faq-question').addEventListener('click', () => {
+                item.classList.toggle('active');
+            });
+        });
+
+        // Search FAQ
+        const searchInput = document.getElementById('searchFaq');
+        searchInput.addEventListener('keyup', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            faqItems.forEach(item => {
+                const question = item.querySelector('.faq-question span').textContent.toLowerCase();
+                const answer = item.querySelector('.faq-answer').textContent.toLowerCase();
+                if (question.includes(searchTerm) || answer.includes(searchTerm)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

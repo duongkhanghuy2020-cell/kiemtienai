@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products - Khang Huy Apple</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1f2937 0%, #2d3748 100%);
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #3b82f6;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: #3b82f6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+            color: white;
+            padding: 4rem 20px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        /* Filter Section */
+        .filter-section {
+            background: #f5f5f5;
+            padding: 3rem 20px;
+            margin: 2rem 0;
+        }
+
+        .filter-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .filter-header h2 {
+            font-size: 2rem;
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+
+        .filter-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .filter-btn {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid #3b82f6;
+            background: white;
+            color: #3b82f6;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: #3b82f6;
+            color: white;
+        }
+
+        /* Products Grid */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            padding: 3rem 20px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+        }
+
+        .product-info {
+            padding: 1.5rem;
+        }
+
+        .product-category {
+            color: #3b82f6;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-name {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-description {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
+
+        .product-specs {
+            background: #f9fafb;
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 0.85rem;
+            color: #555;
+        }
+
+        .product-specs div {
+            margin: 0.3rem 0;
+        }
+
+        .product-price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #f59e0b;
+            margin-bottom: 1rem;
+        }
+
+        .product-cta {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-small {
+            flex: 1;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary-small {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-primary-small:hover {
+            background: #2563eb;
+        }
+
+        .btn-secondary-small {
+            background: white;
+            color: #3b82f6;
+            border: 1px solid #3b82f6;
+        }
+
+        .btn-secondary-small:hover {
+            background: #f0f9ff;
+        }
+
+        /* Categories Section */
+        .categories-showcase {
+            padding: 4rem 20px;
+            background: white;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #1f2937;
+            margin-bottom: 3rem;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .category-card {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .category-card:hover {
+            transform: scale(1.05);
+        }
+
+        .category-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .category-name {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .category-count {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Why Buy From Us */
+        .why-us {
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            padding: 4rem 20px;
+            margin-top: 3rem;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .benefit-item {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .benefit-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .benefit-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .benefit-text {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+            color: white;
+            padding: 4rem 20px;
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .cta-section h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .cta-section p {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .btn-large {
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            display: inline-block;
+            margin: 0 0.5rem;
+        }
+
+        .btn-primary-large {
+            background: white;
+            color: #3b82f6;
+        }
+
+        .btn-primary-large:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-secondary-large {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-secondary-large:hover {
+            background: white;
+            color: #3b82f6;
+        }
+
+        /* Footer */
+        footer {
+            background: #1f2937;
+            color: white;
+            padding: 3rem 20px;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-section {
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 0.5rem;
+            color: #3b82f6;
+        }
+
+        .footer-section p {
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 2rem 0;
+        }
+
+        .footer-links a {
+            color: #3b82f6;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #444;
+            padding-top: 2rem;
+            opacity: 0.7;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            nav ul {
+                gap: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 1rem;
+                padding: 2rem 20px;
+            }
+
+            .filter-buttons {
+                gap: 0.5rem;
+            }
+
+            .filter-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .cta-section h2 {
+                font-size: 1.5rem;
+            }
+
+            .btn-large {
+                display: block;
+                margin: 0.5rem 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <div class="logo">Khang Huy Apple</div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="products.html">Products</a></li>
+                    <li><a href="services.html">Services</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="faq.html">FAQ</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Apple Products Store</h1>
+            <p>Authentic Apple devices with warranty & support. Browse our complete selection of iPhones, iPads, Macs, and more.</p>
+        </div>
+    </section>
+
+    <!-- Filter Section -->
+    <section class="filter-section">
+        <div class="container">
+            <div class="filter-header">
+                <h2>Filter by Category</h2>
+                <div class="filter-buttons">
+                    <button class="filter-btn active" onclick="filterProducts('all')">All Products</button>
+                    <button class="filter-btn" onclick="filterProducts('iphone')">iPhone</button>
+                    <button class="filter-btn" onclick="filterProducts('ipad')">iPad</button>
+                    <button class="filter-btn" onclick="filterProducts('mac')">Mac</button>
+                    <button class="filter-btn" onclick="filterProducts('watch')">Apple Watch</button>
+                    <button class="filter-btn" onclick="filterProducts('airpods')">AirPods</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Grid -->
+    <section class="container">
+        <div class="products-grid" id="productsGrid">
+            <!-- iPhone Products -->
+            <div class="product-card" data-category="iphone">
+                <div class="product-image">📱</div>
+                <div class="product-info">
+                    <div class="product-category">iPhone</div>
+                    <div class="product-name">iPhone 17 Pro Max</div>
+                    <div class="product-description">Latest flagship with advanced camera and processor</div>
+                    <div class="product-specs">
+                        <div>6.9" Display • A19 Pro Chip</div>
+                        <div>256GB / 512GB / 1TB</div>
+                        <div>Titanium Grade 5</div>
+                    </div>
+                    <div class="product-price">From 32,999,000₫</div>
+                    <div class="product-cta">
+                        <button class="btn-small btn-primary-small">Buy Now</button>
+                        <button class="btn-small btn-secondary-small">Details</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-card" data-category="iphone">
+                <div class="product-image">📱</div>
+                <div class="product-info">
+                    <div class="product-category">iPhone</div>
+                    <div class="product-name">iPhone 17 Pro</div>
+                    <div class="product-description">Premium performance in a standard size</div>
+                    <div class="product-specs">
+                        <div>6.3" Display • A19 Pro Chip</div>
+                        <div>256GB / 512GB / 1TB</div>
+                        <div>Titanium Grade 5</div>
+                    </div>
+                    <div class="product-price">From 28,999,000₫</div>
+                    <div class="product-cta">
+                        <button class="btn-small btn-primary-small">Buy Now</button>
+                        <button class="btn-small btn-secondary-small">Details</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-card" data-category="iphone">
+                <div class="product-image">📱</div>
+                <div class="product-info">
+                    <div class="product-category">iPhone</div>
+                    <div class="product-name">iPhone 17</div>
+                    <div class="product-description">Excellent value flagship performance</div>
+                    <div class="product-specs">
+                        <div>6.2" Display • A19 Chip</div>
+                        <div>128GB / 256GB / 512GB</div>
+                        <div>Aluminum Design</div>
+                    </div>
+                    <div class="product-price">From 22,999,000₫</div>
+                    <div class="product-cta">
+                        <button class="btn-small btn-primary-small">Buy Now</button>
+                        <button class="btn-small btn-secondary-small">Details</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-card" data-category="iphone">
+                <div class="product-image">📱</div>
+                <div class="product-info">
+                    <div class="product-category">iPhone</div>
+                    <div class="product-name">iPhone 16</div>
+                    <div class="product-description">Previous generation - great value</div>
+                    <div class="product-specs">
+                        <div>6.1" Display • A18 Chip</div>
+                        <div>128GB / 256GB / 512GB</div>
+                        <div>Aluminum Design</div>
+                    </div>
+                    <div class="product-price">From 17,999,000₫</div>
+                    <div class="product-cta">
+                        <button class="btn-small btn-primary-small">Buy Now</button>
+                        <button class="btn-small btn-secondary-small">Details</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- iPad Products -->
+            <div class="product-card" data-category="ipad">
+                <div class="product-image">📱</div>
+                <div class="product-info">
+                    <div class="product-category">iPad</div>
+                    <div class="product-name">iPad Pro 12.9"</div>
+                    <div class="product-description">Powerful tablet for professionals</div>
+                    <div class="product-specs">
+                        <div>12.9" Display • M4 Chip</div>
+                        <div>256GB / 512GB / 1TB / 2TB</div>
+                        <div>Nano-texture Display Option</div>
+                    </div>
+                    <div class="product-price">From 26,999,000₫</div>
+                    <div class="product-cta">
+                        <button class="btn-small btn-primary-small">Buy Now</button>
+                        <button class="btn-small btn-secondary-small">Details</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-card" data-category="ipad">
+                <div class="product-image">📱</div>
+                <div class="product-info">
+                    <div class="product-category">iPad</div>
+                    <div class="product-name">iPad Pro 11"</div>
+                    <div class="product-description">Portable power and versatility</div>
+                    <div class="product-specs">
+                        <div>11" Display • M4 Chip</div>
+                        <div>256GB / 512GB / 1TB / 2TB</div>
+                        <div>Ultra-thin Design</div>
+                    </div>
+                    <div class="product-price">From 18,999,000₫</div>
+                    <div class="product-cta">
+                        <button class="btn-small btn-primary-small">Buy Now</button>
+                        <button class="btn-small btn-secondary-small">Details</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-card" data-category="ipad">
+                <div class="product-image">📱</div>
+                <div class="product-info">
+                    <div class="product-category">iPad</div>
+                    <div class="product-name">iPad Air</div>
+                    <div class="product-description">Perfect balance of power and price</div>
+                    <div class="product-specs">
+                        <div>11" & 13" Options • M2 Chip</div>
+                        <div>64GB / 256GB / 512GB / 1TB</div>
+                        <div>Great for Everyday Use</div>
+                    </div>
+                    <div class="product-price">From 12,999,000₫</div>
+                    <div class="product-cta">
+                        <button class="btn-small btn-primary-small">Buy Now</button>
+                        <button class="btn-small btn-secondary-small">Details</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-card" data-category="ipad">
+                <div class="product-image">📱</div>
+                <div class="product-info">
+                    <div class="product-category">iPad</div>
+                    <div class="product-name">iPad (Standard)</div>
+                    <div class="product-description">Great entry-level tablet</div>
+                    <div class="product-specs">
+                        <div>10.9" Display • A14 Bionic</div>
+                        <div>64GB / 256GB</div>
+                        <div>Affordable & Reliable</div>
+                    </div>
+                    <div class="product-price">From 7,999,000₫</div>
+                    <div class="product-cta">
+                        <button class="btn-small btn-primary-small">Buy Now</button>
+                        <button class="btn-small btn-secondary-small">Details</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mac Products -->
+            <div class="product-card" data-category="mac">
+                <div class="product-image">💻</div>
+                <div class="product-info">
+                    <div class="product-category">Mac</div>
+                    <div class="product-name">MacBook Pro 16"</div>
+                    <div class="product-description">Ultimate professional laptop</div>
+                    <div class="product-specs">
+                        <div>16" Display • M4 Pro/Max</div>
+                        <div>512GB / 1TB / 2TB / 4TB</div>
+                        <div>Up to 12-core GPU</div>
+                    </div>
+                    <div class="product-price">From 46,999,000₫</div>
+                    <div class="product-cta">
+                        <button class="btn-small btn-primary-small">Buy Now</button>
+                        <button class="btn-small btn-secondary-small">Details</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-card" data-category="mac">
+                <div class="product-image">💻</div>
+                <div class="product-info">
+                    <div class="product-category">Mac</div>
+                    <div class="product-name">MacBook Pro 14"</div>
+                    <div class="product-description">Powerful portable workstation</div>
+                    <div class="product-specs">
+                        <div>14" Display • M4 Pro/Max</div>
+                        <div>512GB / 1TB / 2TB / 4TB</div>
+                        <div>Excellent for Creators</div>
+                    </div>
+                    <div class="product-price">From 36,999,000₫</div>
+                    <div class="product-cta">
+                        <button class="btn-small btn-primary-small">Buy Now</button>
+                        <button class="btn-small btn-secondary-small">Details</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-card" data-category="mac">
+                <div class="product-image">💻</div>
+                <div class="product-info">
+                    <div class="product-category">Mac</div>
+                    <div class="product-name">MacBook Air 15"</div>
+                    <div class="product-description">Fast, thin, and light laptop</div>
+                    <div class="product-specs">
+                        <div>15.3" Display • M3/M3 Pro</div>
+                        <div>256GB / 512GB / 1TB / 2TB</div>
+                        <div>Great All-rounder</div>
+                    </div>
+                    <div class="product-price">From 26,999,000₫</div>
+                    <div class="product-cta">
+                        <button class="btn-small btn-primary-small">Buy Now</button>
+                        <button class="btn-small btn-secondary-small">Details</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-card" data-category="mac">
+                <div class="product-image">💻</div>
+                <div class="product-info">
+                    <div class="product-category">Mac</div>
+                    <div class="product-name">MacBook Air 13"</div>
+                    <div class="product-description">Compact powerhouse laptop</div>
+                    <div class="product-specs">
+                        <div>13.3" Display • M3/M3 Pro</div>
+                        <div>256GB / 512GB / 1TB / 2TB</div>
+                        <div>Perfect for Students</div>
+                    </div>
+                    <div class="product-price">From 22,999,000₫</div>
+                    <div class="product-cta">
+                        <button class="btn-small btn-primary-small">Buy Now</button>
+                        <button class="btn-small btn-secondary-small">Details</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Apple Watch Products -->
+            <div class="product-card" data-category="watch">
+                <div class="product-image">⌚</div>
+                <div class="product-info">
+                    <div class="product-category">Apple Watch</div>
+                    <div class="product-name">Apple Watch Ultra 2</div>
+                    <div class="product-description">Premium fitness & adventure watch</div>
+                    <div class="product-specs">
+                        <div>49mm Display • S9 Chip</div>
+                        <div>Titanium Case</div>
+                        <div>All-day Battery</div>
+                    </div>
+                    <div class="product-price">From 12,999,000₫</div>
+                    <div class="product-cta">
+                        <button class="btn-small btn-primary-small">Buy Now</button>
+                        <button class="btn-small btn-secondary-small">Details</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-card" data-category="watch">
+                <div class="product-image">⌚</div>
+                <div class="product-info">
+                    <div class="product-category">Apple Watch</div>
+                    <div class="product-name">Apple Watch Series 10</div>
+                    <div class="product-description">Latest mainstream smartwatch</div>
+                    <div class="product-specs">
+                        <div>42mm & 46mm • S10 Chip</div>
+                        <div>Always-on Retina Display</div>
+                        <div>Sleep Tracking</div>
+                    </div>
+                    <div class="product-price">From 8,999,000₫</div>
+                    <div class="product-cta">
+                        <button class="btn-small btn-primary-small">Buy Now</button>
+                        <button class="btn-small btn-secondary-small">Details</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-card" data-category="watch">
+                <div class="product-image">⌚</div>
+                <div class="product-info">
+                    <div class="product-category">Apple Watch</div>
+                    <div class="product-name">Apple Watch SE</div>
+                    <div class="product-description">Essential features at great price</div>
+                    <div class="product-specs">
+                        <div>40mm & 44mm • S8 Chip</div>
+                        <div>Fitness Tracking</div>
+                        <div>Perfect for Beginners</div>
+                    </div>
+                    <div class="product-price">From 4,999,000₫</div>
+                    <div class="product-cta">
+                        <button class="btn-small btn-primary-small">Buy Now</button>
+                        <button class="btn-small btn-secondary-small">Details</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AirPods Products -->
+            <div class="product-card" data-category="airpods">
+                <div class="product-image">🎧</div>
+                <div class="product-info">
+                    <div class="product-category">AirPods</div>
+                    <div class="product-name">AirPods Max</div>
+                    <div class="product-description">Premium over-ear headphones</div>
+                    <div class="product-specs">
+                        <div>Spatial Audio</div>
+                        <div>Active Noise Cancellation</div>
+                        <div>20-hour Battery</div>
+                    </div>
+                    <div class="product-price">From 7,599,000₫</div>
+                    <div class="product-cta">
+                        <button class="btn-small btn-primary-small">Buy Now</button>
+                        <button class="btn-small btn-secondary-small">Details</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-card" data-category="airpods">
+                <div class="product-image">🎧</div>
+                <div class="product-info">
+                    <div class="product-category">AirPods</div>
+                    <div class="product-name">AirPods Pro (3rd Gen)</div>
+                    <div class="product-description">Best earbuds with ANC</div>
+                    <div class="product-specs">
+                        <div>Adaptive Audio</div>
+                        <div>Transparency Mode</div>
+                        <div>6-hour Battery</div>
+                    </div>
+                    <div class="product-price">From 4,999,000₫</div>
+                    <div class="product-cta">
+                        <button class="btn-small btn-primary-small">Buy Now</button>
+                        <button class="btn-small btn-secondary-small">Details</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-card" data-category="airpods">
+                <div class="product-image">🎧</div>
+                <div class="product-info">
+                    <div class="product-category">AirPods</div>
+                    <div class="product-name">AirPods (3rd Gen)</div>
+                    <div class="product-description">Wireless earbuds for everyone</div>
+                    <div class="product-specs">
+                        <div>Spatial Audio</div>
+                        <div>Fast Pairing</div>
+                        <div>6-hour Battery</div>
+                    </div>
+                    <div class="product-price">From 2,990,000₫</div>
+                    <div class="product-cta">
+                        <button class="btn-small btn-primary-small">Buy Now</button>
+                        <button class="btn-small btn-secondary-small">Details</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Buy From Us -->
+    <section class="why-us">
+        <div class="container">
+            <h2 class="section-title">Why Choose Khang Huy Apple?</h2>
+            <div class="benefits-grid">
+                <div class="benefit-item">
+                    <div class="benefit-icon">✓</div>
+                    <div class="benefit-title">100% Authentic Products</div>
+                    <div class="benefit-text">All products are guaranteed authentic with official warranty papers</div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon">🛡️</div>
+                    <div class="benefit-title">Comprehensive Warranty</div>
+                    <div class="benefit-text">12 months warranty on all products with professional support</div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon">⚡</div>
+                    <div class="benefit-title">Fast Delivery</div>
+                    <div class="benefit-text">Same-day delivery available in HCMC for selected products</div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon">💳</div>
+                    <div class="benefit-title">Flexible Payment</div>
+                    <div class="benefit-text">Multiple payment options including installment plans</div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon">🔧</div>
+                    <div class="benefit-title">Expert Support</div>
+                    <div class="benefit-text">Professional technicians available for setup and troubleshooting</div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon">💰</div>
+                    <div class="benefit-title">Best Prices</div>
+                    <div class="benefit-text">Competitive pricing with price match guarantee</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <h2>Ready to Get Your Apple Device?</h2>
+            <p>Visit our store or contact us for more information and special deals</p>
+            <a href="index.html#contact" class="btn-large btn-primary-large">Contact Us Now</a>
+            <a href="services.html" class="btn-large btn-secondary-large">Learn About Repairs</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Khang Huy Apple</h3>
+                <p>Your trusted Apple products and repair services partner in HCMC</p>
+            </div>
+            <div class="footer-links">
+                <a href="index.html">Home</a>
+                <a href="products.html">Products</a>
+                <a href="services.html">Services</a>
+                <a href="about.html">About Us</a>
+                <a href="faq.html">FAQ</a>
+                <a href="policy.html">Policies</a>
+            </div>
+            <div class="footer-section">
+                <p>📞 Hotline: 0981.308.308</p>
+                <p>📧 Email: support@khanghuyapple.com</p>
+                <p>📍 9 Branches across HCMC</p>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Khang Huy Apple. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function filterProducts(category) {
+            // Update active button
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Filter products
+            const products = document.querySelectorAll('.product-card');
+            products.forEach(product => {
+                if (category === 'all' || product.dataset.category === category) {
+                    product.style.display = 'block';
+                    setTimeout(() => {
+                        product.style.opacity = '1';
+                    }, 10);
+                } else {
+                    product.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
