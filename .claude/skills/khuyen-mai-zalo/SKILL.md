@@ -13,7 +13,7 @@ Thầy không rành kỹ thuật. Luôn trả lời bằng tiếng Việt, xưng
 
 | Lệnh | Tác dụng |
 |---|---|
-| `/kmmau` | Xem 8 mẫu soạn sẵn |
+| `/kmmau` | Xem 9 mẫu soạn sẵn |
 | `/km 4` · `/km 4 5 6` | Gửi một mẫu, hoặc gộp nhiều mẫu thành 1 tin, cho tất cả khách |
 | `/km <nội dung>` | Gửi tin tự soạn cho tất cả khách. Bot kèm khuyến mãi này khi trả lời giá |
 | `/kmxem` · `/kmxoa` | Xem / tắt khuyến mãi đang chạy |
@@ -22,7 +22,7 @@ Thầy không rành kỹ thuật. Luôn trả lời bằng tiếng Việt, xưng
 | `/giao <mã khách> <tên máy>` | Gửi phiếu bảo hành điện tử và bật tự nhắc sau sửa cho khách đó |
 | `/nhac` | Đếm khách đang được tự nhắc sau sửa |
 
-Khách tự nhắn `nhận máy iPhone 13` lúc lấy máy cũng được phiếu bảo hành và lịch tự nhắc (ngày 7, 27, 180, gửi lúc 9h–20h). Nhắn `huy nhac` để tắt. Nội dung các mốc nằm trong mảng `FOLLOWUPS`, file `zalo-bot/worker.template.js`.
+Khách tự nhắn `nhận máy iPhone 13` lúc lấy máy cũng được phiếu bảo hành và lịch tự nhắc (ngày 7, 27, 180, gửi lúc 9h–20h). Nhắn `huy nhac` để tắt, nhắn `tra cuu bao hanh` để xem lại phiếu. Nội dung các mốc nằm trong mảng `FOLLOWUPS`, file `zalo-bot/worker.template.js`.
 
 **Giới hạn của bot:**
 - Chỉ gửi được cho khách **đã từng nhắn bot**.
@@ -30,9 +30,38 @@ Khách tự nhắn `nhận máy iPhone 13` lúc lấy máy cũng được phiế
 - Khách nhắn "huy km" thì không nhận khuyến mãi nữa.
 - Chưa có chức năng sinh nhật hay tích điểm.
 
-8 mẫu nằm trong mảng `PROMO_PRESETS` (file `zalo-bot/worker.template.js`): 1 Thu cũ đổi mới · 2 Quà tặng kèm · 3 Trả góp 0% · 4 Giảm giá sửa chữa · 5 Bảo hành mở rộng 6–12 tháng · 6 Miễn phí đi kèm · 7 Check-in · 8 Giờ vàng cuối tuần giảm 200.000đ.
+9 mẫu nằm trong mảng `PROMO_PRESETS` (file `zalo-bot/worker.template.js`): 1 Thu cũ đổi mới · 2 Quà tặng kèm · 3 Trả góp 0% · 4 Giảm giá sửa chữa · 5 Bảo hành mở rộng 6–12 tháng · 6 Miễn phí đi kèm · 7 Check-in · 8 Giờ vàng cuối tuần giảm 200.000đ · 9 Đặt lịch trước giảm 10% (tối đa 100.000đ).
 
-## Chuỗi lớn làm thế nào (đã tra cứu tháng 10/2026)
+## 10 nguyên tắc tối ưu nhất (rút ra từ 8 chuỗi bên dưới)
+
+1. **Chăm sóc sau bán quan trọng ngang khuyến mãi.** TGDĐ nhắc vệ sinh định kỳ, Điện Thoại Vui cho tra cứu bảo hành. Bot đã có phiếu bảo hành điện tử, tra cứu, nhắc ngày 7/27/180.
+2. **Mỗi ưu đãi có điều kiện, mức trần và hạn dùng.** FPT ghi đơn tối thiểu, không cộng dồn; Điện Thoại Vui ghi "giảm 10%, tối đa 300.000đ". Luôn ghi "tối đa …đ", "không áp dụng cùng ưu đãi khác", "đến ngày …".
+3. **Khuyến khích đặt lịch trước** (Điện Thoại Vui giảm 10%). Tiệm chủ động linh kiện, khách không phải chờ. Dùng mẫu 9.
+4. **Combo trọn gói khi có sự kiện** (ShopDunk khai trương: thu cũ trợ giá + trả góp 0% + dán cường lực miễn phí). Gộp `/km 1 3 6`.
+5. **Có lý do để khách đăng ký thành viên** (Hoàng Hà: đăng ký Member trong giờ livestream mới được voucher). Với tiệm mình: "quét QR nhắn bot nhận ưu đãi". Danh sách khách của bot chính là danh sách thành viên.
+6. **Khung giờ cố định để khách quen hẹn** (Hoàng Hà livestream tối Thứ Sáu 19h30–21h30). Tiệm mình có mẫu 8 giờ vàng 12h00 và cuối tuần. Nên giữ cố định để khách nhớ.
+7. **Chạy theo mùa cao điểm và minigame** (Minh Tuấn: thu cũ đổi mới cuối năm, quay số trúng vàng, livestream công bố kết quả hằng tuần). Với tiệm nhỏ: minigame trên fanpage (đoán giá, bình luận nhận thẻ cào), công bố kết quả công khai.
+8. **Tích điểm, ưu đãi khách quen** (Viettel++, Quà Tặng VIP, FPT tích điểm). Bot chưa có. Đề xuất làm sau: đếm số lần "nhận máy", lần thứ 3 giảm thêm.
+9. **Dịch vụ cho khách ở xa** (Điện Thoại Vui nhận sửa qua ship, miễn phí ship 2 chiều trong 10km, hỗ trợ qua Zalo). Gợi ý thầy cân nhắc: khách ngoài khu vực nhắn bot đặt ship máy.
+10. **Chống bị nghi lừa đảo.** VTV đưa tin khoảng 1.000 người bị lừa qua livestream "iPhone giá rẻ" rồi bị kéo sang Zalo. Tin của tiệm luôn có tên, địa chỉ, hotline thật; không dùng chữ "trúng thưởng", "nhấn link nhận quà"; không giá rẻ bất thường.
+
+**Không nên:** bán iPhone mới qua livestream TikTok Shop / Shopee. Apple đã yêu cầu đại lý ngừng bán trên TikTok Shop từ 31/5/2024 và ngừng livestream trên Shopee. Livestream nên dùng để **giới thiệu dịch vụ sửa, mẹo dùng máy, minigame** trên Facebook/TikTok, rồi dẫn khách về bot Zalo hoặc tiệm.
+
+## Từng chuỗi làm thế nào (đã tra cứu tháng 10/2026)
+
+- **Điện Thoại Vui (chuỗi sửa chữa, giống tiệm mình nhất):**
+  - tra cứu bảo hành online bằng SĐT + mã phiếu;
+  - đặt lịch trước giảm 10%, có mức trần, không cộng dồn;
+  - sửa từ xa qua ship;
+  - hỗ trợ qua Zalo, giờ 8h–21h.
+- **ShopDunk:** đại lý ủy quyền Apple, nhấn mạnh trải nghiệm thử máy tại cửa hàng. Sự kiện khai trương có combo thu cũ trợ giá tới 1,5 triệu + trả góp 0% + dán cường lực miễn phí. Không tìm thấy tài liệu về cách họ nhắn tin Zalo.
+- **Hoàng Hà Mobile:**
+  - livestream fanpage theo khung giờ cố định, kèm minigame, thẻ cào, đấu giá ngược;
+  - hợp tác TikToker cho Black Friday;
+  - gắn voucher với việc đăng ký Hoàng Hà Member.
+  Không tìm thấy chính sách HSSV.
+- **Viettel Store / Viettel++:** tích điểm khi dùng dịch vụ, đổi điểm lấy data, phút gọi, voucher; không đổi ra tiền mặt. Không tìm thấy tài liệu riêng về tin nhắn khuyến mãi của Viettel Store.
+- **"Trai Đẹp bán iPhone":** không tìm thấy thông tin về người bán này. Bối cảnh chung là iPhone từng bán rất mạnh qua livestream TikTok (FPT Shop, Viettel Store, Di Động Việt), đến khi Apple cấm từ 2024.
 
 - **Thế Giới Di Động:** chăm sóc khách qua app *Quà Tặng VIP*: tích điểm theo % giá trị đơn, theo dõi và đặt lịch bảo hành, **nhắc lịch vệ sinh định kỳ**. Họ cũng cảnh báo khách về tin nhắn giả danh báo "trúng thưởng".
   → Bài học: **chăm sóc sau bán** (nhắc bảo hành, vệ sinh) quan trọng ngang khuyến mãi, và tin nhắn phải xưng rõ tên tiệm, hotline để khách tin là thật.
@@ -100,6 +129,6 @@ Ngày 25–28 bot gửi ở ngày 27. Mốc "ngay sau khi giao máy" là phiếu
 ## Sửa hoặc thêm mẫu khuyến mãi
 
 1. Sửa mảng `PROMO_PRESETS` trong `zalo-bot/worker.template.js`. Mỗi mẫu gồm `['Tên ngắn', '<emoji> TIÊU ĐỀ\nNội dung 1 câu.']`.
-2. Cập nhật bảng "8 mẫu" trong `zalo-bot/HUONG-DAN.md`, và danh sách mẫu trong file skill này.
+2. Cập nhật bảng mẫu khuyến mãi trong `zalo-bot/HUONG-DAN.md`, và danh sách mẫu trong file skill này.
 3. Chạy `powershell -ExecutionPolicy Bypass -File zalo-bot\build.ps1`, rồi commit và push lên `master`. Cloudflare tự deploy trong khoảng 1 phút.
 4. Báo thầy nhắn `/kmmau` để xem mẫu mới.

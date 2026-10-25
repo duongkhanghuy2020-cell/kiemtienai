@@ -175,6 +175,13 @@ function answer(raw, sender, promo) {
     };
   }
 
+  if (/(^| )bao hanh( |$)/.test(t)) {
+    return {
+      reply: `🛡️ Chính sách bảo hành ${SHOP.name}:\n• Bảo hành 6 – 12 tháng tùy linh kiện\n• 1 đổi 1 trong 30 ngày đầu\n• Kiểm tra, chẩn đoán miễn phí\nĐã sửa máy tại tiệm? Nhắn "tra cuu bao hanh" để xem phiếu bảo hành điện tử.${CTA}`,
+      notify: null,
+    };
+  }
+
   const greeting = /^(hi|hello|alo|chao|xin chao|shop|ad|admin|e|em|a|anh|chi|ok|oke|cam on|thanks)( .*)?$/.test(t) || t.length < 4;
   return {
     reply:
@@ -273,6 +280,8 @@ const PROMO_PRESETS = [
   // Nhóm 3: Khách thân thiết / Khách mới
   ['Check-in giảm giá', '📍 CHECK-IN NHẬN QUÀ\nGiảm ngay 100.000đ hoặc tặng 1 nón bảo hiểm khi check-in tiệm lên Facebook/Google Maps.'],
   ['Giờ vàng cuối tuần', '⏰ GIỜ VÀNG – NGÀY HỘI THÀNH VIÊN\nGiảm ngay 200.000đ vào cuối tuần (Thứ 7, Chủ nhật) và khung giờ vàng 12h00 mỗi ngày.'],
+  // Học Điện Thoại Vui: khuyến khích đặt lịch trước để tiệm chủ động linh kiện, khách không phải chờ
+  ['Đặt lịch trước', '📅 ĐẶT LỊCH TRƯỚC – GIẢM 10%\nĐặt lịch sửa qua Zalo bot hoặc website, giảm ngay 10% tiền công (tối đa 100.000đ). Không áp dụng cùng ưu đãi khác.'],
 ];
 
 function presetList() {
@@ -285,6 +294,7 @@ function presetList() {
 const DAY = 86400000;
 const WARRANTY_WORDS = /^(kich hoat|kich hoat bao hanh|nhan may|da nhan may)( |$)/;
 const STOP_REMIND_WORDS = /^(huy nhac|tat nhac)$/;
+const LOOKUP_WORDS = /^(tra cuu bao hanh|tra cuu|phieu bao hanh|xem bao hanh)$/;
 
 const vnDayStart = (ts) => Math.floor((ts + 7 * 3600000) / DAY) * DAY;
 const pad = (n) => String(n).padStart(2, '0');
@@ -305,7 +315,7 @@ function warrantyCard(r) {
     `🛡️ PHIẾU BẢO HÀNH ĐIỆN TỬ – ${SHOP.name.toUpperCase()}\n` +
     `Khách: ${r.n || '(không tên)'}\nMáy: ${r.m || '(chưa ghi)'}\nNgày nhận máy: ${fmtDate(r.d)}\n` +
     `• 1 đổi 1 đến hết ${fmtDate(r.d + 30 * DAY)}\n• Bảo hành 6 – 12 tháng tùy linh kiện\n\n` +
-    `Giữ tin nhắn này làm phiếu bảo hành. Bot sẽ hỏi thăm sau 7 ngày, nhắc trước khi hết hạn 1 đổi 1 và mời kiểm tra máy sau 6 tháng ` +
+    `Giữ tin nhắn này làm phiếu bảo hành (nhắn "tra cuu bao hanh" để xem lại). Bot sẽ hỏi thăm sau 7 ngày, nhắc trước khi hết hạn 1 đổi 1 và mời kiểm tra máy sau 6 tháng ` +
     `(nhắn "huy nhac" nếu không muốn nhận).\n📞 ${SHOP.phone}`
   );
 }
@@ -349,7 +359,7 @@ async function runFollowups(env, limit) {
 
 const OWNER_HELP =
   'Chào chủ tiệm 👋\n' +
-  '• /kmmau: xem 8 mẫu khuyến mãi soạn sẵn\n' +
+  '• /kmmau: xem các mẫu khuyến mãi soạn sẵn\n' +
   '• /km <số>: gửi mẫu đó cho TẤT CẢ khách (VD: /km 4, gộp nhiều mẫu: /km 4 5 6)\n' +
   '• /km <nội dung>: gửi khuyến mãi tự soạn cho TẤT CẢ khách + bot tự kèm khi trả lời giá\n' +
   '• /kmxem: xem khuyến mãi đang chạy\n' +
@@ -461,6 +471,13 @@ async function onUpdate(env, update) {
   if (STOP_REMIND_WORDS.test(t)) {
     if (env.DB) await env.DB.delete(`f:${chatId}`);
     return send(env, chatId, 'Đã tắt tin nhắc sau sửa máy. Phiếu bảo hành của anh/chị vẫn còn hiệu lực ạ.');
+  }
+  // Khách tự tra cứu phiếu bảo hành (học Điện Thoại Vui: tra cứu bảo hành online)
+  if (env.DB && LOOKUP_WORDS.test(t)) {
+    const { metadata: r } = await env.DB.getWithMetadata(`f:${chatId}`);
+    return send(env, chatId, r
+      ? warrantyCard(r)
+      : `Khang Huy chưa tìm thấy phiếu bảo hành điện tử của anh/chị (phiếu chỉ lưu 6 tháng kể từ ngày nhận máy). Anh/chị gọi ${SHOP.phone} để tiệm tra theo số điện thoại nhé.`);
   }
   // Khách nhắn "nhận máy iPhone 13" lúc lấy máy => phiếu bảo hành điện tử + tự nhắc
   if (env.DB && WARRANTY_WORDS.test(t)) {

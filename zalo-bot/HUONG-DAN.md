@@ -102,7 +102,7 @@ Thầy nhắn các lệnh sau cho bot, từ Zalo của thầy:
 
 | Lệnh | Tác dụng |
 |---|---|
-| `/kmmau` | Xem 8 mẫu khuyến mãi soạn sẵn (bảng bên dưới) |
+| `/kmmau` | Xem 9 mẫu khuyến mãi soạn sẵn (bảng bên dưới) |
 | `/km 4` | Gửi **mẫu số 4** cho tất cả khách |
 | `/km 4 5 6` | Gộp mẫu 4, 5, 6 thành **một tin** rồi gửi cho tất cả khách |
 | `/km Giảm 20% thay pin đến hết 30/11` | Gửi tin tự soạn này cho **tất cả khách**. Từ lúc đó, mỗi lần trả lời giá bot đều kèm dòng "🔥 KHUYẾN MÃI" |
@@ -131,10 +131,11 @@ Thầy nhắn các lệnh sau cho bot, từ Zalo của thầy:
 Khách đã từng nhắn bot thì thầy có thể tự bật cho khách, không cần khách nhắn: `/giao <mã khách> iPhone 13`. Mã khách có trong tin báo đơn.
 
 - `/nhac`: đếm khách đang được tự nhắc.
+- Khách nhắn `tra cuu bao hanh` để bot gửi lại phiếu bảo hành.
 - Khách nhắn `huy nhac` thì bot thôi nhắc. Phiếu bảo hành vẫn còn hiệu lực.
 - Khách sửa lần nữa thì nhắn lại "nhận máy …", lịch nhắc tính lại từ đầu.
 
-### 8 mẫu khuyến mãi soạn sẵn
+### 9 mẫu khuyến mãi soạn sẵn
 
 | Số | Nhóm | Mẫu | Nội dung khách nhận |
 |---|---|---|---|
@@ -146,6 +147,7 @@ Khách đã từng nhắn bot thì thầy có thể tự bật cho khách, khôn
 | 6 | Sửa chữa | Miễn phí đi kèm | Miễn phí vệ sinh máy, dán cường lực, kiểm tra tổng quát khi đến sửa |
 | 7 | Khách thân thiết | Check-in giảm giá | Giảm 100.000đ hoặc tặng nón bảo hiểm khi check-in lên Facebook/Google Maps |
 | 8 | Khách thân thiết | Giờ vàng cuối tuần | Giảm 200.000đ Thứ 7, Chủ nhật và khung giờ vàng 12h00 |
+| 9 | Sửa chữa | Đặt lịch trước | Đặt lịch qua bot/web giảm 10% tiền công (tối đa 100.000đ), không cộng dồn |
 
 Gợi ý gộp: `/km 1 2 3` (lên đời máy), `/km 4 5 6` (sửa chữa), `/km 7 8` (khách thân thiết).
 
