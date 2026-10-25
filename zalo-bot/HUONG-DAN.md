@@ -110,7 +110,7 @@ Thầy nhắn các lệnh sau cho bot, từ Zalo của thầy:
 
 - Tin báo đơn và câu hỏi khó đều về khung chat của thầy với bot.
 - Muốn gọi điện thì cứ gọi thẳng số khách trong tin báo đơn.
-- Link hoặc mã QR của bot nằm trong phần thông tin bot ở Zalo. Thầy nên in ra dán ở quầy, gắn lên web và Facebook. **Càng nhiều khách nhắn bot thì danh sách nhận khuyến mãi càng dài.**
+- Link bot: **https://zalo.me/904216852236717976**. Link này đã được gắn trên trang bảng giá (nút "Báo giá" màu cam). Mã QR của bot nằm trong phần thông tin bot ở Zalo. Thầy nên in mã QR ra dán ở quầy và đăng link lên Facebook. **Càng nhiều khách nhắn bot thì danh sách nhận khuyến mãi càng dài.**
 
 ### Lưu ý khi gửi khuyến mãi
 
