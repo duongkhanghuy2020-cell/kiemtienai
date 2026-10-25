@@ -64,7 +64,7 @@ Bot cần một chỗ để nhớ những khách đã nhắn và nội dung khuy
    - Bấm **Deploy** (hoặc **Save**)
 3. Vẫn trong **Settings**, tìm **Trigger Events** (hoặc **Triggers**) → **Add** → **Cron Triggers**. Chọn kiểu **Every minute** (hoặc gõ `* * * * *`) rồi bấm **Add**.
 
-> Dòng hẹn giờ này giúp bot gửi khuyến mãi theo từng đợt, mỗi phút 35 khách, để không vượt giới hạn của gói miễn phí. Ví dụ 300 khách thì khoảng 9 phút là gửi xong.
+> Dòng hẹn giờ này giúp bot gửi khuyến mãi theo từng đợt, mỗi phút 25 khách, để không vượt giới hạn của gói miễn phí. Ví dụ 300 khách thì khoảng 12 phút là gửi xong.
 
 ## Bước 6: Đăng ký thầy là chủ tiệm (2 phút)
 

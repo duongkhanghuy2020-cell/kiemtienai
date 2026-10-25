@@ -20,8 +20,9 @@ const SHOP = {
 
 const API = 'https://bot-api.zaloplatforms.com/bot';
 
-// Gói Cloudflare miễn phí cho tối đa 50 lệnh gọi ra ngoài mỗi lần chạy, nên gửi khuyến mãi theo đợt
-const BATCH = 35;
+// Gói Cloudflare miễn phí cho tối đa 50 lệnh gọi ra ngoài mỗi lần chạy: chia cho việc lấy tin và gửi khuyến mãi
+const POLL_BUDGET = 20;
+const BATCH = 25;
 
 const PROMO_WORDS = /(^| )(khuyen mai|km|giam gia|uu dai|sale|chuong trinh|qua tang)( |$)/;
 const STOP_WORDS = /^(huy km|tat km|ngung km|stop|\/stop)$/;
@@ -209,12 +210,33 @@ function promoMessage(text) {
   return `🔥 ${SHOP.name.toUpperCase()} KHUYẾN MÃI\n\n${text}\n\n📞 ${SHOP.phone} | ${SHOP.address}\n(Nhắn "huy km" để ngừng nhận tin khuyến mãi)`;
 }
 
-// Chạy mỗi phút (cron): gửi khuyến mãi cho BATCH khách tiếp theo
-async function runBroadcast(env) {
-  if (!env.DB) return;
+// Cloudflare chặn webhook của Zalo trên tên miền workers.dev, nên mỗi phút bot tự lấy tin mới (getUpdates).
+// Mỗi lần gọi trả về 1 tin; Zalo giữ kết nối tối đa 10 giây nếu chưa có tin. Trả về số lệnh gọi ra ngoài đã dùng.
+async function pollUpdates(env, budget) {
+  const until = Date.now() + 50000;
+  let used = 0;
+  while (Date.now() < until && used + 3 <= budget) {
+    const started = Date.now();
+    const r = await callApi(env, 'getUpdates', { timeout: '10' });
+    used++;
+    if (r && r.ok && r.result) {
+      used += 2; // trả lời khách + báo chủ tiệm
+      await onUpdate(env, r.result).catch((e) => console.error(e));
+    } else if (Date.now() - started < 8000) {
+      // Lỗi trả về ngay (không phải hết giờ chờ): dừng, tránh gọi dồn dập
+      console.log('getUpdates', JSON.stringify(r));
+      break;
+    }
+  }
+  return used;
+}
+
+// Chạy mỗi phút (cron): gửi khuyến mãi cho tối đa `limit` khách tiếp theo
+async function runBroadcast(env, limit) {
+  if (!env.DB || limit < 1) return;
   const job = await env.DB.get('bc', 'json');
   if (!job) return;
-  const page = await env.DB.list({ prefix: 'c:', cursor: job.cursor || undefined, limit: BATCH });
+  const page = await env.DB.list({ prefix: 'c:', cursor: job.cursor || undefined, limit });
   for (const k of page.keys) {
     if (k.metadata && k.metadata.off) continue;
     const r = await send(env, k.name.slice(2), promoMessage(job.text));
@@ -383,15 +405,15 @@ export default {
     }
 
     // Mở 1 lần sau khi deploy: https://<worker>/setup?key=<WEBHOOK_SECRET>
+    // Mặc định xóa webhook để bot tự lấy tin (getUpdates). Thêm &mode=webhook khi đã có tên miền riêng không bị chặn.
     if (url.pathname === '/setup') {
       if (!env.WEBHOOK_SECRET || url.searchParams.get('key') !== env.WEBHOOK_SECRET) {
         return new Response('Sai key', { status: 403 });
       }
-      const r = await callApi(env, 'setWebhook', {
-        url: `${url.origin}/webhook`,
-        secret_token: env.WEBHOOK_SECRET,
-      });
-      return json(r);
+      if (url.searchParams.get('mode') === 'webhook') {
+        return json(await callApi(env, 'setWebhook', { url: `${url.origin}/webhook`, secret_token: env.WEBHOOK_SECRET }));
+      }
+      return json(await callApi(env, 'deleteWebhook', {}));
     }
 
     return new Response(`${SHOP.name} Zalo bot đang chạy ✅`, {
@@ -400,6 +422,11 @@ export default {
   },
 
   async scheduled(event, env, ctx) {
-    ctx.waitUntil(runBroadcast(env).catch((e) => console.error(e)));
+    ctx.waitUntil(
+      (async () => {
+        await pollUpdates(env, POLL_BUDGET);
+        await runBroadcast(env, BATCH);
+      })().catch((e) => console.error(e))
+    );
   },
 };
