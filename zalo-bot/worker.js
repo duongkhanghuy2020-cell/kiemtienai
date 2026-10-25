@@ -366,8 +366,10 @@ export default {
     const url = new URL(request.url);
 
     if (url.pathname === '/webhook' && request.method === 'POST') {
+      // Zalo gửi 1 yêu cầu kiểm tra không kèm secret khi setWebhook: trả 200 để qua kiểm tra, nhưng không xử lý
       if (request.headers.get('X-Bot-Api-Secret-Token') !== env.WEBHOOK_SECRET) {
-        return new Response('forbidden', { status: 403 });
+        console.log('webhook without valid secret', request.headers.get('User-Agent'));
+        return json({ ok: true });
       }
       const body = await request.json().catch(() => null);
       const update = body && (body.result || body);
