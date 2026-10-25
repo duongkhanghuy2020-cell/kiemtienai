@@ -102,7 +102,10 @@ Thầy nhắn các lệnh sau cho bot, từ Zalo của thầy:
 
 | Lệnh | Tác dụng |
 |---|---|
-| `/km Giảm 20% thay pin đến hết 30/11` | Gửi tin này cho **tất cả khách**. Từ lúc đó, mỗi lần trả lời giá bot đều kèm dòng "🔥 KHUYẾN MÃI" |
+| `/kmmau` | Xem 8 mẫu khuyến mãi soạn sẵn (bảng bên dưới) |
+| `/km 4` | Gửi **mẫu số 4** cho tất cả khách |
+| `/km 4 5 6` | Gộp mẫu 4, 5, 6 thành **một tin** rồi gửi cho tất cả khách |
+| `/km Giảm 20% thay pin đến hết 30/11` | Gửi tin tự soạn này cho **tất cả khách**. Từ lúc đó, mỗi lần trả lời giá bot đều kèm dòng "🔥 KHUYẾN MÃI" |
 | `/kmxem` | Xem khuyến mãi đang chạy |
 | `/kmxoa` | Tắt khuyến mãi: bot không kèm khuyến mãi khi trả lời giá nữa |
 | `/khach` | Đếm số khách đã nhắn bot |
@@ -111,6 +114,23 @@ Thầy nhắn các lệnh sau cho bot, từ Zalo của thầy:
 - Tin báo đơn và câu hỏi khó đều về khung chat của thầy với bot.
 - Muốn gọi điện thì cứ gọi thẳng số khách trong tin báo đơn.
 - Link bot: **https://zalo.me/904216852236717976**. Link này đã được gắn trên trang bảng giá (nút "Báo giá" màu cam). Mã QR của bot nằm trong phần thông tin bot ở Zalo. Thầy nên in mã QR ra dán ở quầy và đăng link lên Facebook. **Càng nhiều khách nhắn bot thì danh sách nhận khuyến mãi càng dài.**
+
+### 8 mẫu khuyến mãi soạn sẵn
+
+| Số | Nhóm | Mẫu | Nội dung khách nhận |
+|---|---|---|---|
+| 1 | Mua máy / Lên đời | Thu cũ đổi mới | Thu lại máy cũ giá cao, trợ giá ngay 300.000đ – 500.000đ khi lên đời máy mới |
+| 2 | Mua máy / Lên đời | Quà tặng kèm | Mua điện thoại mới tặng ốp lưng, cường lực trọn đời, củ sạc nhanh chính hãng hoặc tai nghe Bluetooth |
+| 3 | Mua máy / Lên đời | Trả góp 0% | Không cần trả trước, thủ tục 15 phút (chỉ cần CCCD) |
+| 4 | Sửa chữa | Giảm giá sửa chữa | Giảm 20% tiền công hoặc giảm 100.000đ khi thay màn hình/pin |
+| 5 | Sửa chữa | Bảo hành mở rộng | Bảo hành 6 – 12 tháng, 1 đổi 1 trong 30 ngày đầu |
+| 6 | Sửa chữa | Miễn phí đi kèm | Miễn phí vệ sinh máy, dán cường lực, kiểm tra tổng quát khi đến sửa |
+| 7 | Khách thân thiết | Check-in giảm giá | Giảm 100.000đ hoặc tặng nón bảo hiểm khi check-in lên Facebook/Google Maps |
+| 8 | Khách thân thiết | Giờ vàng cuối tuần | Giảm giá đặc biệt Thứ 7, Chủ nhật và khung giờ vàng 12h00 |
+
+Gợi ý gộp: `/km 1 2 3` (lên đời máy), `/km 4 5 6` (sửa chữa), `/km 7 8` (khách thân thiết).
+
+Muốn sửa nội dung mẫu, thầy nhắn Claude. Muốn gửi nội dung khác hẳn thì dùng `/km <nội dung tự soạn>`.
 
 ### Lưu ý khi gửi khuyến mãi
 

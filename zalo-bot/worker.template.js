@@ -116,7 +116,12 @@ const NOTE = '\nGiá là tiền công sửa, kiểm tra máy miễn phí, bảo 
 // promo: nội dung khuyến mãi đang chạy (hoặc rỗng).
 function handleText(raw, sender, promo) {
   const r = answer(raw, sender, promo);
-  if (promo && r.withPromo) r.reply += `\n\n🔥 KHUYẾN MÃI: ${promo}`;
+  if (promo && r.withPromo) {
+    // Khuyến mãi dài (gộp nhiều mẫu) thì chỉ nhắc ngắn để tin báo giá không quá dài
+    r.reply += promo.length > 250
+      ? `\n\n🔥 Đang có khuyến mãi! Nhắn "khuyến mãi" để xem chi tiết.`
+      : `\n\n🔥 KHUYẾN MÃI: ${promo}`;
+  }
   return r;
 }
 
@@ -252,9 +257,30 @@ async function runBroadcast(env, limit) {
   }
 }
 
+// Mẫu khuyến mãi soạn sẵn. Chủ tiệm nhắn /km <số> (VD: /km 4) hoặc gộp nhiều mẫu: /km 4 5 6
+const PROMO_PRESETS = [
+  // Nhóm 1: Mua máy mới / Lên đời máy
+  ['Thu cũ đổi mới', '🔄 THU CŨ ĐỔI MỚI – TRỢ GIÁ KHỦNG\nThu lại máy cũ giá cao, trợ giá ngay 300.000đ – 500.000đ khi lên đời máy mới.'],
+  ['Quà tặng kèm', '🎁 MUA MÁY MỚI – QUÀ TẶNG GIÁ TRỊ\nMua điện thoại mới tặng ngay ốp lưng, cường lực trọn đời, củ sạc nhanh chính hãng hoặc tai nghe Bluetooth.'],
+  ['Trả góp 0%', '💳 TRẢ GÓP 0%\nKhông cần trả trước, thủ tục nhanh gọn trong 15 phút (chỉ cần CCCD).'],
+  // Nhóm 2: Sửa chữa & Thay linh kiện
+  ['Giảm giá sửa chữa', '🔧 GIẢM GIÁ SỬA CHỮA\nGiảm ngay 20% tiền công sửa chữa hoặc giảm 100.000đ khi thay màn hình/pin.'],
+  ['Bảo hành mở rộng', '🛡️ BẢO HÀNH MỞ RỘNG\nBảo hành sửa chữa lên đến 6 – 12 tháng, 1 đổi 1 trong 30 ngày đầu.'],
+  ['Miễn phí đi kèm', '✨ MIỄN PHÍ ĐI KÈM KHI SỬA MÁY\nMiễn phí vệ sinh máy, dán cường lực và kiểm tra tổng quát toàn bộ máy khi đến sửa chữa.'],
+  // Nhóm 3: Khách thân thiết / Khách mới
+  ['Check-in giảm giá', '📍 CHECK-IN NHẬN QUÀ\nGiảm ngay 100.000đ hoặc tặng 1 nón bảo hiểm khi check-in tiệm lên Facebook/Google Maps.'],
+  ['Giờ vàng cuối tuần', '⏰ GIỜ VÀNG – NGÀY HỘI THÀNH VIÊN\nGiảm giá đặc biệt vào cuối tuần (Thứ 7, Chủ nhật) và khung giờ vàng 12h00 mỗi ngày.'],
+];
+
+function presetList() {
+  return PROMO_PRESETS.map(([name, body], i) => `${i + 1}. ${name}: ${body.split('\n')[1]}`).join('\n');
+}
+
 const OWNER_HELP =
   'Chào chủ tiệm 👋\n' +
-  '• /km <nội dung>: gửi khuyến mãi cho TẤT CẢ khách + bot tự kèm khi trả lời giá\n' +
+  '• /kmmau: xem 8 mẫu khuyến mãi soạn sẵn\n' +
+  '• /km <số>: gửi mẫu đó cho TẤT CẢ khách (VD: /km 4, gộp nhiều mẫu: /km 4 5 6)\n' +
+  '• /km <nội dung>: gửi khuyến mãi tự soạn cho TẤT CẢ khách + bot tự kèm khi trả lời giá\n' +
   '• /kmxem: xem khuyến mãi đang chạy\n' +
   '• /kmxoa: tắt khuyến mãi\n' +
   '• /khach: đếm số khách\n' +
@@ -268,7 +294,10 @@ async function onOwner(env, chatId, text) {
     const r = await send(env, m[1], m[2]);
     return reply(r && r.ok ? '✅ Đã gửi cho khách.' : `❌ Gửi lỗi: ${JSON.stringify(r)}`);
   }
-  if (!/^\/(km|kmxem|kmxoa|khach)\b/.test(text)) return reply(OWNER_HELP);
+  if (!/^\/(km|kmmau|kmxem|kmxoa|khach)\b/.test(text)) return reply(OWNER_HELP);
+  if (text === '/kmmau') {
+    return reply(`📋 MẪU KHUYẾN MÃI SOẠN SẴN\n\n${presetList()}\n\nGửi cho tất cả khách: /km <số>\nVD: /km 4 hoặc gộp /km 4 5 6`);
+  }
   if (!env.DB) return reply('❌ Chưa gắn KV "DB" cho worker, xem Bước 5 trong hướng dẫn.');
 
   if (text === '/kmxem') {
@@ -283,8 +312,15 @@ async function onOwner(env, chatId, text) {
     const { total, off } = await countCustomers(env);
     return reply(`Có ${total} khách đã nhắn bot, ${total - off} khách đang nhận khuyến mãi.`);
   }
-  const promo = text.replace(/^\/km\s*/, '').trim();
-  if (!promo) return reply('Gõ: /km <nội dung khuyến mãi>\nVD: /km Giảm 20% thay pin đến hết 30/11');
+  let promo = text.replace(/^\/km\s*/, '').trim();
+  if (!promo) return reply('Gõ: /km <số mẫu> hoặc /km <nội dung khuyến mãi>\nVD: /km 4 hoặc /km Giảm 20% thay pin đến hết 30/11\nXem mẫu: /kmmau');
+  // Chỉ toàn số (VD "4" hoặc "4 5 6") => dùng mẫu soạn sẵn
+  if (/^[\d\s,]+$/.test(promo)) {
+    const nums = promo.split(/[\s,]+/).filter(Boolean).map(Number);
+    const bad = nums.filter((n) => !PROMO_PRESETS[n - 1]);
+    if (bad.length) return reply(`❌ Không có mẫu số ${bad.join(', ')}. Có mẫu từ 1 đến ${PROMO_PRESETS.length}, xem: /kmmau`);
+    promo = [...new Set(nums)].map((n) => PROMO_PRESETS[n - 1][1]).join('\n\n');
+  }
   await env.DB.put('promo', promo.slice(0, 1500));
   await env.DB.put('bc', JSON.stringify({ text: promo.slice(0, 1500), cursor: null, sent: 0, failed: 0 }));
   const { total, off } = await countCustomers(env);
