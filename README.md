@@ -97,7 +97,7 @@ https://yourdomain.com
 - 5000+ khách hàng hài lòng
 - 98% tỷ lệ sửa thành công
 - 24/7 hỗ trợ
-- 2 năm bảo hành
+- Bảo hành 6 - 12 tháng
 
 ✅ **Testimonials**
 - 3 testimonials từ khách thực

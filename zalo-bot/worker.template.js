@@ -110,7 +110,7 @@ const CTA =
   `\n\nĐặt lịch: nhắn "Tên - SĐT - lỗi máy", Khang Huy gọi lại ngay.` +
   `\nHotline: ${SHOP.phone} | ${SHOP.address} | ${SHOP.hours}`;
 
-const NOTE = '\nGiá là tiền công sửa, kiểm tra máy miễn phí, bảo hành 2 năm.';
+const NOTE = '\nGiá là tiền công sửa, kiểm tra máy miễn phí, bảo hành 6 - 12 tháng.';
 
 // Quyết định trả lời khách. Trả về { reply, notify } — notify là tin báo cho chủ tiệm (hoặc null).
 // promo: nội dung khuyến mãi đang chạy (hoặc rỗng).
@@ -239,6 +239,9 @@ async function pollUpdates(env, budget) {
 // Chạy mỗi phút (cron): gửi khuyến mãi cho tối đa `limit` khách tiếp theo
 async function runBroadcast(env, limit) {
   if (!env.DB || limit < 1) return;
+  // Chỉ gửi khuyến mãi 8h-21h giờ Việt Nam (luật chỉ cho 7h-22h); ngoài giờ thì đợi sáng hôm sau gửi tiếp
+  const hourVN = (new Date().getUTCHours() + 7) % 24;
+  if (hourVN < 8 || hourVN >= 21) return;
   const job = await env.DB.get('bc', 'json');
   if (!job) return;
   const page = await env.DB.list({ prefix: 'c:', cursor: job.cursor || undefined, limit });
@@ -269,7 +272,7 @@ const PROMO_PRESETS = [
   ['Miễn phí đi kèm', '✨ MIỄN PHÍ ĐI KÈM KHI SỬA MÁY\nMiễn phí vệ sinh máy, dán cường lực và kiểm tra tổng quát toàn bộ máy khi đến sửa chữa.'],
   // Nhóm 3: Khách thân thiết / Khách mới
   ['Check-in giảm giá', '📍 CHECK-IN NHẬN QUÀ\nGiảm ngay 100.000đ hoặc tặng 1 nón bảo hiểm khi check-in tiệm lên Facebook/Google Maps.'],
-  ['Giờ vàng cuối tuần', '⏰ GIỜ VÀNG – NGÀY HỘI THÀNH VIÊN\nGiảm giá đặc biệt vào cuối tuần (Thứ 7, Chủ nhật) và khung giờ vàng 12h00 mỗi ngày.'],
+  ['Giờ vàng cuối tuần', '⏰ GIỜ VÀNG – NGÀY HỘI THÀNH VIÊN\nGiảm ngay 200.000đ vào cuối tuần (Thứ 7, Chủ nhật) và khung giờ vàng 12h00 mỗi ngày.'],
 ];
 
 function presetList() {
@@ -324,7 +327,7 @@ async function onOwner(env, chatId, text) {
   await env.DB.put('promo', promo.slice(0, 1500));
   await env.DB.put('bc', JSON.stringify({ text: promo.slice(0, 1500), cursor: null, sent: 0, failed: 0 }));
   const { total, off } = await countCustomers(env);
-  return reply(`✅ Đã lưu khuyến mãi. Bot đang gửi cho ${total - off} khách, xong sẽ báo lại (mỗi phút ${BATCH} khách).\n\nXem trước tin khách nhận:\n\n${promoMessage(promo)}`);
+  return reply(`✅ Đã lưu khuyến mãi. Bot đang gửi cho ${total - off} khách, xong sẽ báo lại (mỗi phút ${BATCH} khách, chỉ gửi 8h-21h).\n\nXem trước tin khách nhận:\n\n${promoMessage(promo)}`);
 }
 
 async function callApi(env, method, body) {

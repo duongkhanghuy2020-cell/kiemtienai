@@ -126,7 +126,7 @@ Thầy nhắn các lệnh sau cho bot, từ Zalo của thầy:
 | 5 | Sửa chữa | Bảo hành mở rộng | Bảo hành 6 – 12 tháng, 1 đổi 1 trong 30 ngày đầu |
 | 6 | Sửa chữa | Miễn phí đi kèm | Miễn phí vệ sinh máy, dán cường lực, kiểm tra tổng quát khi đến sửa |
 | 7 | Khách thân thiết | Check-in giảm giá | Giảm 100.000đ hoặc tặng nón bảo hiểm khi check-in lên Facebook/Google Maps |
-| 8 | Khách thân thiết | Giờ vàng cuối tuần | Giảm giá đặc biệt Thứ 7, Chủ nhật và khung giờ vàng 12h00 |
+| 8 | Khách thân thiết | Giờ vàng cuối tuần | Giảm 200.000đ Thứ 7, Chủ nhật và khung giờ vàng 12h00 |
 
 Gợi ý gộp: `/km 1 2 3` (lên đời máy), `/km 4 5 6` (sửa chữa), `/km 7 8` (khách thân thiết).
 
