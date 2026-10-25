@@ -279,6 +279,74 @@ function presetList() {
   return PROMO_PRESETS.map(([name, body], i) => `${i + 1}. ${name}: ${body.split('\n')[1]}`).join('\n');
 }
 
+// --- Phiếu bảo hành điện tử & tự nhắc khách sau sửa ---
+// Mỗi khách đã nhận máy là 1 key "f:<chatId>", metadata: n tên, m máy, d ngày nhận (ms), s số mốc nhắc đã gửi.
+
+const DAY = 86400000;
+const WARRANTY_WORDS = /^(kich hoat|kich hoat bao hanh|nhan may|da nhan may)( |$)/;
+const STOP_REMIND_WORDS = /^(huy nhac|tat nhac)$/;
+
+const vnDayStart = (ts) => Math.floor((ts + 7 * 3600000) / DAY) * DAY;
+const pad = (n) => String(n).padStart(2, '0');
+function fmtDate(ts) {
+  const d = new Date(vnDayStart(ts));
+  return `${pad(d.getUTCDate())}/${pad(d.getUTCMonth() + 1)}/${d.getUTCFullYear()}`;
+}
+
+// [số ngày sau khi nhận máy, nội dung tin]
+const FOLLOWUPS = [
+  [7, (r) => `Chào ${r.n || 'anh/chị'}, máy ${r.m || 'của anh/chị'} sửa tại ${SHOP.name} dùng ổn không ạ? Có gì bất thường anh/chị nhắn ngay để tiệm hỗ trợ.\nNếu hài lòng, anh/chị đánh giá giúp tiệm trên Google Maps nhé. Cảm ơn anh/chị nhiều! 🙏`],
+  [27, (r) => `⏰ Máy ${r.m || 'của anh/chị'} còn 3 ngày nữa là hết hạn 1 đổi 1 (đến ${fmtDate(r.d + 30 * DAY)}). Nếu thấy lỗi gì, anh/chị ghé ${SHOP.name} kiểm tra miễn phí trước ngày này nhé.\n📍 ${SHOP.address} | 📞 ${SHOP.phone}`],
+  [180, (r) => `🔧 Đã 6 tháng từ lần sửa máy ${r.m || ''} tại ${SHOP.name}. Mời anh/chị ghé vệ sinh máy và kiểm tra pin, chẩn đoán miễn phí.\n📍 ${SHOP.address} | 📞 ${SHOP.phone} | ${SHOP.hours}`],
+];
+
+function warrantyCard(r) {
+  return (
+    `🛡️ PHIẾU BẢO HÀNH ĐIỆN TỬ – ${SHOP.name.toUpperCase()}\n` +
+    `Khách: ${r.n || '(không tên)'}\nMáy: ${r.m || '(chưa ghi)'}\nNgày nhận máy: ${fmtDate(r.d)}\n` +
+    `• 1 đổi 1 đến hết ${fmtDate(r.d + 30 * DAY)}\n• Bảo hành 6 – 12 tháng tùy linh kiện\n\n` +
+    `Giữ tin nhắn này làm phiếu bảo hành. Bot sẽ hỏi thăm sau 7 ngày, nhắc trước khi hết hạn 1 đổi 1 và mời kiểm tra máy sau 6 tháng ` +
+    `(nhắn "huy nhac" nếu không muốn nhận).\n📞 ${SHOP.phone}`
+  );
+}
+
+// Lưu (hoặc làm mới nếu sửa lần nữa) lịch nhắc cho khách, trả về bản ghi
+async function registerWarranty(env, chatId, name, model) {
+  const r = { n: (name || '').slice(0, 60), m: (model || '').slice(0, 60), d: Date.now(), s: 0 };
+  await env.DB.put(`f:${chatId}`, '', { metadata: r });
+  return r;
+}
+
+// Mỗi ngày 9h-20h giờ VN chạy 1 lượt: gửi mốc nhắc đến hạn. Trả về số tin đã gửi.
+async function runFollowups(env, limit) {
+  if (!env.DB || limit < 1) return 0;
+  const now = Date.now();
+  const hourVN = (new Date(now).getUTCHours() + 7) % 24;
+  if (hourVN < 9 || hourVN >= 20) return 0;
+  const today = vnDayStart(now);
+  const state = (await env.DB.get('fu', 'json')) || {};
+  if (state.day === today && !state.cursor) return 0;
+  const page = await env.DB.list({ prefix: 'f:', cursor: (state.day === today && state.cursor) || undefined, limit });
+  let used = 0;
+  for (const k of page.keys) {
+    const r = k.metadata;
+    if (!r) continue;
+    const days = Math.floor((today - vnDayStart(r.d)) / DAY);
+    // Chỉ gửi mốc muộn nhất đã đến hạn (nếu bot ngừng lâu thì bỏ qua mốc cũ, không gửi dồn)
+    let due = -1;
+    FOLLOWUPS.forEach(([day], i) => {
+      if (i >= r.s && days >= day) due = i;
+    });
+    if (due < 0) continue;
+    await send(env, k.name.slice(2), FOLLOWUPS[due][1](r));
+    used++;
+    if (due === FOLLOWUPS.length - 1) await env.DB.delete(k.name);
+    else await env.DB.put(k.name, '', { metadata: { ...r, s: due + 1 } });
+  }
+  await env.DB.put('fu', JSON.stringify(page.list_complete ? { day: today } : { day: today, cursor: page.cursor }));
+  return used;
+}
+
 const OWNER_HELP =
   'Chào chủ tiệm 👋\n' +
   '• /kmmau: xem 8 mẫu khuyến mãi soạn sẵn\n' +
@@ -287,6 +355,8 @@ const OWNER_HELP =
   '• /kmxem: xem khuyến mãi đang chạy\n' +
   '• /kmxoa: tắt khuyến mãi\n' +
   '• /khach: đếm số khách\n' +
+  '• /giao <mã khách> <tên máy>: gửi phiếu bảo hành + bật tự nhắc sau sửa cho khách đó\n' +
+  '• /nhac: đếm khách đang được tự nhắc sau sửa\n' +
   '• /tl <chat_id> <nội dung>: trả lời 1 khách\n' +
   'Các tin báo đơn sẽ gửi về đây.';
 
@@ -297,7 +367,7 @@ async function onOwner(env, chatId, text) {
     const r = await send(env, m[1], m[2]);
     return reply(r && r.ok ? '✅ Đã gửi cho khách.' : `❌ Gửi lỗi: ${JSON.stringify(r)}`);
   }
-  if (!/^\/(km|kmmau|kmxem|kmxoa|khach)\b/.test(text)) return reply(OWNER_HELP);
+  if (!/^\/(km|kmmau|kmxem|kmxoa|khach|giao|nhac)\b/.test(text)) return reply(OWNER_HELP);
   if (text === '/kmmau') {
     return reply(`📋 MẪU KHUYẾN MÃI SOẠN SẴN\n\n${presetList()}\n\nGửi cho tất cả khách: /km <số>\nVD: /km 4 hoặc gộp /km 4 5 6`);
   }
@@ -315,6 +385,25 @@ async function onOwner(env, chatId, text) {
     const { total, off } = await countCustomers(env);
     return reply(`Có ${total} khách đã nhắn bot, ${total - off} khách đang nhận khuyến mãi.`);
   }
+  if (text === '/nhac') {
+    let cursor, total = 0;
+    do {
+      const page = await env.DB.list({ prefix: 'f:', cursor });
+      total += page.keys.length;
+      cursor = page.list_complete ? null : page.cursor;
+    } while (cursor);
+    return reply(`Có ${total} khách đang được tự nhắc sau sửa máy.`);
+  }
+  const g = text.match(/^\/giao\s+(\S+)\s*([\s\S]*)/);
+  if (g) {
+    const { metadata: c } = await env.DB.getWithMetadata(`c:${g[1]}`);
+    const r = await registerWarranty(env, g[1], c && c.n, g[2].trim());
+    const sent = await send(env, g[1], warrantyCard(r));
+    return reply(sent && sent.ok
+      ? `✅ Đã gửi phiếu bảo hành và bật tự nhắc cho khách ${r.n || g[1]} (máy ${r.m || 'chưa ghi'}).`
+      : `❌ Không gửi được cho mã khách ${g[1]}. Khách phải nhắn bot ít nhất 1 lần, và mã phải lấy từ tin báo đơn.`);
+  }
+  if (/^\/giao\b/.test(text)) return reply('Gõ: /giao <mã khách> <tên máy>\nVD: /giao 1234abcd iPhone 13 Pro\nMã khách có trong tin báo đơn.');
   let promo = text.replace(/^\/km\s*/, '').trim();
   if (!promo) return reply('Gõ: /km <số mẫu> hoặc /km <nội dung khuyến mãi>\nVD: /km 4 hoặc /km Giảm 20% thay pin đến hết 30/11\nXem mẫu: /kmmau');
   // Chỉ toàn số (VD "4" hoặc "4 5 6") => dùng mẫu soạn sẵn
@@ -368,6 +457,20 @@ async function onUpdate(env, update) {
     return send(env, chatId, `✅ Anh/chị sẽ nhận tin khuyến mãi mới nhất từ ${SHOP.name}.`);
   }
   await saveCustomer(env, chatId, sender.name);
+
+  if (STOP_REMIND_WORDS.test(t)) {
+    if (env.DB) await env.DB.delete(`f:${chatId}`);
+    return send(env, chatId, 'Đã tắt tin nhắc sau sửa máy. Phiếu bảo hành của anh/chị vẫn còn hiệu lực ạ.');
+  }
+  // Khách nhắn "nhận máy iPhone 13" lúc lấy máy => phiếu bảo hành điện tử + tự nhắc
+  if (env.DB && WARRANTY_WORDS.test(t)) {
+    const model = findModel(t);
+    const rest = text.replace(/^\s*(kích hoạt bảo hành|kich hoat bao hanh|kích hoạt|kich hoat|đã nhận máy|da nhan may|nhận máy|nhan may)\s*/i, '');
+    const r = await registerWarranty(env, chatId, sender.name, model ? model.label : rest);
+    await send(env, chatId, warrantyCard(r));
+    await notifyOwner(env, `🛡️ Khách ${r.n || ''} vừa kích hoạt bảo hành điện tử, máy: ${r.m || '(chưa ghi)'}.\nMã khách: ${chatId}`);
+    return;
+  }
 
   if (!update.event_name || update.event_name === 'message.text.received') {
     if (!text) return;
@@ -463,8 +566,10 @@ export default {
   async scheduled(event, env, ctx) {
     ctx.waitUntil(
       (async () => {
-        await pollUpdates(env, POLL_BUDGET);
-        await runBroadcast(env, BATCH);
+        // Tối đa ~47 lệnh gọi ra ngoài mỗi lần chạy (gói miễn phí cho 50)
+        let left = 46 - (await pollUpdates(env, POLL_BUDGET));
+        left -= await runFollowups(env, Math.min(25, left));
+        await runBroadcast(env, Math.min(BATCH, left));
       })().catch((e) => console.error(e))
     );
   },

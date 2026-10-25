@@ -19,12 +19,16 @@ Thầy không rành kỹ thuật. Luôn trả lời bằng tiếng Việt, xưng
 | `/kmxem` · `/kmxoa` | Xem / tắt khuyến mãi đang chạy |
 | `/khach` | Đếm khách đã nhắn bot và khách đang nhận khuyến mãi |
 | `/tl <mã khách> <nội dung>` | Nhắn riêng 1 khách (mã có trong tin báo đơn) |
+| `/giao <mã khách> <tên máy>` | Gửi phiếu bảo hành điện tử và bật tự nhắc sau sửa cho khách đó |
+| `/nhac` | Đếm khách đang được tự nhắc sau sửa |
+
+Khách tự nhắn `nhận máy iPhone 13` lúc lấy máy cũng được phiếu bảo hành và lịch tự nhắc (ngày 7, 27, 180, gửi lúc 9h–20h). Nhắn `huy nhac` để tắt. Nội dung các mốc nằm trong mảng `FOLLOWUPS`, file `zalo-bot/worker.template.js`.
 
 **Giới hạn của bot:**
 - Chỉ gửi được cho khách **đã từng nhắn bot**.
-- Gửi 25 khách mỗi phút, **chỉ trong 8h–21h**.
+- Gửi khuyến mãi 25 khách mỗi phút, **chỉ trong 8h–21h**.
 - Khách nhắn "huy km" thì không nhận khuyến mãi nữa.
-- Bot **chưa có** chức năng tự nhắc lịch theo từng khách: sau 7 ngày, trước khi hết bảo hành, sinh nhật. Các việc đó thầy làm tay bằng `/tl`, hoặc đề xuất làm thêm tính năng.
+- Chưa có chức năng sinh nhật hay tích điểm.
 
 8 mẫu nằm trong mảng `PROMO_PRESETS` (file `zalo-bot/worker.template.js`): 1 Thu cũ đổi mới · 2 Quà tặng kèm · 3 Trả góp 0% · 4 Giảm giá sửa chữa · 5 Bảo hành mở rộng 6–12 tháng · 6 Miễn phí đi kèm · 7 Check-in · 8 Giờ vàng cuối tuần giảm 200.000đ.
 
@@ -80,7 +84,9 @@ Bot tự thêm tên tiệm, hotline 0981.308.308, địa chỉ và dòng "huy km
 | 11/11, Black Friday, 12/12 | Giờ vàng, giảm sâu | 4 8 |
 | Mỗi cuối tuần | Giờ vàng 12h00 | 8 |
 
-## Chăm sóc sau sửa (học TGDĐ, FPT): thầy nhắn tay bằng `/tl`
+## Chăm sóc sau sửa (học TGDĐ, FPT): bot đã tự làm các mốc 7, 27, 180 ngày
+
+Nhắc thầy cho **mọi khách nhận máy** nhắn "nhận máy <tên máy>". Đây là cách tăng danh sách khách nhận khuyến mãi tốt nhất. Bảng dưới là các mốc và nội dung đang dùng. Muốn đổi nội dung thì sửa mảng `FOLLOWUPS`.
 
 | Thời điểm | Nội dung gợi ý |
 |---|---|
@@ -89,7 +95,7 @@ Bot tự thêm tên tiệm, hotline 0981.308.308, địa chỉ và dòng "huy km
 | Ngày 25–28 | Nhắc sắp hết hạn 1 đổi 1, mời ghé kiểm tra miễn phí |
 | 6 tháng | Mời vệ sinh máy miễn phí, kiểm tra pin |
 
-Khi thầy muốn **tự động hóa** các mốc này, nói rõ là cần làm thêm tính năng. Bot sẽ lưu ngày giao máy cho từng khách rồi tự nhắc, và có thể làm sau nếu thầy đồng ý.
+Ngày 25–28 bot gửi ở ngày 27. Mốc "ngay sau khi giao máy" là phiếu bảo hành điện tử.
 
 ## Sửa hoặc thêm mẫu khuyến mãi
 

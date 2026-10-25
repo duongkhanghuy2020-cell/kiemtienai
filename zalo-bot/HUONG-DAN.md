@@ -115,6 +115,25 @@ Thầy nhắn các lệnh sau cho bot, từ Zalo của thầy:
 - Muốn gọi điện thì cứ gọi thẳng số khách trong tin báo đơn.
 - Link bot: **https://zalo.me/904216852236717976**. Link này đã được gắn trên trang bảng giá (nút "Báo giá" màu cam). Mã QR của bot nằm trong phần thông tin bot ở Zalo. Thầy nên in mã QR ra dán ở quầy và đăng link lên Facebook. **Càng nhiều khách nhắn bot thì danh sách nhận khuyến mãi càng dài.**
 
+### Phiếu bảo hành điện tử & tự nhắc khách sau sửa
+
+**Lúc giao máy**, thầy nhờ khách quét QR bot rồi nhắn: `nhận máy iPhone 13` (ghi đúng tên máy khách). Bot sẽ:
+1. Gửi khách **phiếu bảo hành điện tử**: ngày nhận máy, hạn 1 đổi 1 (30 ngày), bảo hành 6 – 12 tháng.
+2. Báo thầy "🛡️ Khách … vừa kích hoạt bảo hành", kèm mã khách.
+3. **Tự nhắn khách** vào lúc 9h – 20h các ngày sau:
+
+| Sau khi nhận máy | Bot nhắn khách |
+|---|---|
+| 7 ngày | Hỏi máy dùng ổn không, nhờ đánh giá Google Maps |
+| 27 ngày | Nhắc còn 3 ngày hết hạn 1 đổi 1, mời ghé kiểm tra miễn phí |
+| 6 tháng | Mời ghé vệ sinh máy, kiểm tra pin (chẩn đoán miễn phí) |
+
+Khách đã từng nhắn bot thì thầy có thể tự bật cho khách, không cần khách nhắn: `/giao <mã khách> iPhone 13`. Mã khách có trong tin báo đơn.
+
+- `/nhac`: đếm khách đang được tự nhắc.
+- Khách nhắn `huy nhac` thì bot thôi nhắc. Phiếu bảo hành vẫn còn hiệu lực.
+- Khách sửa lần nữa thì nhắn lại "nhận máy …", lịch nhắc tính lại từ đầu.
+
 ### 8 mẫu khuyến mãi soạn sẵn
 
 | Số | Nhóm | Mẫu | Nội dung khách nhận |
