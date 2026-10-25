@@ -261,6 +261,76 @@
             font-weight: 500;
         }
 
+        .booking {
+            background: white;
+            border-top: 4px solid #0068ff;
+            border-radius: 5px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .booking h2 {
+            color: #003d7a;
+            font-size: 18px;
+            margin-bottom: 4px;
+        }
+
+        .booking p {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 14px;
+        }
+
+        .booking form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+        }
+
+        .booking input,
+        .booking textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font: inherit;
+            font-size: 14px;
+        }
+
+        .booking textarea {
+            grid-column: 1 / -1;
+            min-height: 70px;
+            resize: vertical;
+        }
+
+        .booking .hp {
+            position: absolute;
+            left: -9999px;
+        }
+
+        .booking button {
+            grid-column: 1 / -1;
+            background: #0068ff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 12px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .booking button:disabled {
+            opacity: 0.6;
+        }
+
+        .booking-msg {
+            grid-column: 1 / -1;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
         @media (max-width: 768px) {
             header h1 {
                 font-size: 18px;
@@ -656,6 +726,20 @@
             ✓ Giá trên là tiền công sửa | ✓ Chẩn đoán MIỄN PHÍ | ✓ Không phí ẩn | ✓ Bảo hành 2 năm
         </div>
 
+        <div class="booking" id="dat-lich">
+            <h2>📅 ĐẶT LỊCH SỬA</h2>
+            <p>Để lại thông tin, Khang Huy gọi lại tư vấn trong ít phút.</p>
+            <form id="booking-form">
+                <input name="name" placeholder="Tên của bạn" maxlength="60">
+                <input name="phone" type="tel" placeholder="Số điện thoại *" required maxlength="15">
+                <input name="model" placeholder="Dòng máy (VD: iPhone 13 Pro)" maxlength="60">
+                <textarea name="issue" placeholder="Máy bị lỗi gì? (VD: vỡ màn hình, chai pin)" maxlength="500"></textarea>
+                <input class="hp" name="website" tabindex="-1" autocomplete="off">
+                <button type="submit">Gửi đặt lịch</button>
+                <div class="booking-msg" id="booking-msg"></div>
+            </form>
+        </div>
+
         <div class="footer-bar">
             <div class="footer-item">
                 <h3>✓ LINH KIỆN CHÍNH HÃNG</h3>
@@ -679,5 +763,45 @@
         <a class="float-btn zalo" href="https://zalo.me/84981308308" target="_blank" rel="noopener" title="Chat Zalo">Zalo</a>
         <a class="float-btn call" href="tel:0981308308" title="Gọi Hotline">📞</a>
     </div>
+
+    <script>
+        // Địa chỉ Zalo bot sau khi deploy Cloudflare, VD: 'https://khanghuy-bot.ten.workers.dev/order'
+        // Để trống thì form chuyển khách sang chat Zalo.
+        const ORDER_API = '';
+
+        document.getElementById('booking-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const form = e.target;
+            const msg = document.getElementById('booking-msg');
+            const btn = form.querySelector('button');
+            const data = Object.fromEntries(new FormData(form));
+
+            if (!ORDER_API) {
+                window.open('https://zalo.me/84981308308', '_blank');
+                return;
+            }
+
+            btn.disabled = true;
+            msg.style.color = '#666';
+            msg.textContent = 'Đang gửi...';
+            try {
+                const res = await fetch(ORDER_API, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const r = await res.json();
+                if (!r.ok) throw new Error(r.error);
+                form.reset();
+                msg.style.color = '#16a34a';
+                msg.textContent = '✅ Đã gửi! Khang Huy sẽ gọi lại ngay.';
+            } catch (err) {
+                msg.style.color = '#dc2626';
+                msg.textContent = (err.message || 'Chưa gửi được') + '. Vui lòng gọi 0981.308.308';
+            } finally {
+                btn.disabled = false;
+            }
+        });
+    </script>
 </body>
 </html>
