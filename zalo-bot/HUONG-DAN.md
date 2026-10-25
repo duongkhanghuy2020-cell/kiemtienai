@@ -31,7 +31,7 @@ Cloudflare là nơi chạy bot 24/7 miễn phí, máy tính của thầy tắt c
 ## Bước 3: Đưa bot lên Cloudflare (5 phút)
 
 1. Ở menu bên trái, chọn **Workers & Pages** → **Create** → **Start with Hello World!**
-2. Đặt tên **khanghuy-bot** rồi bấm **Deploy**.
+2. Đặt tên **khanghuyapple-bot** rồi bấm **Deploy**.
 3. Bấm **Edit code**. Xóa hết code có sẵn, mở file [worker.js](worker.js) trong thư mục này, chép **toàn bộ** nội dung và dán vào, rồi bấm **Deploy**.
 4. Quay lại trang của worker, vào **Settings** → **Variables and Secrets** → **Add**, rồi thêm 2 biến, mỗi biến chọn loại **Secret**:
 
@@ -41,14 +41,14 @@ Cloudflare là nơi chạy bot 24/7 miễn phí, máy tính của thầy tắt c
    | `WEBHOOK_SECRET` | Thầy tự đặt một chuỗi dài, chỉ gồm chữ và số, ví dụ `KhangHuy2026BiMat`. Ghi lại để dùng ở bước sau |
 
 5. Bấm **Deploy** để lưu.
-6. Ghi lại địa chỉ worker, dạng `https://khanghuy-bot.<tên-của-thầy>.workers.dev`.
+6. Ghi lại địa chỉ worker, dạng `https://khanghuyapple-bot.crimson-recipe-0ba6.workers.dev`.
 
 ## Bước 4: Nối bot với Zalo (1 phút)
 
 Mở trình duyệt và vào địa chỉ sau. Thay phần trong `< >` bằng giá trị của thầy:
 
 ```
-https://khanghuy-bot.<tên-của-thầy>.workers.dev/setup?key=<WEBHOOK_SECRET>
+https://khanghuyapple-bot.crimson-recipe-0ba6.workers.dev/setup?key=<WEBHOOK_SECRET>
 ```
 
 Nếu trang hiện `"ok":true` là xong.
@@ -58,7 +58,7 @@ Nếu trang hiện `"ok":true` là xong.
 Bot cần một chỗ để nhớ những khách đã nhắn và nội dung khuyến mãi đang chạy.
 
 1. Ở menu bên trái Cloudflare, chọn **Storage & Databases** → **KV** → **Create** (hoặc **Create a namespace**), đặt tên **khanghuy-db**, rồi bấm **Add/Create**.
-2. Mở lại worker **khanghuy-bot**, vào **Settings** → **Bindings** → **Add** → **KV namespace**:
+2. Mở lại worker **khanghuyapple-bot**, vào **Settings** → **Bindings** → **Add** → **KV namespace**:
    - **Variable name**: gõ đúng `DB` (chữ in hoa)
    - **KV namespace**: chọn **khanghuy-db**
    - Bấm **Deploy** (hoặc **Save**)
@@ -75,9 +75,9 @@ Bot cần một chỗ để nhớ những khách đã nhắn và nội dung khuy
 
 ## Bước 7: Gắn form đặt lịch trên web
 
-Gửi cho Claude **địa chỉ worker** (chỉ địa chỉ `https://khanghuy-bot....workers.dev`, không gửi token). Claude sẽ gắn vào form "Đặt lịch sửa" trên trang bảng giá và đưa lên GitHub.
+Gửi cho Claude **địa chỉ worker** (chỉ địa chỉ `https://khanghuyapple-bot....workers.dev`, không gửi token). Claude sẽ gắn vào form "Đặt lịch sửa" trên trang bảng giá và đưa lên GitHub.
 
-Thầy cũng có thể tự sửa: trong file `bang-gia-professional.html`, tìm dòng `const ORDER_API = '';` rồi điền `'https://khanghuy-bot.<tên>.workers.dev/order'`.
+Thầy cũng có thể tự sửa: trong file `bang-gia-professional.html`, tìm dòng `const ORDER_API = '';` rồi điền `'https://khanghuyapple-bot.crimson-recipe-0ba6.workers.dev/order'`.
 
 ## Bước 8: Thử bot
 
@@ -122,7 +122,7 @@ Thầy nhắn các lệnh sau cho bot, từ Zalo của thầy:
 
 1. Sửa bảng giá trong `bang-gia-professional.html` (hoặc nhờ Claude sửa).
 2. Nhờ Claude chạy lại `build.ps1` để tạo `worker.js` mới.
-3. Vào Cloudflare → worker **khanghuy-bot** → **Edit code**, dán `worker.js` mới rồi bấm **Deploy**.
+3. Vào Cloudflare → worker **khanghuyapple-bot** → **Edit code**, dán `worker.js` mới rồi bấm **Deploy**.
 
 Danh sách khách và khuyến mãi nằm trong kho KV nên không bị mất khi dán code mới.
 

@@ -1,7 +1,11 @@
 // Cấu hình Cloudflare Worker cho Zalo bot.
 // Cloudflare tự deploy thư mục zalo-bot mỗi khi có commit mới trên GitHub.
-// BOT_TOKEN, WEBHOOK_SECRET, OWNER_CHAT_ID đặt trong Cloudflare (Settings > Variables and Secrets), không để ở đây.
+// BOT_TOKEN, WEBHOOK_SECRET đặt trong Cloudflare (Settings > Variables and Secrets > Secret), không để ở đây.
 {
+  "vars": {
+    // Chat id Zalo của chủ tiệm (nhắn /id cho bot để lấy) — nhận tin báo đơn và dùng lệnh /km, /tl
+    "OWNER_CHAT_ID": "68a4c7095f4bb615ef5a"
+  },
   "name": "khanghuyapple-bot",
   "main": "worker.js",
   "compatibility_date": "2025-09-01",
