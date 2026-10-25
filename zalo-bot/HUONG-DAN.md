@@ -135,6 +135,20 @@ Khách đã từng nhắn bot thì thầy có thể tự bật cho khách, khôn
 - Khách nhắn `huy nhac` thì bot thôi nhắc. Phiếu bảo hành vẫn còn hiệu lực.
 - Khách sửa lần nữa thì nhắn lại "nhận máy …", lịch nhắc tính lại từ đầu.
 
+### Tích điểm khách quen
+
+- Mỗi lần khách nhận máy (khách nhắn "nhận máy …" hoặc thầy gõ `/giao`), khách được **1 điểm**. Phiếu bảo hành có dòng "⭐ Tích điểm: 2/3 lần sửa".
+- Đủ **3 điểm**: bot tự gửi khách **🎁 voucher giảm 100.000đ tiền công lần sửa kế tiếp**, có mã riêng (dạng `KHAB12C`), hạn dùng 6 tháng. Thầy cũng được báo mã voucher.
+- Mỗi khách được cộng tối đa 1 điểm trong 7 ngày, để không ai nhắn "nhận máy" nhiều lần lấy điểm.
+
+| Ai | Nhắn | Tác dụng |
+|---|---|---|
+| Khách | `diem` | Xem điểm và voucher đang có |
+| Thầy | `/dung KHAB12C` | Khi khách đưa mã: bot kiểm tra mã đúng, chưa dùng, còn hạn, rồi đánh dấu đã dùng |
+| Thầy | `/diem <mã khách>` | Xem điểm của một khách |
+
+Muốn đổi số điểm cần đủ hoặc mức giảm, thầy nhắn Claude. Hai giá trị này là `STAMPS_NEEDED` và `REWARD` trong code.
+
 ### 9 mẫu khuyến mãi soạn sẵn
 
 | Số | Nhóm | Mẫu | Nội dung khách nhận |

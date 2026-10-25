@@ -21,6 +21,10 @@ Thầy không rành kỹ thuật. Luôn trả lời bằng tiếng Việt, xưng
 | `/tl <mã khách> <nội dung>` | Nhắn riêng 1 khách (mã có trong tin báo đơn) |
 | `/giao <mã khách> <tên máy>` | Gửi phiếu bảo hành điện tử và bật tự nhắc sau sửa cho khách đó |
 | `/nhac` | Đếm khách đang được tự nhắc sau sửa |
+| `/dung <mã voucher>` | Kiểm tra và đánh dấu voucher khách quen đã dùng |
+| `/diem <mã khách>` | Xem điểm tích lũy của một khách |
+
+**Tích điểm:** mỗi lần nhận máy +1 điểm (tối đa 1 điểm/7 ngày). Đủ 3 điểm, bot gửi voucher "giảm 100.000đ tiền công lần sửa kế tiếp", hạn 180 ngày. Khách nhắn `diem` để xem. Hằng số `STAMPS_NEEDED`, `REWARD`, `VOUCHER_DAYS` nằm trong `zalo-bot/worker.template.js`.
 
 Khách tự nhắn `nhận máy iPhone 13` lúc lấy máy cũng được phiếu bảo hành và lịch tự nhắc (ngày 7, 27, 180, gửi lúc 9h–20h). Nhắn `huy nhac` để tắt, nhắn `tra cuu bao hanh` để xem lại phiếu. Nội dung các mốc nằm trong mảng `FOLLOWUPS`, file `zalo-bot/worker.template.js`.
 
@@ -28,7 +32,7 @@ Khách tự nhắn `nhận máy iPhone 13` lúc lấy máy cũng được phiế
 - Chỉ gửi được cho khách **đã từng nhắn bot**.
 - Gửi khuyến mãi 25 khách mỗi phút, **chỉ trong 8h–21h**.
 - Khách nhắn "huy km" thì không nhận khuyến mãi nữa.
-- Chưa có chức năng sinh nhật hay tích điểm.
+- Chưa có chức năng sinh nhật.
 
 9 mẫu nằm trong mảng `PROMO_PRESETS` (file `zalo-bot/worker.template.js`): 1 Thu cũ đổi mới · 2 Quà tặng kèm · 3 Trả góp 0% · 4 Giảm giá sửa chữa · 5 Bảo hành mở rộng 6–12 tháng · 6 Miễn phí đi kèm · 7 Check-in · 8 Giờ vàng cuối tuần giảm 200.000đ · 9 Đặt lịch trước giảm 10% (tối đa 100.000đ).
 
@@ -41,7 +45,7 @@ Khách tự nhắn `nhận máy iPhone 13` lúc lấy máy cũng được phiế
 5. **Có lý do để khách đăng ký thành viên** (Hoàng Hà: đăng ký Member trong giờ livestream mới được voucher). Với tiệm mình: "quét QR nhắn bot nhận ưu đãi". Danh sách khách của bot chính là danh sách thành viên.
 6. **Khung giờ cố định để khách quen hẹn** (Hoàng Hà livestream tối Thứ Sáu 19h30–21h30). Tiệm mình có mẫu 8 giờ vàng 12h00 và cuối tuần. Nên giữ cố định để khách nhớ.
 7. **Chạy theo mùa cao điểm và minigame** (Minh Tuấn: thu cũ đổi mới cuối năm, quay số trúng vàng, livestream công bố kết quả hằng tuần). Với tiệm nhỏ: minigame trên fanpage (đoán giá, bình luận nhận thẻ cào), công bố kết quả công khai.
-8. **Tích điểm, ưu đãi khách quen** (Viettel++, Quà Tặng VIP, FPT tích điểm). Bot chưa có. Đề xuất làm sau: đếm số lần "nhận máy", lần thứ 3 giảm thêm.
+8. **Tích điểm, ưu đãi khách quen** (Viettel++, Quà Tặng VIP, FPT tích điểm). Bot đã có: 3 lần sửa được voucher 100.000đ. Nhắc thầy luôn bảo khách nhắn "nhận máy" để được tính điểm.
 9. **Dịch vụ cho khách ở xa** (Điện Thoại Vui nhận sửa qua ship, miễn phí ship 2 chiều trong 10km, hỗ trợ qua Zalo). Gợi ý thầy cân nhắc: khách ngoài khu vực nhắn bot đặt ship máy.
 10. **Chống bị nghi lừa đảo.** VTV đưa tin khoảng 1.000 người bị lừa qua livestream "iPhone giá rẻ" rồi bị kéo sang Zalo. Tin của tiệm luôn có tên, địa chỉ, hotline thật; không dùng chữ "trúng thưởng", "nhấn link nhận quà"; không giá rẻ bất thường.
 

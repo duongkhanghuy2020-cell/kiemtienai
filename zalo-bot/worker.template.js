@@ -203,7 +203,8 @@ async function saveCustomer(env, chatId, name, patch) {
   const now = Date.now();
   // Gói miễn phí giới hạn 1000 lần ghi/ngày: chỉ ghi khi khách mới, đổi trạng thái, hoặc sau 1 ngày
   if (old && !patch && old.n === (name || '') && now - old.l < 86400000) return;
-  const meta = { n: name || '', f: old ? old.f : now, l: now, off: old ? !!old.off : false, ...(patch || {}) };
+  // Giữ các trường khác (điểm tích lũy, voucher) khi cập nhật
+  const meta = { ...(old || {}), n: name || '', f: old ? old.f : now, l: now, off: old ? !!old.off : false, ...(patch || {}) };
   await env.DB.put(key, '', { metadata: meta });
 }
 
@@ -232,7 +233,7 @@ async function pollUpdates(env, budget) {
     const r = await callApi(env, 'getUpdates', { timeout: '10' });
     used++;
     if (r && r.ok && r.result) {
-      used += 2; // trả lời khách + báo chủ tiệm
+      used += 3; // tối đa: phiếu bảo hành + voucher + báo chủ tiệm
       await onUpdate(env, r.result).catch((e) => console.error(e));
     } else if (Date.now() - started < 8000) {
       // Lỗi trả về ngay (không phải hết giờ chờ): dừng, tránh gọi dồn dập
@@ -327,6 +328,58 @@ async function registerWarranty(env, chatId, name, model) {
   return r;
 }
 
+// --- Tích điểm khách quen (học Viettel++, Quà Tặng VIP) ---
+// Mỗi lần nhận máy +1 điểm, lưu ở metadata khách: p điểm, ps lần cộng điểm gần nhất, vc mã voucher đang có.
+// Tối đa 1 điểm/7 ngày để không ai nhắn "nhận máy" nhiều lần lấy điểm.
+// Đủ STAMPS_NEEDED điểm => voucher, key "v:<MÃ>" metadata: c chatId, d ngày tạo, u ngày dùng (0 = chưa dùng).
+const STAMPS_NEEDED = 3;
+const REWARD = 'giảm 100.000đ tiền công lần sửa kế tiếp';
+const VOUCHER_DAYS = 180;
+const POINT_WORDS = /^(diem|xem diem|tich diem|diem cua toi|voucher)$/;
+
+async function addStamp(env, chatId, name) {
+  const key = `c:${chatId}`;
+  const now = Date.now();
+  const { metadata: old } = await env.DB.getWithMetadata(key);
+  const c = old || { n: name || '', f: now, off: false };
+  if (c.ps && now - c.ps < 7 * DAY) return { p: c.p || 0, skipped: true };
+  let p = (c.p || 0) + 1;
+  let voucher = null;
+  if (p >= STAMPS_NEEDED) {
+    voucher = 'KH' + Math.random().toString(36).slice(2, 7).toUpperCase();
+    await env.DB.put(`v:${voucher}`, '', { metadata: { c: chatId, d: now, u: 0 } });
+    p = 0;
+  }
+  await env.DB.put(key, '', { metadata: { ...c, n: name || c.n || '', l: now, p, ps: now, ...(voucher ? { vc: voucher } : {}) } });
+  return { p, voucher };
+}
+
+function stampLine(s) {
+  if (s.voucher) return `⭐ Tích điểm: đủ ${STAMPS_NEEDED}/${STAMPS_NEEDED} lần sửa – anh/chị được tặng voucher!`;
+  return `⭐ Tích điểm: ${s.p}/${STAMPS_NEEDED} lần sửa. Đủ ${STAMPS_NEEDED} lần được ${REWARD}.`;
+}
+
+function voucherMessage(code) {
+  return (
+    `🎁 VOUCHER KHÁCH QUEN – ${SHOP.name.toUpperCase()}\n` +
+    `Cảm ơn anh/chị đã tin tưởng sửa máy ${STAMPS_NEEDED} lần tại tiệm!\n` +
+    `Mã: ${code}\nƯu đãi: ${REWARD}\nHạn dùng: đến ${fmtDate(Date.now() + VOUCHER_DAYS * DAY)}\n` +
+    `Đưa mã này cho nhân viên khi đến sửa (nhắn "diem" để xem lại).`
+  );
+}
+
+async function pointsInfo(env, chatId) {
+  const { metadata: c } = await env.DB.getWithMetadata(`c:${chatId}`);
+  let text = `⭐ Điểm khách quen: ${(c && c.p) || 0}/${STAMPS_NEEDED} lần sửa.\nMỗi lần sửa máy tại ${SHOP.name} được 1 điểm, đủ ${STAMPS_NEEDED} điểm tặng voucher ${REWARD}.`;
+  if (c && c.vc) {
+    const { metadata: v } = await env.DB.getWithMetadata(`v:${c.vc}`);
+    if (v && !v.u && Date.now() < v.d + VOUCHER_DAYS * DAY) {
+      text += `\n\n🎁 Voucher đang có: ${c.vc} (${REWARD}, hạn đến ${fmtDate(v.d + VOUCHER_DAYS * DAY)}).`;
+    }
+  }
+  return text;
+}
+
 // Mỗi ngày 9h-20h giờ VN chạy 1 lượt: gửi mốc nhắc đến hạn. Trả về số tin đã gửi.
 async function runFollowups(env, limit) {
   if (!env.DB || limit < 1) return 0;
@@ -367,6 +420,8 @@ const OWNER_HELP =
   '• /khach: đếm số khách\n' +
   '• /giao <mã khách> <tên máy>: gửi phiếu bảo hành + bật tự nhắc sau sửa cho khách đó\n' +
   '• /nhac: đếm khách đang được tự nhắc sau sửa\n' +
+  '• /dung <mã voucher>: kiểm tra và đánh dấu voucher khách quen đã dùng\n' +
+  '• /diem <mã khách>: xem điểm tích lũy của khách\n' +
   '• /tl <chat_id> <nội dung>: trả lời 1 khách\n' +
   'Các tin báo đơn sẽ gửi về đây.';
 
@@ -377,7 +432,7 @@ async function onOwner(env, chatId, text) {
     const r = await send(env, m[1], m[2]);
     return reply(r && r.ok ? '✅ Đã gửi cho khách.' : `❌ Gửi lỗi: ${JSON.stringify(r)}`);
   }
-  if (!/^\/(km|kmmau|kmxem|kmxoa|khach|giao|nhac)\b/.test(text)) return reply(OWNER_HELP);
+  if (!/^\/(km|kmmau|kmxem|kmxoa|khach|giao|nhac|dung|diem)\b/.test(text)) return reply(OWNER_HELP);
   if (text === '/kmmau') {
     return reply(`📋 MẪU KHUYẾN MÃI SOẠN SẴN\n\n${presetList()}\n\nGửi cho tất cả khách: /km <số>\nVD: /km 4 hoặc gộp /km 4 5 6`);
   }
@@ -395,6 +450,25 @@ async function onOwner(env, chatId, text) {
     const { total, off } = await countCustomers(env);
     return reply(`Có ${total} khách đã nhắn bot, ${total - off} khách đang nhận khuyến mãi.`);
   }
+  const u = text.match(/^\/dung\s+(\S+)/);
+  if (u) {
+    const code = u[1].toUpperCase();
+    const { metadata: v } = await env.DB.getWithMetadata(`v:${code}`);
+    if (!v) return reply(`❌ Không có voucher ${code}. Kiểm tra lại mã khách đưa.`);
+    if (v.u) return reply(`❌ Voucher ${code} đã dùng ngày ${fmtDate(v.u)}.`);
+    if (Date.now() > v.d + VOUCHER_DAYS * DAY) return reply(`❌ Voucher ${code} đã hết hạn ngày ${fmtDate(v.d + VOUCHER_DAYS * DAY)}.`);
+    await env.DB.put(`v:${code}`, '', { metadata: { ...v, u: Date.now() } });
+    const { metadata: c } = await env.DB.getWithMetadata(`c:${v.c}`);
+    if (c && c.vc === code) {
+      const { vc, ...rest } = c;
+      await env.DB.put(`c:${v.c}`, '', { metadata: rest });
+    }
+    await send(env, v.c, `✅ Voucher ${code} đã được dùng hôm nay. Cảm ơn anh/chị đã ủng hộ ${SHOP.name}!`);
+    return reply(`✅ Voucher ${code} hợp lệ, đã đánh dấu đã dùng.\nÁp dụng cho khách: ${REWARD}.`);
+  }
+  const dm = text.match(/^\/diem\s+(\S+)/);
+  if (dm) return reply(`Khách ${dm[1]}:\n${await pointsInfo(env, dm[1])}`);
+  if (/^\/(dung|diem)\b/.test(text)) return reply('Gõ: /dung <mã voucher> (VD: /dung KHAB12C)\nhoặc /diem <mã khách> để xem điểm của khách.');
   if (text === '/nhac') {
     let cursor, total = 0;
     do {
@@ -408,9 +482,12 @@ async function onOwner(env, chatId, text) {
   if (g) {
     const { metadata: c } = await env.DB.getWithMetadata(`c:${g[1]}`);
     const r = await registerWarranty(env, g[1], c && c.n, g[2].trim());
-    const sent = await send(env, g[1], warrantyCard(r));
+    const s = await addStamp(env, g[1], c && c.n);
+    const sent = await send(env, g[1], `${warrantyCard(r)}\n\n${stampLine(s)}`);
+    if (sent && sent.ok && s.voucher) await send(env, g[1], voucherMessage(s.voucher));
+    const pts = s.voucher ? `đủ ${STAMPS_NEEDED}, đã tặng voucher ${s.voucher}` : `${s.p}/${STAMPS_NEEDED}${s.skipped ? ' (không cộng: đã cộng trong 7 ngày qua)' : ''}`;
     return reply(sent && sent.ok
-      ? `✅ Đã gửi phiếu bảo hành và bật tự nhắc cho khách ${r.n || g[1]} (máy ${r.m || 'chưa ghi'}).`
+      ? `✅ Đã gửi phiếu bảo hành và bật tự nhắc cho khách ${r.n || g[1]} (máy ${r.m || 'chưa ghi'}).\n⭐ Điểm: ${pts}`
       : `❌ Không gửi được cho mã khách ${g[1]}. Khách phải nhắn bot ít nhất 1 lần, và mã phải lấy từ tin báo đơn.`);
   }
   if (/^\/giao\b/.test(text)) return reply('Gõ: /giao <mã khách> <tên máy>\nVD: /giao 1234abcd iPhone 13 Pro\nMã khách có trong tin báo đơn.');
@@ -472,6 +549,7 @@ async function onUpdate(env, update) {
     if (env.DB) await env.DB.delete(`f:${chatId}`);
     return send(env, chatId, 'Đã tắt tin nhắc sau sửa máy. Phiếu bảo hành của anh/chị vẫn còn hiệu lực ạ.');
   }
+  if (env.DB && POINT_WORDS.test(t)) return send(env, chatId, await pointsInfo(env, chatId));
   // Khách tự tra cứu phiếu bảo hành (học Điện Thoại Vui: tra cứu bảo hành online)
   if (env.DB && LOOKUP_WORDS.test(t)) {
     const { metadata: r } = await env.DB.getWithMetadata(`f:${chatId}`);
@@ -484,8 +562,13 @@ async function onUpdate(env, update) {
     const model = findModel(t);
     const rest = text.replace(/^\s*(kích hoạt bảo hành|kich hoat bao hanh|kích hoạt|kich hoat|đã nhận máy|da nhan may|nhận máy|nhan may)\s*/i, '');
     const r = await registerWarranty(env, chatId, sender.name, model ? model.label : rest);
-    await send(env, chatId, warrantyCard(r));
-    await notifyOwner(env, `🛡️ Khách ${r.n || ''} vừa kích hoạt bảo hành điện tử, máy: ${r.m || '(chưa ghi)'}.\nMã khách: ${chatId}`);
+    const s = await addStamp(env, chatId, sender.name);
+    await send(env, chatId, `${warrantyCard(r)}\n\n${stampLine(s)}`);
+    if (s.voucher) await send(env, chatId, voucherMessage(s.voucher));
+    const pts = s.voucher ? `đủ ${STAMPS_NEEDED}, đã tặng voucher ${s.voucher}` : `${s.p}/${STAMPS_NEEDED}`;
+    await notifyOwner(env,
+      `🛡️ Khách ${r.n || ''} vừa kích hoạt bảo hành điện tử, máy: ${r.m || '(chưa ghi)'}.\n` +
+      `⭐ Điểm: ${pts}${s.skipped ? ' (không cộng: đã cộng điểm trong 7 ngày qua)' : ''}\nMã khách: ${chatId}`);
     return;
   }
 
