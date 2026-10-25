@@ -52,6 +52,54 @@
             border-right: none;
         }
 
+        .contact-info a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .contact-info a:hover {
+            text-decoration: underline;
+        }
+
+        .float-contact {
+            position: fixed;
+            right: 16px;
+            bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 1000;
+        }
+
+        .float-btn {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            animation: pulse 2s infinite;
+        }
+
+        .float-btn.zalo {
+            background: #0068ff;
+        }
+
+        .float-btn.call {
+            background: #16a34a;
+            font-size: 24px;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+        }
+
         .container {
             max-width: 1400px;
             margin: 20px auto;
@@ -241,6 +289,10 @@
                 background: white;
             }
 
+            .float-contact {
+                display: none;
+            }
+
             header {
                 page-break-after: avoid;
             }
@@ -257,9 +309,9 @@
     </header>
 
     <div class="contact-info">
-        <div>💬 Zalo: 0981308308</div>
+        <div><a href="https://zalo.me/0981308308" target="_blank" rel="noopener">💬 Zalo: 0981308308</a></div>
         <div>📍 Địa chỉ: 296 Lê Văn Thọ Phường Thông Tây Hội, HCM</div>
-        <div>📞 Hotline: 0981.308.308</div>
+        <div><a href="tel:0981308308">📞 Hotline: 0981.308.308</a></div>
         <div>⏰ 8AM - 9PM (Hàng Ngày)</div>
     </div>
 
@@ -621,6 +673,11 @@
                 <strong>Tư vấn miễn phí</strong>
             </div>
         </div>
+    </div>
+
+    <div class="float-contact">
+        <a class="float-btn zalo" href="https://zalo.me/0981308308" target="_blank" rel="noopener" title="Chat Zalo">Zalo</a>
+        <a class="float-btn call" href="tel:0981308308" title="Gọi Hotline">📞</a>
     </div>
 </body>
 </html>
