@@ -165,6 +165,12 @@ function phoneKey(t) {
   return suf ? `${base} ${suf}` : base;
 }
 
+// Khách viết tắt/viết liền (17prm, ip13pm, 18promax, 15 pm...) => bot đoán rồi hỏi lại cho chắc
+function isShorthand(t) {
+  return /(?:^| )(?:iphone|ip|i)?\d{1,2}e?(?:prm|pm|promax|pro|plus|mini|air)(?= |$)|(?:^| )(?:ip|i) ?\d|(?:^| )\d{1,2} (?:prm|pm|promax)(?= |$)|(?:^| )xsmax(?= |$)|(?:^| )[6-8]plus(?= |$)/.test(t);
+}
+const confirmOf = (label) => `Dạ, anh/chị hỏi ${label} phải không ạ? `;
+
 function capOf(t) {
   let m = t.match(/(?:^| )(\d{2,4}) ?(?:gb|g)(?= |$)/);
   if (m) return `${m[1]}GB`;
@@ -304,7 +310,7 @@ function saleAnswer(t, raw, sender, service) {
   if (used.length) parts.push(`✨ MÁY CÓ SẴN TẠI TIỆM:\n${usedLines(used)}`);
   return {
     reply:
-      `Dạ, ${label} bên em đang có ạ:${capNote}\n\n${parts.join('\n\n')}\n\n` +
+      `${isShorthand(t) ? `${confirmOf(label)}Em gửi giá máy ạ:` : `Dạ, ${label} bên em đang có ạ:`}${capNote}\n\n${parts.join('\n\n')}\n\n` +
       `Giá cập nhật ${KHO.updated}, bên em hỗ trợ trả góp ạ.${SALE_CTA}`,
     notify: notify(''),
   };
@@ -348,7 +354,24 @@ function answer(raw, sender, promo) {
   if (sale) return sale;
 
   const repair = repairAnswer(t, raw, sender, service);
-  if (repair) return repair;
+  if (repair) {
+    const dev = findDevice(t);
+    if (dev && dev !== 'iPad' && isShorthand(t)) {
+      repair.reply = confirmOf(dev) + repair.reply.replace(/^Dạ,? /, '').replace(/^./, (c) => c.toUpperCase());
+    }
+    return repair;
+  }
+
+  // Có số/chữ giống tên máy nhưng không đoán được => hướng dẫn cách viết
+  if (/\d/.test(t) && !PROMO_WORDS.test(t)) {
+    return {
+      reply:
+        `Dạ em chưa rõ anh/chị hỏi dòng máy nào ạ. Anh/chị nhắn giúp em theo mẫu:\n` +
+        `• Hỏi giá máy: "giá 17 pro max 256" hoặc "mua 15 pro 99"\n` +
+        `• Hỏi giá sửa: "màn hình 13 pro max" hoặc "thay pin 12"`,
+      notify: `💬 Khách ${sender.name || ''} hỏi (bot chưa hiểu):\n"${raw}"\nTrả lời: /tl ${sender.chatId} <nội dung>`,
+    };
+  }
 
   if (/(^| )bao hanh( |$)/.test(t)) {
     return {
