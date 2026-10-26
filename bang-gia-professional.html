@@ -31,6 +31,28 @@
             margin-bottom: 8px;
         }
 
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+        }
+
+        header .logo {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: white;
+            flex-shrink: 0;
+        }
+
+        .hero img {
+            display: block;
+            width: 100%;
+            max-height: 520px;
+            object-fit: cover;
+        }
+
         .contact-info {
             background: #fff;
             color: #003d7a;
@@ -343,6 +365,11 @@
                 font-size: 18px;
             }
 
+            header .logo {
+                width: 48px;
+                height: 48px;
+            }
+
             .price-table {
                 font-size: 11px;
             }
@@ -382,14 +409,19 @@
 </head>
 <body>
     <header>
-        <h1>📱 BẢNG GIÁ SỬA CHỮA KHANG HUY APPLE 2026</h1>
+        <img class="logo" src="images/logo.png" alt="Logo Khang Huy Apple" onerror="this.remove()">
+        <h1>BẢNG GIÁ SỬA CHỮA KHANG HUY APPLE 2026</h1>
     </header>
+
+    <div class="hero">
+        <img src="images/banner.jpg" alt="Khang Huy Apple – Thu cũ đổi mới, hỗ trợ trả góp" onerror="this.parentElement.remove()">
+    </div>
 
     <div class="contact-info">
         <div><a href="https://zalo.me/84981308308" target="_blank" rel="noopener">💬 Zalo: 0981308308</a></div>
-        <div><a href="https://zalo.me/904216852236717976" target="_blank" rel="noopener">🤖 Bot báo giá 24/7</a></div>
+        <div><a href="https://zalo.me/904216852236717976" target="_blank" rel="noopener">⚡ Báo giá nhanh 24/7</a></div>
         <div>📍 Địa chỉ: 296 Lê Văn Thọ Phường Thông Tây Hội, HCM</div>
-        <div><a href="tel:0981308308">📞 Hotline: 0981.308.308</a></div>
+        <div>📞 Hotline: <a href="tel:0981308308">0981.308.308</a> - <a href="tel:0909067474">0909.06.7474</a></div>
         <div>⏰ 8AM - 9PM (Hàng Ngày)</div>
     </div>
 
@@ -736,7 +768,7 @@
 
         <div class="booking" id="dat-lich">
             <h2>📅 ĐẶT LỊCH SỬA</h2>
-            <p>Để lại thông tin, Khang Huy gọi lại tư vấn trong ít phút. Muốn xem giá ngay? <a href="https://zalo.me/904216852236717976" target="_blank" rel="noopener">Nhắn Bot báo giá 24/7 trên Zalo</a>.</p>
+            <p>Để lại thông tin, Khang Huy gọi lại tư vấn trong ít phút. Muốn xem giá ngay? <a href="https://zalo.me/904216852236717976" target="_blank" rel="noopener">Nhắn Zalo báo giá nhanh 24/7</a>.</p>
             <form id="booking-form">
                 <input name="name" placeholder="Tên của bạn" maxlength="60">
                 <input name="phone" type="tel" placeholder="Số điện thoại *" required maxlength="15">
@@ -768,7 +800,7 @@
     </div>
 
     <div class="float-contact">
-        <a class="float-btn bot" href="https://zalo.me/904216852236717976" target="_blank" rel="noopener" title="Bot báo giá tự động 24/7">Báo<br>giá</a>
+        <a class="float-btn bot" href="https://zalo.me/904216852236717976" target="_blank" rel="noopener" title="Báo giá nhanh 24/7 qua Zalo">Báo<br>giá</a>
         <a class="float-btn zalo" href="https://zalo.me/84981308308" target="_blank" rel="noopener" title="Chat Zalo">Zalo</a>
         <a class="float-btn call" href="tel:0981308308" title="Gọi Hotline">📞</a>
     </div>

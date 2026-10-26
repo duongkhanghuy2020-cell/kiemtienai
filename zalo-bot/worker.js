@@ -13,7 +13,7 @@
 
 const SHOP = {
   name: 'Khang Huy Apple',
-  phone: '0981.308.308',
+  phone: '0981.308.308 - 0909.06.7474',
   address: '296 Lê Văn Thọ, P. Thông Tây Hội, HCM',
   hours: '8h - 21h hằng ngày',
 };
@@ -107,10 +107,10 @@ function money(v) {
 }
 
 const CTA =
-  `\n\nĐặt lịch: nhắn "Tên - SĐT - lỗi máy", Khang Huy gọi lại ngay.` +
-  `\nHotline: ${SHOP.phone} | ${SHOP.address} | ${SHOP.hours}`;
+  `\n\n📅 Anh/chị muốn đặt lịch, vui lòng nhắn giúp em "Tên - SĐT - lỗi máy", bên em sẽ gọi lại tư vấn ngay ạ.` +
+  `\n📞 Hotline: ${SHOP.phone}\n📍 ${SHOP.address}\n⏰ ${SHOP.hours}`;
 
-const NOTE = '\nGiá là tiền công sửa, kiểm tra máy miễn phí, bảo hành 6 - 12 tháng.';
+const NOTE = '\nGiá trên là tiền công sửa, bên em kiểm tra máy miễn phí và bảo hành 6 - 12 tháng ạ.';
 
 // Quyết định trả lời khách. Trả về { reply, notify } — notify là tin báo cho chủ tiệm (hoặc null).
 // promo: nội dung khuyến mãi đang chạy (hoặc rỗng).
@@ -119,7 +119,7 @@ function handleText(raw, sender, promo) {
   if (promo && r.withPromo) {
     // Khuyến mãi dài (gộp nhiều mẫu) thì chỉ nhắc ngắn để tin báo giá không quá dài
     r.reply += promo.length > 250
-      ? `\n\n🔥 Đang có khuyến mãi! Nhắn "khuyến mãi" để xem chi tiết.`
+      ? `\n\n🔥 Dạ hiện bên em đang có khuyến mãi, anh/chị nhắn "khuyến mãi" để xem chi tiết ạ.`
       : `\n\n🔥 KHUYẾN MÃI: ${promo}`;
   }
   return r;
@@ -134,28 +134,28 @@ function answer(raw, sender, promo) {
   if (!phone && !service && PROMO_WORDS.test(t)) {
     return {
       reply: promo
-        ? `🔥 Khuyến mãi đang có tại ${SHOP.name}:\n${promo}${CTA}`
-        : `Hiện ${SHOP.name} chưa có chương trình khuyến mãi mới. Khi có, bot sẽ nhắn ngay cho anh/chị ạ!${CTA}`,
+        ? `Dạ, ${SHOP.name} gửi anh/chị chương trình khuyến mãi đang áp dụng ạ:\n\n${promo}${CTA}`
+        : `Dạ hiện ${SHOP.name} chưa có chương trình khuyến mãi mới ạ. Khi có ưu đãi, bên em sẽ nhắn ngay cho anh/chị ạ.${CTA}`,
       notify: null,
     };
   }
 
   if (phone) {
     return {
-      reply: `Cảm ơn ${sender.name || 'anh/chị'}! Khang Huy đã nhận thông tin, sẽ gọi lại số ${phone} trong ít phút để tư vấn và hẹn lịch ạ.`,
+      reply: `Dạ em cảm ơn anh/chị${sender.name ? ' ' + sender.name : ''} ạ! ${SHOP.name} đã nhận thông tin, bên em sẽ gọi lại số ${phone} trong ít phút để tư vấn và hẹn lịch cho anh/chị ạ.`,
       notify: `🔔 ĐƠN MỚI TỪ ZALO BOT\nKhách: ${sender.name || '(không tên)'}\nSĐT: ${phone}\nNội dung: ${raw}`,
     };
   }
 
   if (model && model.key && service) {
     const v = PRICES[MODELS[model.key]][service];
-    return { reply: `${service} ${model.label}: ${money(v)}.${NOTE}${CTA}`, notify: null, withPromo: true };
+    return { reply: `Dạ, ${service.toLowerCase()} ${model.label} bên em giá ${money(v)} ạ.${NOTE}${CTA}`, notify: null, withPromo: true };
   }
 
   if (model && model.key) {
     const rows = POPULAR.map((s) => `• ${s}: ${money(PRICES[MODELS[model.key]][s])}`).join('\n');
     return {
-      reply: `Giá sửa ${model.label} tại Khang Huy:\n${rows}\n\nAnh/chị cần sửa gì khác cứ nhắn, ví dụ "loa ${model.key}".${NOTE}${CTA}`,
+      reply: `Dạ, em gửi anh/chị giá sửa ${model.label} tại ${SHOP.name} ạ:\n${rows}\n\nAnh/chị cần sửa hạng mục khác cứ nhắn em, ví dụ "loa ${model.key}" ạ.${NOTE}${CTA}`,
       notify: null,
       withPromo: true,
     };
@@ -163,21 +163,21 @@ function answer(raw, sender, promo) {
 
   if (model && !model.key) {
     return {
-      reply: `${model.label} Khang Huy có nhận sửa, kỹ thuật sẽ báo giá chính xác cho anh/chị trong ít phút ạ.${CTA}`,
+      reply: `Dạ ${model.label} bên em có nhận sửa ạ. Anh/chị chờ em một chút, kỹ thuật sẽ báo giá chính xác cho anh/chị trong ít phút ạ.${CTA}`,
       notify: `❓ Khách ${sender.name || ''} hỏi máy chưa có trong bảng giá:\n"${raw}"\nTrả lời: /tl ${sender.chatId} <nội dung>`,
     };
   }
 
   if (service) {
     return {
-      reply: `Anh/chị cho Khang Huy biết máy đời nào để báo giá ${service.toLowerCase()} chính xác nhé (ví dụ: "${service.toLowerCase()} 13 pro max").`,
+      reply: `Dạ, anh/chị cho em xin đời máy để em báo giá ${service.toLowerCase()} chính xác ạ (ví dụ: "${service.toLowerCase()} 13 pro max").`,
       notify: null,
     };
   }
 
   if (/(^| )bao hanh( |$)/.test(t)) {
     return {
-      reply: `🛡️ Chính sách bảo hành ${SHOP.name}:\n• Bảo hành 6 – 12 tháng tùy linh kiện\n• 1 đổi 1 trong 30 ngày đầu\n• Kiểm tra, chẩn đoán miễn phí\nĐã sửa máy tại tiệm? Nhắn "tra cuu bao hanh" để xem phiếu bảo hành điện tử.${CTA}`,
+      reply: `Dạ, chính sách bảo hành của ${SHOP.name} như sau ạ:\n🛡️ Bảo hành 6 – 12 tháng tùy linh kiện\n🔄 1 đổi 1 trong 30 ngày đầu\n🔍 Kiểm tra, chẩn đoán máy miễn phí\nNếu anh/chị đã sửa máy tại tiệm, anh/chị nhắn "tra cuu bao hanh" để xem phiếu bảo hành điện tử ạ.${CTA}`,
       notify: null,
     };
   }
@@ -185,8 +185,8 @@ function answer(raw, sender, promo) {
   const greeting = /^(hi|hello|alo|chao|xin chao|shop|ad|admin|e|em|a|anh|chi|ok|oke|cam on|thanks)( .*)?$/.test(t) || t.length < 4;
   return {
     reply:
-      `Xin chào, đây là trợ lý tự động của ${SHOP.name} 📱\n` +
-      `Anh/chị nhắn tên máy + lỗi để xem giá ngay, ví dụ:\n• "màn hình 12 pro max"\n• "thay pin 11"\n• "ép kính 14"` +
+      `Dạ, ${SHOP.name} xin chào anh/chị ạ! 📱\n` +
+      `Anh/chị cần sửa máy, vui lòng nhắn giúp em tên máy và lỗi để em báo giá ngay ạ, ví dụ:\n• "màn hình 12 pro max"\n• "thay pin 11"\n• "ép kính 14"` +
       CTA,
     notify: greeting ? null : `💬 Khách ${sender.name || ''} hỏi (bot chưa hiểu):\n"${raw}"\nTrả lời: /tl ${sender.chatId} <nội dung>`,
     withPromo: true,
@@ -282,7 +282,7 @@ const PROMO_PRESETS = [
   ['Check-in giảm giá', '📍 CHECK-IN NHẬN QUÀ\nGiảm ngay 100.000đ hoặc tặng 1 nón bảo hiểm khi check-in tiệm lên Facebook/Google Maps.'],
   ['Giờ vàng cuối tuần', '⏰ GIỜ VÀNG – NGÀY HỘI THÀNH VIÊN\nGiảm ngay 200.000đ vào cuối tuần (Thứ 7, Chủ nhật) và khung giờ vàng 12h00 mỗi ngày.'],
   // Học Điện Thoại Vui: khuyến khích đặt lịch trước để tiệm chủ động linh kiện, khách không phải chờ
-  ['Đặt lịch trước', '📅 ĐẶT LỊCH TRƯỚC – GIẢM 10%\nĐặt lịch sửa qua Zalo bot hoặc website, giảm ngay 10% tiền công (tối đa 100.000đ). Không áp dụng cùng ưu đãi khác.'],
+  ['Đặt lịch trước', '📅 ĐẶT LỊCH TRƯỚC – GIẢM 10%\nĐặt lịch sửa qua Zalo hoặc website, giảm ngay 10% tiền công (tối đa 100.000đ). Không áp dụng cùng ưu đãi khác.'],
 ];
 
 function presetList() {
@@ -306,9 +306,9 @@ function fmtDate(ts) {
 
 // [số ngày sau khi nhận máy, nội dung tin]
 const FOLLOWUPS = [
-  [7, (r) => `Chào ${r.n || 'anh/chị'}, máy ${r.m || 'của anh/chị'} sửa tại ${SHOP.name} dùng ổn không ạ? Có gì bất thường anh/chị nhắn ngay để tiệm hỗ trợ.\nNếu hài lòng, anh/chị đánh giá giúp tiệm trên Google Maps nhé. Cảm ơn anh/chị nhiều! 🙏`],
-  [27, (r) => `⏰ Máy ${r.m || 'của anh/chị'} còn 3 ngày nữa là hết hạn 1 đổi 1 (đến ${fmtDate(r.d + 30 * DAY)}). Nếu thấy lỗi gì, anh/chị ghé ${SHOP.name} kiểm tra miễn phí trước ngày này nhé.\n📍 ${SHOP.address} | 📞 ${SHOP.phone}`],
-  [180, (r) => `🔧 Đã 6 tháng từ lần sửa máy ${r.m || ''} tại ${SHOP.name}. Mời anh/chị ghé vệ sinh máy và kiểm tra pin, chẩn đoán miễn phí.\n📍 ${SHOP.address} | 📞 ${SHOP.phone} | ${SHOP.hours}`],
+  [7, (r) => `Dạ ${SHOP.name} xin chào anh/chị${r.n ? ' ' + r.n : ''} ạ! Máy ${r.m || 'của anh/chị'} sửa tại tiệm mình dùng có ổn định không ạ? Nếu có gì bất thường, anh/chị nhắn em ngay để bên em hỗ trợ ạ.\nNếu anh/chị hài lòng, anh/chị đánh giá giúp tiệm trên Google Maps với ạ. Em cảm ơn anh/chị nhiều! 🙏`],
+  [27, (r) => `⏰ Dạ em xin nhắc anh/chị: máy ${r.m || 'của anh/chị'} còn 3 ngày nữa là hết hạn 1 đổi 1 (đến ${fmtDate(r.d + 30 * DAY)}) ạ. Nếu máy có lỗi gì, anh/chị ghé ${SHOP.name} để bên em kiểm tra miễn phí trước ngày này ạ.\n📍 ${SHOP.address} | 📞 ${SHOP.phone}`],
+  [180, (r) => `🔧 Dạ đã 6 tháng từ lần anh/chị sửa máy ${r.m || ''} tại ${SHOP.name} ạ. Bên em kính mời anh/chị ghé vệ sinh máy và kiểm tra pin, chẩn đoán máy miễn phí ạ.\n📍 ${SHOP.address} | 📞 ${SHOP.phone} | ${SHOP.hours}`],
 ];
 
 function warrantyCard(r) {
@@ -316,7 +316,7 @@ function warrantyCard(r) {
     `🛡️ PHIẾU BẢO HÀNH ĐIỆN TỬ – ${SHOP.name.toUpperCase()}\n` +
     `Khách: ${r.n || '(không tên)'}\nMáy: ${r.m || '(chưa ghi)'}\nNgày nhận máy: ${fmtDate(r.d)}\n` +
     `• 1 đổi 1 đến hết ${fmtDate(r.d + 30 * DAY)}\n• Bảo hành 6 – 12 tháng tùy linh kiện\n\n` +
-    `Giữ tin nhắn này làm phiếu bảo hành (nhắn "tra cuu bao hanh" để xem lại). Bot sẽ hỏi thăm sau 7 ngày, nhắc trước khi hết hạn 1 đổi 1 và mời kiểm tra máy sau 6 tháng ` +
+    `Dạ anh/chị giữ tin nhắn này làm phiếu bảo hành giúp em ạ (nhắn "tra cuu bao hanh" để xem lại). Bên em sẽ hỏi thăm sau 7 ngày, nhắc trước khi hết hạn 1 đổi 1 và mời kiểm tra máy sau 6 tháng ` +
     `(nhắn "huy nhac" nếu không muốn nhận).\n📞 ${SHOP.phone}`
   );
 }
@@ -355,16 +355,16 @@ async function addStamp(env, chatId, name) {
 }
 
 function stampLine(s) {
-  if (s.voucher) return `⭐ Tích điểm: đủ ${STAMPS_NEEDED}/${STAMPS_NEEDED} lần sửa – anh/chị được tặng voucher!`;
-  return `⭐ Tích điểm: ${s.p}/${STAMPS_NEEDED} lần sửa. Đủ ${STAMPS_NEEDED} lần được ${REWARD}.`;
+  if (s.voucher) return `⭐ Tích điểm: đủ ${STAMPS_NEEDED}/${STAMPS_NEEDED} lần sửa – dạ anh/chị được tặng voucher ạ!`;
+  return `⭐ Tích điểm: ${s.p}/${STAMPS_NEEDED} lần sửa. Dạ đủ ${STAMPS_NEEDED} lần anh/chị được ${REWARD} ạ.`;
 }
 
 function voucherMessage(code) {
   return (
     `🎁 VOUCHER KHÁCH QUEN – ${SHOP.name.toUpperCase()}\n` +
-    `Cảm ơn anh/chị đã tin tưởng sửa máy ${STAMPS_NEEDED} lần tại tiệm!\n` +
+    `Dạ em cảm ơn anh/chị đã tin tưởng sửa máy ${STAMPS_NEEDED} lần tại tiệm ạ!\n` +
     `Mã: ${code}\nƯu đãi: ${REWARD}\nHạn dùng: đến ${fmtDate(Date.now() + VOUCHER_DAYS * DAY)}\n` +
-    `Đưa mã này cho nhân viên khi đến sửa (nhắn "diem" để xem lại).`
+    `Anh/chị đưa mã này cho nhân viên khi đến sửa giúp em ạ (nhắn "diem" để xem lại).`
   );
 }
 
@@ -463,7 +463,7 @@ async function onOwner(env, chatId, text) {
       const { vc, ...rest } = c;
       await env.DB.put(`c:${v.c}`, '', { metadata: rest });
     }
-    await send(env, v.c, `✅ Voucher ${code} đã được dùng hôm nay. Cảm ơn anh/chị đã ủng hộ ${SHOP.name}!`);
+    await send(env, v.c, `✅ Dạ voucher ${code} đã được áp dụng hôm nay ạ. Em cảm ơn anh/chị đã tin tưởng ủng hộ ${SHOP.name} ạ!`);
     return reply(`✅ Voucher ${code} hợp lệ, đã đánh dấu đã dùng.\nÁp dụng cho khách: ${REWARD}.`);
   }
   const dm = text.match(/^\/diem\s+(\S+)/);
@@ -537,17 +537,17 @@ async function onUpdate(env, update) {
   const t = norm(text);
   if (STOP_WORDS.test(t)) {
     await saveCustomer(env, chatId, sender.name, { off: true });
-    return send(env, chatId, 'Đã ngừng gửi tin khuyến mãi cho anh/chị. Nhắn "nhan km" nếu muốn nhận lại ạ.');
+    return send(env, chatId, 'Dạ bên em đã ngừng gửi tin khuyến mãi cho anh/chị ạ. Khi nào anh/chị muốn nhận lại, anh/chị nhắn "nhan km" giúp em ạ.');
   }
   if (START_WORDS.test(t)) {
     await saveCustomer(env, chatId, sender.name, { off: false });
-    return send(env, chatId, `✅ Anh/chị sẽ nhận tin khuyến mãi mới nhất từ ${SHOP.name}.`);
+    return send(env, chatId, `✅ Dạ, anh/chị sẽ nhận được tin khuyến mãi mới nhất từ ${SHOP.name} ạ. Em cảm ơn anh/chị!`);
   }
   await saveCustomer(env, chatId, sender.name);
 
   if (STOP_REMIND_WORDS.test(t)) {
     if (env.DB) await env.DB.delete(`f:${chatId}`);
-    return send(env, chatId, 'Đã tắt tin nhắc sau sửa máy. Phiếu bảo hành của anh/chị vẫn còn hiệu lực ạ.');
+    return send(env, chatId, 'Dạ bên em đã tắt tin nhắc sau sửa máy ạ. Phiếu bảo hành của anh/chị vẫn còn hiệu lực đầy đủ ạ.');
   }
   if (env.DB && POINT_WORDS.test(t)) return send(env, chatId, await pointsInfo(env, chatId));
   // Khách tự tra cứu phiếu bảo hành (học Điện Thoại Vui: tra cứu bảo hành online)
@@ -555,7 +555,7 @@ async function onUpdate(env, update) {
     const { metadata: r } = await env.DB.getWithMetadata(`f:${chatId}`);
     return send(env, chatId, r
       ? warrantyCard(r)
-      : `Khang Huy chưa tìm thấy phiếu bảo hành điện tử của anh/chị (phiếu chỉ lưu 6 tháng kể từ ngày nhận máy). Anh/chị gọi ${SHOP.phone} để tiệm tra theo số điện thoại nhé.`);
+      : `Dạ em chưa tìm thấy phiếu bảo hành điện tử của anh/chị ạ (phiếu được lưu 6 tháng kể từ ngày nhận máy). Anh/chị vui lòng gọi ${SHOP.phone} để bên em tra theo số điện thoại giúp anh/chị ạ.`);
   }
   // Khách nhắn "nhận máy iPhone 13" lúc lấy máy => phiếu bảo hành điện tử + tự nhắc
   if (env.DB && WARRANTY_WORDS.test(t)) {
@@ -582,7 +582,7 @@ async function onUpdate(env, update) {
   }
 
   // Ảnh, sticker, ghi âm...
-  await send(env, chatId, `Khang Huy đã nhận tin của anh/chị, kỹ thuật sẽ xem và trả lời ngay ạ.${CTA}`);
+  await send(env, chatId, `Dạ ${SHOP.name} đã nhận được tin của anh/chị ạ. Anh/chị chờ em một chút, kỹ thuật sẽ xem và phản hồi ngay ạ.${CTA}`);
   const kind = { image: 'ảnh', sticker: 'sticker', voice: 'ghi âm' }[update.event_name.split('.')[1]] || 'tin nhắn';
   await notifyOwner(env, `📎 Khách ${sender.name || ''} gửi ${kind} cho bot.\nTrả lời: /tl ${chatId} <nội dung>`);
 }
