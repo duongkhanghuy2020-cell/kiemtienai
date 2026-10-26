@@ -155,9 +155,11 @@ const ORIGIN = { 'V.NAM': 'VN', USA: 'Mỹ', SING: 'Sing', VC: 'CPO' };
 
 // "18 pm 256g ..." => "18 pro max"; "ip 17 promax ..." => "17 pro max"; "iphone duo ..." => "duo"
 function phoneKey(t) {
-  const m = t.match(/(?:^| )(?:iphone |ip |i )?(duo|xs ?max|xs|xr|x|6s plus|[6-8] plus|1[0-9]e|1[0-9])(?: (pro ?max|promax|prm|pm|pro|plus|air|mini))?(?= |$)/);
+  // Khách hay viết liền: "17prm", "ip18promax", "iphone17pm" => cho phép không có dấu cách
+  const m = t.match(/(?:^| )(?:iphone ?|ip ?|i )?(duo|xs ?max|xs|xr|x|6s ?plus|[6-8] ?plus|1[0-9]e|1[0-9]) ?(pro ?max|promax|prm|pm|pro|plus|air|mini)?(?= |$)/);
   if (!m) return null;
   const base = m[1].replace(/ /g, '').replace('xsmax', 'xs max').replace(/^(6s|[6-8])plus$/, '$1 plus');
+  if (/plus$/.test(base)) return base;
   let suf = (m[2] || '').replace(/ /g, '');
   if (['promax', 'prm', 'pm'].includes(suf)) suf = 'pro max';
   return suf ? `${base} ${suf}` : base;
@@ -229,7 +231,8 @@ function newLines(items, detailed) {
   const lines = caps.map((cap) => {
     const g = items.filter((x) => x.cap === cap);
     const prices = g.map((x) => x.p).filter((p) => p > 0);
-    const cols = [...new Set(g.map((x) => x.col).filter(Boolean))].join(', ');
+    const nice = (c) => c.charAt(0).toUpperCase() + c.slice(1).toLowerCase();
+    const cols = [...new Set(g.map((x) => nice(x.col)).filter(Boolean))].join(', ');
     const range = !prices.length ? 'liên hệ'
       : Math.min(...prices) === Math.max(...prices) ? vnd(prices[0])
       : `${vnd(Math.min(...prices))} – ${vnd(Math.max(...prices))}`;
@@ -255,8 +258,16 @@ function saleAnswer(t, raw, sender, service) {
   if (service) return null;
   const cat = CATS.find(([, re]) => re.test(t));
   const key = cat ? null : phoneKey(t);
-  if (!cat && !key) return null;
   const intent = SALE_WORDS.test(t);
+  if (!cat && !key) {
+    // "giá máy", "mua máy" chưa nói dòng nào => hỏi lại, kèm các dòng đang có
+    if (!/(^| )(gia may|mua may|may nao|con may|ban may|may moi|may 99|may cu)( |$)/.test(t)) return null;
+    const lines = [...new Set(STOCK.filter((x) => x.key && x.p > 0).map((x) => labelOf(x.key).replace('iPhone ', '')))];
+    return {
+      reply: `Dạ, anh/chị muốn xem giá máy nào ạ? Bên em đang có iPhone ${lines.slice(0, 12).join(', ')}, iPad, Samsung… Anh/chị nhắn giúp em tên máy (VD: "17 pro max 256") để em báo giá ngay ạ.`,
+      notify: null,
+    };
+  }
   const label = cat ? cat[2] : labelOf(key);
   const notify = (note) => `💰 Khách ${sender.name || ''} hỏi mua ${label}${note}: "${raw}"\nTrả lời: /tl ${sender.chatId} <nội dung>`;
 
