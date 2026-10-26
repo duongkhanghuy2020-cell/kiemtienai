@@ -1,9 +1,16 @@
 ﻿# Đọc file Excel kho máy (máy new + máy 99%) => zalo-bot\kho-may.json cho bot.
 # Không lấy cột IMEI (kho code trên GitHub để công khai).
 # Chạy: powershell -ExecutionPolicy Bypass -File zalo-bot\kho-may.ps1 [-Xlsx "<đường dẫn file>"]
-param([string]$Xlsx = "$env:USERPROFILE\Desktop\New folder\KHO MÁY NEW - 99% KHANG HUY.xlsx")
+param([string]$Xlsx = '')
 
-if (-not (Test-Path -LiteralPath $Xlsx)) { Write-Host "Khong thay file kho: $Xlsx (giu kho-may.json cu)"; exit 0 }
+# Không chỉ định file thì lấy bản mới nhất "KHO M*.xlsx" ở Desktop, Desktop\New folder, Downloads, D:\Claude Agent
+if (-not $Xlsx) {
+  $found = Get-ChildItem -Path "$env:USERPROFILE\Desktop", "$env:USERPROFILE\Desktop\New folder", "$env:USERPROFILE\Downloads", (Split-Path -Parent $PSScriptRoot) -Filter 'KHO M*.xlsx' -ErrorAction SilentlyContinue |
+    Sort-Object LastWriteTime -Descending | Select-Object -First 1
+  if ($found) { $Xlsx = $found.FullName }
+}
+if (-not $Xlsx -or -not (Test-Path -LiteralPath $Xlsx)) { Write-Host "Khong thay file kho may (giu kho-may.json cu)"; exit 0 }
+Write-Host "Doc file kho: $Xlsx"
 
 $tmp = Join-Path $env:TEMP "kho-may-$PID"
 Remove-Item $tmp -Recurse -Force -ErrorAction SilentlyContinue

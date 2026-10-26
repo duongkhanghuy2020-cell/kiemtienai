@@ -188,11 +188,12 @@ Ví dụ khách nhắn: `giá 17 pro max`, `mua 15 pro max 99`, `18 pro max 256 
 
 ## Khi đổi giá
 
-1. Sửa bảng giá trong `bang-gia-professional.html` (hoặc nhờ Claude sửa).
-2. Nhờ Claude chạy lại `build.ps1` để tạo `worker.js` mới.
-3. Vào Cloudflare → worker **khanghuyapple-bot** → **Edit code**, dán `worker.js` mới rồi bấm **Deploy**.
+- **Giá sửa:** bot lấy từ trang **https://khanghuyapple.lovable.app/bang-gia-sua-chua**, tức đúng giá thầy nhập trên trang đó. Lỗi nào trên trang ghi "Liên hệ báo giá" thì bot báo khách "kỹ thuật sẽ báo giá", và nhắn thầy "❓ Khách … hỏi giá sửa (chưa có giá)" để thầy trả lời.
+- **Giá máy new và 99%:** bot lấy từ file Excel `KHO MÁY NEW - 99% KHANG HUY.xlsx`. File để ở Desktop, `Desktop\New folder` hoặc Downloads đều được, bot dùng bản mới nhất.
 
-Danh sách khách và khuyến mãi nằm trong kho KV nên không bị mất khi dán code mới.
+Sửa giá xong, thầy nhắn Claude **"cập nhật giá"**. Claude chạy `build.ps1` để lấy giá mới từ trang web và file Excel, rồi đẩy lên GitHub. Khoảng 1 phút sau bot dùng giá mới. Thầy không phải vào Cloudflare.
+
+Danh sách khách và khuyến mãi nằm trong kho KV nên không bị mất khi cập nhật.
 
 ## Gặp lỗi
 

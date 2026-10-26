@@ -28,33 +28,37 @@ const PROMO_WORDS = /(^| )(khuyen mai|km|giam gia|uu dai|sale|chuong trinh|qua t
 const STOP_WORDS = /^(huy km|tat km|ngung km|stop|\/stop)$/;
 const START_WORDS = /^(nhan km|bat km|\/start)$/;
 
-// Giá tiền công (nghìn đồng), trích từ bang-gia-professional.html
-const PRICES = __PRICES__;
+// Giá sửa chữa lấy từ https://khanghuyapple.lovable.app/bang-gia-sua-chua bằng sua-chua.ps1 (0 = liên hệ báo giá)
+const SUA = __SUA__;
 
-// Từ khóa khách hay dùng -> hạng mục trong bảng giá. Thứ tự quan trọng: cụ thể trước, chung sau.
+// Từ khóa khách hay dùng -> [tên lỗi, từ khóa, đầu tên dịch vụ trên trang giá sửa]. Cụ thể trước, chung sau.
 const SERVICES = [
-  ['Kính Camera sau', ['kinh camera', 'kinh cam', 'mat kinh camera']],
-  ['Camera trước', ['camera truoc', 'cam truoc']],
-  ['Camera sau', ['camera sau', 'cam sau', 'camera']],
-  ['Kính lưng', ['kinh lung', 'mat lung', 'lung']],
-  ['Ép kính / Ép cảm ứng', ['ep kinh', 'ep cam ung', 'vo kinh', 'be kinh', 'nut kinh', 'kinh', 'cam ung']],
-  ['Phản quang', ['phan quang']],
-  ['Màn hình', ['man hinh', 'thay man', 'man']],
-  ['Thay pin', ['pin']],
-  ['Độ vỏ/Sưởn', ['do vo', 'len vo', 'do suon']],
-  ['Thay vỏ/Sưởn', ['thay vo', 'vo', 'suon']],
-  ['Dây chân sạc', ['chan sac', 'sac']],
-  ['Loa trong', ['loa trong', 'nghe goi']],
-  ['Loa ngoài', ['loa ngoai', 'loa']],
-  ['Face ID', ['face id', 'faceid']],
-  ['Mở icloud', ['icloud']],
-  ['Thay rung', ['rung']],
-  ['Dây nguồn / Dây volume', ['nut nguon', 'day nguon', 'nut volume', 'nut am luong', 'volume']],
-  ['Anten wifi', ['wifi', 'song']],
+  ['kính camera', ['kinh camera', 'kinh cam'], ['Thay kính camera']],
+  ['camera trước', ['camera truoc', 'cam truoc'], ['Thay camera trước']],
+  ['camera rung, mờ', ['camera rung', 'camera mo', 'cam rung', 'cam mo'], ['Sửa camera rung, mờ']],
+  ['camera sau', ['camera sau', 'cam sau', 'camera'], ['Thay camera sau']],
+  ['kính lưng', ['kinh lung', 'mat lung', 'lung'], ['Thay kính lưng']],
+  ['màn hình xanh, trắng', ['man xanh', 'man trang', 'soc man', 'man soc', 'man hinh xanh'], ['Sửa màn hình xanh, trắng']],
+  ['kính màn hình', ['ep kinh', 'ep cam ung', 'vo kinh', 'be kinh', 'nut kinh', 'kinh man', 'kinh'], ['Thay kính màn hình']],
+  ['màn hình', ['man hinh', 'thay man', 'man'], ['Thay màn hình zin', 'Thay màn hình linh kiện']],
+  ['pin', ['pin', 'chai pin'], ['Thay pin tiêu chuẩn', 'Thay pin zin']],
+  ['chân sạc', ['chan sac', 'khong sac', 'sac'], ['Thay chân sạc', 'Sửa USB sạc trên main']],
+  ['Face ID', ['face id', 'faceid'], ['Sửa Face ID']],
+  ['vỏ, sườn', ['thay vo', 'do vo', 'vo', 'suon'], ['Thay vỏ iPhone', 'Thay vỏ / sườn']],
+  ['loa trong', ['loa trong', 'nghe goi', 'loa nghe'], ['Thay loa trong']],
+  ['loa ngoài', ['loa ngoai', 'loa'], ['Thay loa ngoài']],
+  ['iCloud', ['icloud'], ['Mở iCloud']],
+  ['rung', ['rung'], ['Thay rung']],
+  ['nút nguồn, âm lượng', ['nut nguon', 'day nguon', 'nut volume', 'nut am luong', 'volume'], ['Thay dây nguồn']],
+  ['lỗi nguồn', ['mat nguon', 'khong len nguon', 'loi nguon', 'nguon'], ['Sửa lỗi nguồn', 'Sửa IC nguồn']],
+  ['Wi-Fi, Bluetooth', ['wifi', 'bluetooth'], ['Sửa Wi-Fi', 'Thay anten Wi-Fi', 'Sửa IC Wi-Fi']],
+  ['sóng, SIM', ['song', 'sim', 'imei', 'mat song'], ['Sửa lỗi SIM', 'Sửa IC sóng']],
+  ['cảm biến', ['cam bien'], ['Thay dây cảm biến', 'Sửa cảm biến trên main']],
+  ['cảm ứng', ['cam ung', 'liet cam ung'], ['Sửa hiển thị / cảm ứng trên main']],
+  ['âm thanh', ['mat tieng', 'audio', 'mic'], ['Sửa Audio main']],
+  ['ổ cứng', ['o cung', 'dung luong'], ['Sửa ổ cứng']],
+  ['đèn flash', ['den flash', 'ic den', 'den'], ['Sửa IC đèn']],
 ];
-
-// Hạng mục hiện khi khách chỉ hỏi dòng máy
-const POPULAR = ['Màn hình', 'Ép kính / Ép cảm ứng', 'Thay pin', 'Kính lưng', 'Camera sau'];
 
 function norm(s) {
   return String(s || '')
@@ -67,32 +71,61 @@ function norm(s) {
     .trim();
 }
 
-function modelKey(name) {
-  return norm(name).replace(/^iphone /, '').replace(/ pm$/, ' pro max');
-}
+const DEVICES = Object.keys(SUA.devices).map((name) => ({ name, t: norm(name) }));
 
-const MODELS = Object.fromEntries(Object.keys(PRICES).map((k) => [modelKey(k), k]));
-
-// Trả về { key, label } nếu tìm thấy dòng máy, key = null nếu máy không có trong bảng giá
-function findModel(t) {
-  const m = t.match(/(?:^| )(?:iphone|ip|i)? ?(xs ?max|xsm|xs|xr|x|1[1-7])(?: ?(pro ?max|promax|prm|pm|pro|plus|\+))?(?![a-z0-9])/);
-  if (!m) return null;
-  let base = m[1].replace(/ /g, '');
-  if (base === 'xsmax' || base === 'xsm') base = 'xs max';
-  let suffix = m[2] ? m[2].replace(/ /g, '') : '';
-  if (['promax', 'prm', 'pm'].includes(suffix)) suffix = 'pro max';
-  if (suffix === '+') suffix = 'plus';
-  const key = suffix ? `${base} ${suffix}` : base;
-  const label = 'iPhone ' + key.toUpperCase().replace('PRO MAX', 'Pro Max').replace('PRO', 'Pro').replace('PLUS', 'Plus').replace('XS MAX', 'XS Max');
-  return { key: MODELS[key] ? key : null, label };
+// Tên dòng máy trên trang giá sửa (VD "iPhone 13 mini", "iPad Gen 10"), hoặc tên tự đặt nếu trang không có
+function findDevice(t) {
+  if (/(^| )ipad( |$)/.test(t)) {
+    let best = null, score = 0;
+    for (const d of DEVICES.filter((x) => x.t.startsWith('ipad '))) {
+      const s = d.t.split(' ').slice(1).filter((w) => ` ${t} `.includes(` ${w} `)).length;
+      if (s > score) { best = d; score = s; }
+    }
+    return best ? best.name : 'iPad';
+  }
+  const key = phoneKey(t);
+  if (!key) return null;
+  const d = DEVICES.find((x) => x.t === `iphone ${key}`);
+  return d ? d.name : labelOf(key);
 }
 
 function findService(t) {
   const padded = ` ${t} `;
-  for (const [name, words] of SERVICES) {
-    if (words.some((w) => padded.includes(` ${w} `))) return name;
+  return SERVICES.find(([, words]) => words.some((w) => padded.includes(` ${w} `))) || null;
+}
+
+// "Thay màn hình zin (Zin TM)" => "Màn hình zin (Zin TM)"
+const shortName = (s) => s.replace(/^(Thay|Sửa) /, '').replace(/^./, (c) => c.toUpperCase());
+const lowerFirst = (s) => s.replace(/^./, (c) => c.toLowerCase());
+
+function repairAnswer(t, raw, sender, svc) {
+  const dev = findDevice(t);
+  const ask = `❓ Khách ${sender.name || ''} hỏi giá sửa (chưa có giá): "${raw}"\nTrả lời: /tl ${sender.chatId} <nội dung>`;
+  if (!dev) {
+    return svc ? { reply: `Dạ, anh/chị cho em xin đời máy để em báo giá ${svc[0]} chính xác ạ (VD: "${svc[0]} 13 pro max").`, notify: null } : null;
   }
-  return null;
+  if (dev === 'iPad') {
+    return { reply: `Dạ, anh/chị cho em xin đời iPad (VD: "iPad Gen 10", "iPad Pro 11 M1") để em báo giá chính xác ạ.`, notify: null };
+  }
+  const prices = SUA.devices[dev];
+  const later = { reply: `Dạ ${svc ? `${svc[0]} ` : ''}${dev} bên em báo giá trực tiếp ạ, kỹ thuật sẽ báo giá cho anh/chị trong ít phút ạ.${CTA}`, notify: ask };
+  if (!prices) return later;
+  if (svc) {
+    const rows = Object.entries(prices).filter(([k, v]) => v > 0 && svc[2].some((p) => k.startsWith(p)));
+    if (!rows.length) return later;
+    const reply = rows.length === 1
+      ? `Dạ, ${lowerFirst(rows[0][0])} ${dev} bên em giá ${vnd(rows[0][1])} ạ.`
+      : `Dạ, ${svc[0]} ${dev} bên em có ${rows.length} loại ạ:\n${rows.map(([k, v]) => `• ${shortName(k)}: ${vnd(v)}`).join('\n')}`;
+    return { reply: reply + NOTE + CTA, notify: null, withPromo: true };
+  }
+  // Chỉ hỏi dòng máy: báo vài lỗi hay gặp
+  const top = Object.entries(prices).filter(([, v]) => v > 0).slice(0, 5);
+  if (!top.length) return later;
+  return {
+    reply: `Dạ, giá sửa ${dev} một số lỗi thường gặp ạ:\n${top.map(([k, v]) => `• ${shortName(k)}: ${vnd(v)}`).join('\n')}\nAnh/chị cần sửa lỗi nào, nhắn em để báo giá chính xác ạ.${CTA}`,
+    notify: null,
+    withPromo: true,
+  };
 }
 
 function findPhone(raw) {
@@ -100,17 +133,10 @@ function findPhone(raw) {
   return m ? m[0].replace(/[^\d+]/g, '') : null;
 }
 
-function money(v) {
-  if (!v || v === 'Call') return 'liên hệ báo giá';
-  return v.split('/').map((n) => `${Number(n).toLocaleString('de-DE')}.000đ`).join(' hoặc ') +
-    (v.includes('/') ? ' (tùy loại linh kiện)' : '');
-}
+// Ngắn gọn: hỏi gì trả lời nấy, cuối tin chỉ 1 dòng mời đặt lịch
+const CTA = `\nAnh/chị cần đặt lịch, nhắn giúp em "Tên - SĐT" ạ. 📞 ${SHOP.phone}`;
 
-const CTA =
-  `\n\n📅 Anh/chị muốn đặt lịch, vui lòng nhắn giúp em "Tên - SĐT - lỗi máy", bên em sẽ gọi lại tư vấn ngay ạ.` +
-  `\n📞 Hotline: ${SHOP.phone}\n📍 ${SHOP.address}\n⏰ ${SHOP.hours}`;
-
-const NOTE = '\nGiá trên là tiền công sửa, bên em kiểm tra máy miễn phí và bảo hành 6 - 12 tháng ạ.';
+const NOTE = '\nBên em kiểm tra máy miễn phí, bảo hành 6 - 12 tháng ạ.';
 
 // --- Bán máy: new nguyên seal + máy có sẵn 99% ---
 // Dữ liệu lấy từ file Excel "KHO MÁY NEW - 99% KHANG HUY.xlsx" qua kho-may.ps1 (không có IMEI).
@@ -129,7 +155,7 @@ const ORIGIN = { 'V.NAM': 'VN', USA: 'Mỹ', SING: 'Sing', VC: 'CPO' };
 
 // "18 pm 256g ..." => "18 pro max"; "ip 17 promax ..." => "17 pro max"; "iphone duo ..." => "duo"
 function phoneKey(t) {
-  const m = t.match(/(?:^| )(?:iphone |ip |i )?(duo|xs ?max|xs|xr|x|6s plus|[6-8] plus|1[0-9]e|1[0-9])(?: (pro ?max|promax|prm|pm|pro|plus|air))?(?= |$)/);
+  const m = t.match(/(?:^| )(?:iphone |ip |i )?(duo|xs ?max|xs|xr|x|6s plus|[6-8] plus|1[0-9]e|1[0-9])(?: (pro ?max|promax|prm|pm|pro|plus|air|mini))?(?= |$)/);
   if (!m) return null;
   const base = m[1].replace(/ /g, '').replace('xsmax', 'xs max').replace(/^(6s|[6-8])plus$/, '$1 plus');
   let suf = (m[2] || '').replace(/ /g, '');
@@ -147,8 +173,18 @@ function capOf(t) {
 }
 
 function labelOf(key) {
-  const words = { duo: 'Duo', pro: 'Pro', max: 'Max', plus: 'Plus', air: 'Air', xs: 'XS', xr: 'XR', x: 'X' };
+  const words = { duo: 'Duo', pro: 'Pro', max: 'Max', plus: 'Plus', air: 'Air', mini: 'mini', xs: 'XS', xr: 'XR', x: 'X' };
   return 'iPhone ' + key.split(' ').map((w) => words[w] || w).join(' ');
+}
+
+// Chữ viết tắt trong file kho (thầy giải thích): TMZ thay màn zin, TV thay vỏ zin, BLOCK/LOCK máy lock
+const ABBR = { TMZ: 'thay màn zin', TM: 'thay màn', TV: 'thay vỏ zin', BLOCK: 'máy lock', LOCK: 'máy lock' };
+function expand(s) {
+  return String(s || '')
+    .replace(/SẠC\s*(\d+)/i, 'sạc $1 lần')
+    .replace(/(^|[\s,(])(TMZ|TM|TV|BLOCK|LOCK)(?=$|[\s,)])/g, (_, a, w) => a + ABBR[w])
+    .replace(/^[-–\s]+|[-–\s]+$/g, '')
+    .toLowerCase();
 }
 
 const STOCK = KHO.items.map((it) => {
@@ -163,7 +199,10 @@ const STOCK = KHO.items.map((it) => {
   } else {
     const m = it.n.match(/(\d{2})%\s*(.*)$/);
     x.cond = /NEW/i.test(it.n) ? 'new đã active' : m ? `máy ${m[1]}%` : 'máy cũ';
-    x.extra = [m ? m[2].replace(/SẠC\s*(\d+)/i, 'sạc $1 lần').replace(/^[-\s]+|[-\s]+$/g, '') : '', it.note].filter(Boolean).join(', ');
+    const extra = expand(m ? m[2] : '');
+    const note = String(it.note || '').toLowerCase().trim();
+    // Ghi chú đã nói rõ (VD "thay màn zin + pin zin 91%") thì bỏ phần viết tắt trùng ý
+    x.extra = [extra && !note.includes(extra) ? extra : '', note].filter(Boolean).join(', ');
   }
   return x;
 });
@@ -172,9 +211,7 @@ const vnd = (p) => (p > 0 ? `${p.toLocaleString('de-DE')}đ` : 'liên hệ');
 const byPrice = (a, b) => (a.p || Infinity) - (b.p || Infinity);
 const capNum = (c) => (parseInt(c, 10) || 0) * (/TB/.test(c) ? 1024 : 1);
 
-const SALE_CTA =
-  `\n\n📅 Anh/chị muốn xem máy hoặc giữ máy, vui lòng nhắn giúp em "Tên - SĐT", bên em sẽ gọi lại tư vấn ngay ạ.` +
-  `\n📞 Hotline: ${SHOP.phone}\n📍 ${SHOP.address}`;
+const SALE_CTA = `\nAnh/chị muốn xem hoặc giữ máy, nhắn giúp em "Tên - SĐT" ạ. 📞 ${SHOP.phone}`;
 
 function newLines(items, detailed) {
   if (detailed || items.length <= 6) {
@@ -254,11 +291,10 @@ function saleAnswer(t, raw, sender, service) {
   const parts = [];
   if (fresh.length) parts.push(`🆕 MÁY MỚI NGUYÊN SEAL:\n${newLines(fresh, !!(cap && !capNote) || !!cat)}`);
   if (used.length) parts.push(`✨ MÁY CÓ SẴN TẠI TIỆM:\n${usedLines(used)}`);
-  const repairHint = key && !intent ? `\n🔧 Anh/chị cần sửa máy, nhắn ví dụ "màn hình ${key}" để xem giá sửa ạ.` : '';
   return {
     reply:
       `Dạ, ${label} bên em đang có ạ:${capNote}\n\n${parts.join('\n\n')}\n\n` +
-      `Dạ giá cập nhật ngày ${KHO.updated}, có thể thay đổi theo ngày ạ. 💳 Bên em hỗ trợ trả góp và thu cũ đổi mới ạ.${repairHint}${SALE_CTA}`,
+      `Giá cập nhật ${KHO.updated}, bên em hỗ trợ trả góp ạ.${SALE_CTA}`,
     notify: notify(''),
   };
 }
@@ -279,7 +315,6 @@ function handleText(raw, sender, promo) {
 function answer(raw, sender, promo) {
   const t = norm(raw);
   const phone = findPhone(raw);
-  const model = findModel(t);
   const service = findService(t);
 
   if (!phone && !service && PROMO_WORDS.test(t)) {
@@ -301,37 +336,12 @@ function answer(raw, sender, promo) {
   const sale = saleAnswer(t, raw, sender, service);
   if (sale) return sale;
 
-  if (model && model.key && service) {
-    const v = PRICES[MODELS[model.key]][service];
-    return { reply: `Dạ, ${service.toLowerCase()} ${model.label} bên em giá ${money(v)} ạ.${NOTE}${CTA}`, notify: null, withPromo: true };
-  }
-
-  if (model && model.key) {
-    const rows = POPULAR.map((s) => `• ${s}: ${money(PRICES[MODELS[model.key]][s])}`).join('\n');
-    return {
-      reply: `Dạ, em gửi anh/chị giá sửa ${model.label} tại ${SHOP.name} ạ:\n${rows}\n\nAnh/chị cần sửa hạng mục khác cứ nhắn em, ví dụ "loa ${model.key}" ạ.${NOTE}${CTA}`,
-      notify: null,
-      withPromo: true,
-    };
-  }
-
-  if (model && !model.key) {
-    return {
-      reply: `Dạ ${model.label} bên em có nhận sửa ạ. Anh/chị chờ em một chút, kỹ thuật sẽ báo giá chính xác cho anh/chị trong ít phút ạ.${CTA}`,
-      notify: `❓ Khách ${sender.name || ''} hỏi máy chưa có trong bảng giá:\n"${raw}"\nTrả lời: /tl ${sender.chatId} <nội dung>`,
-    };
-  }
-
-  if (service) {
-    return {
-      reply: `Dạ, anh/chị cho em xin đời máy để em báo giá ${service.toLowerCase()} chính xác ạ (ví dụ: "${service.toLowerCase()} 13 pro max").`,
-      notify: null,
-    };
-  }
+  const repair = repairAnswer(t, raw, sender, service);
+  if (repair) return repair;
 
   if (/(^| )bao hanh( |$)/.test(t)) {
     return {
-      reply: `Dạ, chính sách bảo hành của ${SHOP.name} như sau ạ:\n🛡️ Bảo hành 6 – 12 tháng tùy linh kiện\n🔄 1 đổi 1 trong 30 ngày đầu\n🔍 Kiểm tra, chẩn đoán máy miễn phí\nNếu anh/chị đã sửa máy tại tiệm, anh/chị nhắn "tra cuu bao hanh" để xem phiếu bảo hành điện tử ạ.${CTA}`,
+      reply: `Dạ, bên em bảo hành 6 – 12 tháng tùy linh kiện, 1 đổi 1 trong 30 ngày đầu ạ. Anh/chị đã sửa máy tại tiệm thì nhắn "tra cuu bao hanh" để xem phiếu bảo hành ạ.`,
       notify: null,
     };
   }
@@ -340,8 +350,8 @@ function answer(raw, sender, promo) {
   return {
     reply:
       `Dạ, ${SHOP.name} xin chào anh/chị ạ! 📱\n` +
-      `Anh/chị cần sửa máy, vui lòng nhắn giúp em tên máy và lỗi để em báo giá ngay ạ, ví dụ:\n• "màn hình 12 pro max"\n• "thay pin 11"\n• "ép kính 14"` +
-      CTA,
+      `Anh/chị nhắn giúp em tên máy và lỗi cần sửa (VD: "màn hình 13 pro max") hoặc máy muốn mua (VD: "giá 17 pro max") để em báo giá ngay ạ.\n` +
+      `📍 ${SHOP.address} | ⏰ ${SHOP.hours} | 📞 ${SHOP.phone}`,
     notify: greeting ? null : `💬 Khách ${sender.name || ''} hỏi (bot chưa hiểu):\n"${raw}"\nTrả lời: /tl ${sender.chatId} <nội dung>`,
     withPromo: true,
   };
@@ -713,9 +723,9 @@ async function onUpdate(env, update) {
   }
   // Khách nhắn "nhận máy iPhone 13" lúc lấy máy => phiếu bảo hành điện tử + tự nhắc
   if (env.DB && WARRANTY_WORDS.test(t)) {
-    const model = findModel(t);
+    const dev = findDevice(t);
     const rest = text.replace(/^\s*(kích hoạt bảo hành|kich hoat bao hanh|kích hoạt|kich hoat|đã nhận máy|da nhan may|nhận máy|nhan may)\s*/i, '');
-    const r = await registerWarranty(env, chatId, sender.name, model ? model.label : rest);
+    const r = await registerWarranty(env, chatId, sender.name, dev && dev !== 'iPad' ? dev : rest);
     const s = await addStamp(env, chatId, sender.name);
     await send(env, chatId, `${warrantyCard(r)}\n\n${stampLine(s)}`);
     if (s.voucher) await send(env, chatId, voucherMessage(s.voucher));
