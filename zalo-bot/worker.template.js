@@ -139,7 +139,7 @@ const CTA = `\nAnh/chị cần đặt lịch, nhắn giúp em "Tên - SĐT" ạ.
 const NOTE = '\nBên em kiểm tra máy miễn phí, bảo hành 6 - 12 tháng ạ.';
 
 // --- Bán máy: new nguyên seal + máy có sẵn 99% ---
-// Dữ liệu lấy từ file Excel "KHO MÁY NEW - 99% KHANG HUY.xlsx" qua kho-may.ps1 (không có IMEI).
+// Dữ liệu lấy từ trang https://khanghuyapple.lovable.app qua kho-may.ps1 (trang lovable là nguồn giá duy nhất).
 const KHO = __KHO__;
 
 const SALE_WORDS = /(^| )(mua|ban|con hang|co san|con may|may moi|new|seal|nguyen seal|like new|may cu|99|98|tra gop|len doi|gia may|bao nhieu tien)( |$)/;

@@ -84,7 +84,7 @@ Khách tự nhắn `nhận máy iPhone 13` lúc lấy máy cũng được phiế
 2. **Chọn dịp** theo lịch bên dưới. Mỗi tháng nên có 1 chủ đề chính.
 3. **Chọn mẫu hoặc soạn tin.** Có mẫu hợp thì đưa thầy lệnh `/km <số>`. Không có thì soạn tin theo khung bên dưới, rồi đưa thầy lệnh `/km <nội dung>` chép sẵn.
 4. **Kiểm tra trước khi gửi:**
-   - Con số khớp chính sách tiệm: bảo hành **6–12 tháng**; giá trong `bang-gia-professional.html` là **tiền công**.
+   - Con số khớp chính sách tiệm: bảo hành **6–12 tháng**; giá lấy theo trang **https://khanghuyapple.lovable.app** (nguồn giá duy nhất).
    - Có hạn dùng.
    - Không chứa link lạ, không hứa điều tiệm không làm được.
 5. **Gửi.** Mỗi tháng chỉ 2–4 tin, cách nhau ít nhất 5–7 ngày. Nên gửi sáng 9h–11h hoặc tối 19h–20h30. Bot tự gửi dần và báo lại số khách đã nhận.

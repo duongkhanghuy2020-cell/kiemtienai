@@ -1,4 +1,4 @@
-# Tạo worker.js = worker.template.js + giá sửa (trang lovable) + kho máy bán (file Excel)
+# Tạo worker.js = worker.template.js + giá sửa và kho máy bán, đều lấy từ trang khanghuyapple.lovable.app
 # Chạy: powershell -ExecutionPolicy Bypass -File zalo-bot\build.ps1
 $utf8 = New-Object Text.UTF8Encoding $false
 & (Join-Path $PSScriptRoot 'sua-chua.ps1')

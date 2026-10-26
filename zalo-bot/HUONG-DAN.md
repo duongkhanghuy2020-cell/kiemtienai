@@ -73,11 +73,9 @@ Bot cần một chỗ để nhớ những khách đã nhắn và nội dung khuy
 3. Quay lại Cloudflare, vào **Settings** → **Variables and Secrets** → **Add**, thêm biến `OWNER_CHAT_ID` với giá trị là dãy số vừa chép, rồi bấm **Deploy**.
 4. Nhắn bất kỳ chữ gì cho bot. Nếu bot trả lời "Chào chủ tiệm 👋" kèm danh sách lệnh là xong.
 
-## Bước 7: Gắn form đặt lịch trên web
+## Bước 7: Trang web của tiệm
 
-Gửi cho Claude **địa chỉ worker** (chỉ địa chỉ `https://khanghuyapple-bot....workers.dev`, không gửi token). Claude sẽ gắn vào form "Đặt lịch sửa" trên trang bảng giá và đưa lên GitHub.
-
-Thầy cũng có thể tự sửa: trong file `bang-gia-professional.html`, tìm dòng `const ORDER_API = '';` rồi điền `'https://khanghuyapple-bot.crimson-recipe-0ba6.workers.dev/order'`.
+Trang web chính thức là **https://khanghuyapple.lovable.app** (trang bảng giá cũ đã xóa). Nếu muốn form trên trang lovable gửi đơn về Zalo của thầy, cho form gửi thông tin (POST JSON gồm `name`, `phone`, `model`, `issue`) tới `https://khanghuyapple-bot.crimson-recipe-0ba6.workers.dev/order`.
 
 ## Bước 8: Thử bot
 
@@ -175,23 +173,18 @@ Muốn sửa nội dung mẫu, thầy nhắn Claude. Muốn gửi nội dung kh�
 
 ## Bán máy: máy new và máy 99%
 
-Bot lấy giá từ file Excel **`KHO MÁY NEW - 99% KHANG HUY.xlsx`** ở `Desktop\New folder`:
-- **Phần trên** (máy new nguyên seal): bot báo khoảng giá theo dung lượng. Khách hỏi kèm dung lượng thì bot báo từng màu, bản VN/Mỹ, có VAT hay không, đã active hay chưa. Ô giá ghi `CALL` thì bot báo "liên hệ"; ô ghi `HẾT RỒI` thì bot bỏ qua.
-- **Phần "MÁY CÓ SẴN TẠI KHANG HUY"** (máy 99%, 98%): bot liệt kê từng máy (màu, dung lượng, pin, ghi chú, giá).
-- Bot **không** đọc cột IMEI.
+Bot lấy danh sách máy từ trang **https://khanghuyapple.lovable.app** (mục "Máy mới & máy 99%"):
+- **Máy mới nguyên seal:** bot báo khoảng giá theo dung lượng. Khách hỏi kèm dung lượng thì bot báo từng màu, bản VN/Mỹ, có VAT hay không, đã active hay chưa. Máy ghi "Liên hệ báo giá" thì bot báo "liên hệ".
+- **Máy 99% / đã dùng:** bot liệt kê từng máy (màu, dung lượng, pin, ghi chú, giá).
 
-Ví dụ khách nhắn: `giá 17 pro max`, `mua 15 pro max 99`, `18 pro max 256 new`, `ipad`, `samsung`. Mỗi lần khách hỏi mua, thầy nhận tin "💰 Khách … hỏi mua …" để chủ động gọi tư vấn.
-
-**Khi giá hoặc kho máy thay đổi:**
-1. Sửa file Excel, lưu đè đúng chỗ cũ (`Desktop\New folder\KHO MÁY NEW - 99% KHANG HUY.xlsx`). Nhớ sửa ô "CẬP NHẬT …" ở cột H thành ngày mới.
-2. Nhắn Claude: **"cập nhật kho máy"**. Claude chạy `build.ps1` rồi đẩy lên GitHub, khoảng 1 phút sau bot có giá mới.
+Ví dụ khách nhắn: `giá 17 pro max`, `17prm`, `mua 15 pro max 99`, `18 pro max 256 new`, `ipad`, `samsung`. Mỗi lần khách hỏi mua, thầy nhận tin "💰 Khách … hỏi mua …" để chủ động gọi tư vấn.
 
 ## Khi đổi giá
 
 - **Giá sửa:** bot lấy từ trang **https://khanghuyapple.lovable.app/bang-gia-sua-chua**, tức đúng giá thầy nhập trên trang đó. Lỗi nào trên trang ghi "Liên hệ báo giá" thì bot báo khách "kỹ thuật sẽ báo giá", và nhắn thầy "❓ Khách … hỏi giá sửa (chưa có giá)" để thầy trả lời.
-- **Giá máy new và 99%:** bot lấy từ file Excel `KHO MÁY NEW - 99% KHANG HUY.xlsx`. File để ở Desktop, `Desktop\New folder` hoặc Downloads đều được, bot dùng bản mới nhất.
+- **Giá máy new và 99%:** bot lấy từ trang chủ **https://khanghuyapple.lovable.app**.
 
-Sửa giá xong, thầy nhắn Claude **"cập nhật giá"**. Claude chạy `build.ps1` để lấy giá mới từ trang web và file Excel, rồi đẩy lên GitHub. Khoảng 1 phút sau bot dùng giá mới. Thầy không phải vào Cloudflare.
+**Trang lovable là nguồn giá duy nhất.** Thầy sửa giá trên trang lovable xong thì nhắn Claude **"cập nhật giá"**. Claude chạy `build.ps1` để lấy giá mới từ trang, rồi đẩy lên GitHub. Khoảng 1 phút sau bot dùng giá mới. Thầy không phải vào Cloudflare.
 
 Danh sách khách và khuyến mãi nằm trong kho KV nên không bị mất khi cập nhật.
 
