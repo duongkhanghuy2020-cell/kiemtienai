@@ -17,6 +17,9 @@ foreach ($t in [regex]::Matches($html, '<table class="price-table">([\s\S]*?)</t
 }
 $json = $out | ConvertTo-Json -Depth 4 -Compress
 $utf8 = New-Object Text.UTF8Encoding $false
+# Kho máy bán (new + 99%): đọc lại từ file Excel nếu có, rồi nhúng kho-may.json
+& (Join-Path $PSScriptRoot 'kho-may.ps1')
+$kho = [IO.File]::ReadAllText((Join-Path $PSScriptRoot 'kho-may.json'), $utf8)
 $tpl = [IO.File]::ReadAllText((Join-Path $PSScriptRoot 'worker.template.js'), $utf8)
-[IO.File]::WriteAllText((Join-Path $PSScriptRoot 'worker.js'), $tpl.Replace('__PRICES__', $json), $utf8)
+[IO.File]::WriteAllText((Join-Path $PSScriptRoot 'worker.js'), $tpl.Replace('__PRICES__', $json).Replace('__KHO__', $kho), $utf8)
 Write-Host "Da tao worker.js voi $($out.Count) dong may."

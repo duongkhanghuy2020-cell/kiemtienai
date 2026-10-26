@@ -173,6 +173,19 @@ Muốn sửa nội dung mẫu, thầy nhắn Claude. Muốn gửi nội dung kh�
 - Mỗi tin khuyến mãi đều có dòng "Nhắn huy km để ngừng nhận". Khách nhắn "huy km" thì bot thôi gửi, nhắn "nhan km" thì nhận lại.
 - Mỗi tháng chỉ nên gửi 2–4 tin. Gửi dày quá, khách dễ chặn bot.
 
+## Bán máy: máy new và máy 99%
+
+Bot lấy giá từ file Excel **`KHO MÁY NEW - 99% KHANG HUY.xlsx`** ở `Desktop\New folder`:
+- **Phần trên** (máy new nguyên seal): bot báo khoảng giá theo dung lượng. Khách hỏi kèm dung lượng thì bot báo từng màu, bản VN/Mỹ, có VAT hay không, đã active hay chưa. Ô giá ghi `CALL` thì bot báo "liên hệ"; ô ghi `HẾT RỒI` thì bot bỏ qua.
+- **Phần "MÁY CÓ SẴN TẠI KHANG HUY"** (máy 99%, 98%): bot liệt kê từng máy (màu, dung lượng, pin, ghi chú, giá).
+- Bot **không** đọc cột IMEI.
+
+Ví dụ khách nhắn: `giá 17 pro max`, `mua 15 pro max 99`, `18 pro max 256 new`, `ipad`, `samsung`. Mỗi lần khách hỏi mua, thầy nhận tin "💰 Khách … hỏi mua …" để chủ động gọi tư vấn.
+
+**Khi giá hoặc kho máy thay đổi:**
+1. Sửa file Excel, lưu đè đúng chỗ cũ (`Desktop\New folder\KHO MÁY NEW - 99% KHANG HUY.xlsx`). Nhớ sửa ô "CẬP NHẬT …" ở cột H thành ngày mới.
+2. Nhắn Claude: **"cập nhật kho máy"**. Claude chạy `build.ps1` rồi đẩy lên GitHub, khoảng 1 phút sau bot có giá mới.
+
 ## Khi đổi giá
 
 1. Sửa bảng giá trong `bang-gia-professional.html` (hoặc nhờ Claude sửa).

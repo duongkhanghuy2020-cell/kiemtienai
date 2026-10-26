@@ -112,6 +112,157 @@ const CTA =
 
 const NOTE = '\nGiá trên là tiền công sửa, bên em kiểm tra máy miễn phí và bảo hành 6 - 12 tháng ạ.';
 
+// --- Bán máy: new nguyên seal + máy có sẵn 99% ---
+// Dữ liệu lấy từ file Excel "KHO MÁY NEW - 99% KHANG HUY.xlsx" qua kho-may.ps1 (không có IMEI).
+const KHO = __KHO__;
+
+const SALE_WORDS = /(^| )(mua|ban|con hang|co san|con may|may moi|new|seal|nguyen seal|like new|may cu|99|98|tra gop|len doi|gia may|bao nhieu tien)( |$)/;
+const NEW_WORDS = /(^| )(new|moi|seal|nguyen seal|chua active)( |$)/;
+const USED_WORDS = /(^| )(99|98|cu|like new|qua su dung)( |$)/;
+const CATS = [
+  ['ipad', /(^| )ipad( |$)/, 'iPad'],
+  ['mac', /(^| )(macbook|mac|laptop)( |$)/, 'MacBook / laptop'],
+  ['watch', /(^| )(apple watch|watch|dong ho)( |$)/, 'Apple Watch'],
+  ['samsung', /(^| )(samsung|ss|galaxy)( |$)/, 'Samsung'],
+];
+const ORIGIN = { 'V.NAM': 'VN', USA: 'Mỹ', SING: 'Sing', VC: 'CPO' };
+
+// "18 pm 256g ..." => "18 pro max"; "ip 17 promax ..." => "17 pro max"; "iphone duo ..." => "duo"
+function phoneKey(t) {
+  const m = t.match(/(?:^| )(?:iphone |ip |i )?(duo|xs ?max|xs|xr|x|6s plus|[6-8] plus|1[0-9]e|1[0-9])(?: (pro ?max|promax|prm|pm|pro|plus|air))?(?= |$)/);
+  if (!m) return null;
+  const base = m[1].replace(/ /g, '').replace('xsmax', 'xs max').replace(/^(6s|[6-8])plus$/, '$1 plus');
+  let suf = (m[2] || '').replace(/ /g, '');
+  if (['promax', 'prm', 'pm'].includes(suf)) suf = 'pro max';
+  return suf ? `${base} ${suf}` : base;
+}
+
+function capOf(t) {
+  let m = t.match(/(?:^| )(\d{2,4}) ?(?:gb|g)(?= |$)/);
+  if (m) return `${m[1]}GB`;
+  m = t.match(/(?:^| )([1-4]) ?(?:tb|t)(?= |$)/);
+  if (m) return `${m[1]}TB`;
+  m = t.match(/(?:^| )(64|128|256|512)(?= |$)/);
+  return m ? `${m[1]}GB` : '';
+}
+
+function labelOf(key) {
+  const words = { duo: 'Duo', pro: 'Pro', max: 'Max', plus: 'Plus', air: 'Air', xs: 'XS', xr: 'XR', x: 'X' };
+  return 'iPhone ' + key.split(' ').map((w) => words[w] || w).join(' ');
+}
+
+const STOCK = KHO.items.map((it) => {
+  const t = norm(it.n);
+  const x = { ...it, key: it.c === 'iphone' ? phoneKey(t) : null, cap: capOf(t) || capOf(norm(it.cap || '')) };
+  if (it.s === 'n') {
+    const m = it.n.match(/\d+\s?(?:GB|G|TB|T)\s+(.+?)(?:\s+(?:X\/A|ZP|LL|VN|CPO|SG|Full|VAT|\(|-)|$)/i);
+    x.col = m ? m[1].trim() : '';
+    x.cond = 'new';
+    x.active = !/chưa/i.test(it.st || '');
+    x.vat = /VAT/i.test(it.n);
+  } else {
+    const m = it.n.match(/(\d{2})%\s*(.*)$/);
+    x.cond = /NEW/i.test(it.n) ? 'new đã active' : m ? `máy ${m[1]}%` : 'máy cũ';
+    x.extra = [m ? m[2].replace(/SẠC\s*(\d+)/i, 'sạc $1 lần').replace(/^[-\s]+|[-\s]+$/g, '') : '', it.note].filter(Boolean).join(', ');
+  }
+  return x;
+});
+
+const vnd = (p) => (p > 0 ? `${p.toLocaleString('de-DE')}đ` : 'liên hệ');
+const byPrice = (a, b) => (a.p || Infinity) - (b.p || Infinity);
+const capNum = (c) => (parseInt(c, 10) || 0) * (/TB/.test(c) ? 1024 : 1);
+
+const SALE_CTA =
+  `\n\n📅 Anh/chị muốn xem máy hoặc giữ máy, vui lòng nhắn giúp em "Tên - SĐT", bên em sẽ gọi lại tư vấn ngay ạ.` +
+  `\n📞 Hotline: ${SHOP.phone}\n📍 ${SHOP.address}`;
+
+function newLines(items, detailed) {
+  if (detailed || items.length <= 6) {
+    const list = items.slice().sort(byPrice);
+    const lines = list.slice(0, 8).map((x) =>
+      x.c === 'iphone'
+        ? `• ${x.cap} ${x.col} – ${ORIGIN[x.o] || x.o}${x.vat ? ', Full VAT' : ''}${x.active ? ', đã active' : ''}: ${vnd(x.p)}`
+        : `• ${x.n}: ${vnd(x.p)}`
+    );
+    if (list.length > 8) lines.push(`… và ${list.length - 8} máy khác ạ.`);
+    return lines.join('\n');
+  }
+  // Nhiều máy: gom theo dung lượng, báo khoảng giá và màu
+  const caps = [...new Set(items.map((x) => x.cap))].sort((a, b) => capNum(a) - capNum(b));
+  const lines = caps.map((cap) => {
+    const g = items.filter((x) => x.cap === cap);
+    const prices = g.map((x) => x.p).filter((p) => p > 0);
+    const cols = [...new Set(g.map((x) => x.col).filter(Boolean))].join(', ');
+    const range = !prices.length ? 'liên hệ'
+      : Math.min(...prices) === Math.max(...prices) ? vnd(prices[0])
+      : `${vnd(Math.min(...prices))} – ${vnd(Math.max(...prices))}`;
+    return `• ${cap}: ${range}${cols ? ` (${cols})` : ''}`;
+  });
+  lines.push('Anh/chị nhắn kèm dung lượng (VD: "256GB") để em báo giá từng màu, bản VN/Mỹ ạ.');
+  return lines.join('\n');
+}
+
+function usedLines(items) {
+  const list = items.slice().sort(byPrice);
+  const lines = list.slice(0, 8).map((x) =>
+    x.c === 'iphone'
+      ? `• ${x.cap} ${x.col}, ${x.cond}${x.pin ? `, pin ${x.pin}` : ''}${x.extra ? ` (${x.extra})` : ''}: ${vnd(x.p)}`
+      : `• ${x.n}${x.col ? ` ${x.col}` : ''}${x.cap ? ` ${x.cap}` : ''}: ${vnd(x.p)}`
+  );
+  if (list.length > 8) lines.push(`… và ${list.length - 8} máy khác ạ.`);
+  return lines.join('\n');
+}
+
+// Trả về câu trả lời bán máy, hoặc null nếu khách đang hỏi sửa máy
+function saleAnswer(t, raw, sender, service) {
+  if (service) return null;
+  const cat = CATS.find(([, re]) => re.test(t));
+  const key = cat ? null : phoneKey(t);
+  if (!cat && !key) return null;
+  const intent = SALE_WORDS.test(t);
+  const label = cat ? cat[2] : labelOf(key);
+  const notify = (note) => `💰 Khách ${sender.name || ''} hỏi mua ${label}${note}: "${raw}"\nTrả lời: /tl ${sender.chatId} <nội dung>`;
+
+  let list = STOCK.filter((x) => (cat ? x.c === cat[0] : x.key === key));
+  if (!list.length) {
+    if (!intent) return null; // dòng không bán => để phần sửa máy trả lời
+    return {
+      reply: `Dạ ${label} hiện bên em chưa có sẵn ạ. Em đã báo kỹ thuật kiểm tra nguồn hàng, bên em sẽ báo lại anh/chị ngay ạ.${SALE_CTA}`,
+      notify: notify(' (chưa có hàng)'),
+    };
+  }
+  const wantNew = NEW_WORDS.test(t), wantUsed = USED_WORDS.test(t);
+  if (wantNew !== wantUsed) {
+    const f = list.filter((x) => (wantNew ? x.s === 'n' || /new/.test(x.cond) : x.s === 'u' && !/new/.test(x.cond)));
+    if (!f.length) {
+      return {
+        reply: `Dạ ${label} ${wantNew ? 'máy mới' : 'máy 99%'} hiện bên em chưa có sẵn ạ. Anh/chị nhắn "${norm(raw).replace(/ (new|moi|seal|99|98|cu)( |$)/g, ' ').trim()}" để xem các máy đang có, hoặc để lại SĐT để bên em tìm hàng giúp anh/chị ạ.${SALE_CTA}`,
+        notify: notify(` (chưa có ${wantNew ? 'máy mới' : 'máy 99%'})`),
+      };
+    }
+    list = f;
+  }
+  const cap = capOf(t);
+  let capNote = '';
+  if (cap) {
+    const f = list.filter((x) => x.cap === cap);
+    if (f.length) list = f;
+    else capNote = `\nDạ bản ${cap} hiện chưa có, em gửi anh/chị các bản đang có ạ.`;
+  }
+  const fresh = list.filter((x) => x.s === 'n');
+  const used = list.filter((x) => x.s === 'u');
+  const parts = [];
+  if (fresh.length) parts.push(`🆕 MÁY MỚI NGUYÊN SEAL:\n${newLines(fresh, !!(cap && !capNote) || !!cat)}`);
+  if (used.length) parts.push(`✨ MÁY CÓ SẴN TẠI TIỆM:\n${usedLines(used)}`);
+  const repairHint = key && !intent ? `\n🔧 Anh/chị cần sửa máy, nhắn ví dụ "màn hình ${key}" để xem giá sửa ạ.` : '';
+  return {
+    reply:
+      `Dạ, ${label} bên em đang có ạ:${capNote}\n\n${parts.join('\n\n')}\n\n` +
+      `Dạ giá cập nhật ngày ${KHO.updated}, có thể thay đổi theo ngày ạ. 💳 Bên em hỗ trợ trả góp và thu cũ đổi mới ạ.${repairHint}${SALE_CTA}`,
+    notify: notify(''),
+  };
+}
+
 // Quyết định trả lời khách. Trả về { reply, notify } — notify là tin báo cho chủ tiệm (hoặc null).
 // promo: nội dung khuyến mãi đang chạy (hoặc rỗng).
 function handleText(raw, sender, promo) {
@@ -146,6 +297,9 @@ function answer(raw, sender, promo) {
       notify: `🔔 ĐƠN MỚI TỪ ZALO BOT\nKhách: ${sender.name || '(không tên)'}\nSĐT: ${phone}\nNội dung: ${raw}`,
     };
   }
+
+  const sale = saleAnswer(t, raw, sender, service);
+  if (sale) return sale;
 
   if (model && model.key && service) {
     const v = PRICES[MODELS[model.key]][service];
