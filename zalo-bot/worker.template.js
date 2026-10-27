@@ -741,7 +741,9 @@ async function onUpdate(env, update) {
     await saveCustomer(env, chatId, sender.name, { off: false });
     return send(env, chatId, `✅ Dạ, anh/chị sẽ nhận được tin khuyến mãi mới nhất từ ${SHOP.name} ạ. Em cảm ơn anh/chị!`);
   }
-  await saveCustomer(env, chatId, sender.name);
+  // Khách nhắn kèm SĐT => lưu SĐT cùng tài khoản Zalo, để đối chiếu với danh sách khách KiotViet
+  const phoneInText = findPhone(text);
+  await saveCustomer(env, chatId, sender.name, phoneInText ? { ph: phoneInText.replace(/^\+?84/, '0') } : undefined);
 
   if (STOP_REMIND_WORDS.test(t)) {
     if (env.DB) await env.DB.delete(`f:${chatId}`);
