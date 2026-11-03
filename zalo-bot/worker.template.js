@@ -375,7 +375,7 @@ function answer(raw, sender, promo) {
 
   if (/(^| )bao hanh( |$)/.test(t)) {
     return {
-      reply: `Dạ, bên em bảo hành 6 – 12 tháng tùy linh kiện, 1 đổi 1 trong 30 ngày đầu ạ. Anh/chị đã sửa máy tại tiệm thì nhắn "tra cuu bao hanh" để xem phiếu bảo hành ạ.`,
+      reply: `Dạ, bên em bảo hành 6 – 12 tháng tùy linh kiện, 1 đổi 1 trong 30 ngày đầu ạ. Anh/chị đã sửa máy tại tiệm thì nhắn giúp em số điện thoại ghi trên phiếu bảo hành, em gửi phiếu bảo hành điện tử và ngày hết hạn cho anh/chị ạ.`,
       notify: null,
     };
   }
@@ -567,12 +567,31 @@ async function getCards(env, chatId) {
 }
 
 // Lưu phiếu mới + (làm mới) lịch nhắc cho khách, trả về bản ghi
-async function registerWarranty(env, chatId, name, model, months) {
-  const r = { n: (name || '').slice(0, 60), m: (model || '').slice(0, 80), d: Date.now(), s: 0, mo: months || WARRANTY_MONTHS };
+async function registerWarranty(env, chatId, name, model, months, day) {
+  const r = { n: (name || '').slice(0, 60), m: (model || '').slice(0, 80), d: day || Date.now(), s: 0, mo: months || WARRANTY_MONTHS };
   const list = await getCards(env, chatId); // đọc trước khi ghi f: để phiếu mới không bị tính 2 lần
   await env.DB.put(`f:${chatId}`, '', { metadata: r });
   await env.DB.put(`w:${chatId}`, JSON.stringify([{ m: r.m, d: r.d, mo: r.mo }, ...list].slice(0, MAX_CARDS)));
   return r;
+}
+
+// Phiếu thầy ghi theo SĐT khi khách chưa nhắn bot: chờ ở "p:<SĐT>", khách nhắn SĐT đó thì bot gửi phiếu
+async function savePending(env, phone, model, months) {
+  const list = (await env.DB.get(`p:${phone}`, 'json')) || [];
+  await env.DB.put(`p:${phone}`, JSON.stringify([{ m: model.slice(0, 80), d: Date.now(), mo: months }, ...list].slice(0, MAX_CARDS)));
+}
+
+async function deliverPending(env, chatId, name, phone) {
+  const list = await env.DB.get(`p:${phone}`, 'json');
+  if (!list || !list.length) return false;
+  let r;
+  for (const it of [...list].reverse()) r = await registerWarranty(env, chatId, name, it.m, it.mo, it.d); // cũ trước, mới sau
+  await env.DB.delete(`p:${phone}`);
+  const s = await addStamp(env, chatId, name);
+  await send(env, chatId, `${warrantyCard(r)}\n\n${stampLine(s)}`);
+  if (s.voucher) await send(env, chatId, voucherMessage(s.voucher));
+  await notifyOwner(env, `🛡️ Khách ${name || ''} (${phone}) đã nhận phiếu bảo hành điện tử: ${r.m}.\nMã khách: ${chatId}`);
+  return true;
 }
 
 // Tìm mã khách theo SĐT khách đã nhắn bot (lưu ở c:<chatId>.ph)
@@ -677,7 +696,7 @@ const OWNER_HELP =
   '• /kmxem: xem khuyến mãi đang chạy\n' +
   '• /kmxoa: tắt khuyến mãi\n' +
   '• /khach: đếm số khách\n' +
-  '• /giao <SĐT hoặc mã khách> <máy + dịch vụ> <số tháng>t: gửi phiếu bảo hành + bật tự nhắc (VD: /giao 0909123456 iPhone 13 thay pin 6t)\n' +
+  '• /giao <SĐT hoặc mã khách> <máy + dịch vụ> <số tháng>t: gửi phiếu bảo hành + bật tự nhắc (VD: /giao 0909123456 iPhone 13 thay pin 6t). Khách chưa nhắn bot thì bot giữ phiếu, khách nhắn SĐT là nhận\n' +
   '• /nhac: đếm khách đang được tự nhắc sau sửa\n' +
   '• /dung <mã voucher>: kiểm tra và đánh dấu voucher khách quen đã dùng\n' +
   '• /diem <mã khách>: xem điểm tích lũy của khách\n' +
@@ -747,14 +766,19 @@ async function onOwner(env, chatId, text) {
     if (!g[2].replace(/[\s)"”.,;]/g, '')) {
       return reply(`❌ Thầy ghi thêm tên máy + dịch vụ + số tháng bảo hành giúp em.\nVD: /giao ${digits || '0909123456'} iPhone 13 thay pin 6t`);
     }
-    if (/^[\d.+-]+$/.test(g[1]) && /^0\d{9,10}$/.test(digits)) {
-      id = await findByPhone(env, digits);
-      if (!id) return reply(`❌ Chưa có khách nào nhắn bot với SĐT ${digits}.\nNhờ khách mở Zalo nhắn bot số điện thoại của mình (VD "${digits}") rồi gõ lại lệnh này.`);
-    }
     const job = parseJob(g[2].replace(/[\s)"”.,;]+$/, ''));
     const jt = norm(job.m);
     if (!findDevice(jt) && !/(^| )(iphone|ipad|ip|apple|samsung|ss|oppo|xiaomi|redmi|vivo|realme|watch|airpods?|macbook|mac|dien thoai|may)( |$)/.test(jt)) {
       return reply(`❌ Em chưa thấy tên máy trong "${job.m}".\nThầy gõ lại theo mẫu: /giao ${digits || '0909123456'} iPhone 13 thay pin 6t`);
+    }
+    if (/^[\d.+-]+$/.test(g[1]) && /^0\d{9,10}$/.test(digits)) {
+      id = await findByPhone(env, digits);
+      if (!id) {
+        await savePending(env, digits, job.m, job.mo);
+        return reply(
+          `✅ Đã lưu phiếu cho SĐT ${digits}: ${job.m}, bảo hành ${job.mo} tháng đến hết ${fmtDate(addMonths(Date.now(), job.mo))}.\n` +
+          `Khách chưa nhắn bot, nên khi khách vào bot Khang Huy Apple nhắn số ${digits}, bot sẽ tự gửi phiếu cho khách.`);
+      }
     }
     const { metadata: c } = await env.DB.getWithMetadata(`c:${id}`);
     const r = await registerWarranty(env, id, c && c.n, job.m, job.mo);
@@ -821,7 +845,10 @@ async function onUpdate(env, update) {
   }
   // Khách nhắn kèm SĐT => lưu SĐT cùng tài khoản Zalo, để đối chiếu với danh sách khách KiotViet
   const phoneInText = findPhone(text);
-  await saveCustomer(env, chatId, sender.name, phoneInText ? { ph: phoneInText.replace(/^\+?84/, '0') } : undefined);
+  const ph = phoneInText && phoneInText.replace(/^\+?84/, '0');
+  await saveCustomer(env, chatId, sender.name, ph ? { ph } : undefined);
+  // Thầy đã ghi phiếu cho SĐT này => gửi phiếu cho khách luôn
+  if (env.DB && ph && (await deliverPending(env, chatId, sender.name, ph))) return;
 
   if (STOP_REMIND_WORDS.test(t)) {
     if (env.DB) await env.DB.delete(`f:${chatId}`);
@@ -834,7 +861,7 @@ async function onUpdate(env, update) {
     const list = await getCards(env, chatId);
     if (list.length) return send(env, chatId, lookupCards(list, sender.name));
     if (LOOKUP_WORDS.test(t)) {
-      return send(env, chatId, `Dạ em chưa tìm thấy phiếu bảo hành điện tử của anh/chị trên Zalo này ạ. Anh/chị vui lòng gọi ${SHOP.phone} để bên em tra theo số điện thoại giúp anh/chị ạ.`);
+      return send(env, chatId, `Dạ anh/chị nhắn giúp em số điện thoại ghi trên phiếu bảo hành để em tra phiếu ạ (VD: 0909123456).`);
     }
   }
   // Khách nhắn "nhận máy iPhone 13" lúc lấy máy => phiếu bảo hành điện tử + tự nhắc
