@@ -1296,6 +1296,15 @@ async function onAdminApi(request, env) {
       const tok = await oaTokens(env, { refresh_token: rt, grant_type: 'refresh_token' });
       return tok ? json({ ok: true }) : json({ ok: false, error: `Zalo báo lỗi: ${((await env.DB.get('oa', 'json')) || {}).err}` }, 400);
     }
+    case 'oaTest': {
+      // Thử đọc 3 tin gần nhất của OA (không gửi gì), để biết token và quyền đã dùng được chưa
+      const token = await oaToken(env);
+      if (!token) return json({ ok: false, error: 'OA chưa kết nối' }, 400);
+      const r = await fetch(`${OA_API}/v2.0/oa/listrecentchat?data=${encodeURIComponent(JSON.stringify({ offset: 0, count: 3 }))}`, { headers: { access_token: token } });
+      const j = await r.json().catch(() => ({ error: r.status }));
+      return json({ ok: j.error === 0, error: j.error, message: j.message, count: Array.isArray(j.data) ? j.data.length : 0,
+        last: (await env.DB.get('oa:last')) || '' });
+    }
     case 'oaOff': {
       const o = (await env.DB.get('oa', 'json')) || {};
       delete o.access_token;
