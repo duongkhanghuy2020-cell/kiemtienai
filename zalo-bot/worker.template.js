@@ -1276,6 +1276,10 @@ async function onAdminApi(request, env) {
       const o = (await env.DB.get('oa', 'json')) || {};
       const appId = String(d.app_id || '').trim();
       const secret = String(d.secret || '').trim();
+      // Khóa bí mật Zalo dài 20 ký tự; ngắn hơn thường là trình duyệt tự điền mật khẩu trang quản lý
+      if (secret && (secret.length < 16 || secret === (env.ADMIN_KEY || env.WEBHOOK_SECRET))) {
+        return json({ ok: false, error: 'Khóa bí mật chưa đúng (phải khoảng 20 ký tự). Bấm nút sao chép cạnh ô Khóa bí mật trên trang Zalo rồi dán lại.' }, 400);
+      }
       if (appId) o.app_id = appId;
       if (secret) o.secret = secret;
       await env.DB.put('oa', JSON.stringify(o));
@@ -1291,11 +1295,6 @@ async function onAdminApi(request, env) {
       if (!rt) return json({ ok: false, error: 'Chưa dán refresh token' }, 400);
       const tok = await oaTokens(env, { refresh_token: rt, grant_type: 'refresh_token' });
       return tok ? json({ ok: true }) : json({ ok: false, error: `Zalo báo lỗi: ${((await env.DB.get('oa', 'json')) || {}).err}` }, 400);
-    }
-    case 'oaEcho': {
-      // Kiểm tra header secret_key (có dấu gạch dưới) có đi qua fetch của Cloudflare không
-      const r = await fetch('https://httpbin.org/headers', { headers: { secret_key: 'test', 'x-test': '1' } });
-      return json({ ok: true, echo: await r.json().catch(() => r.status) });
     }
     case 'oaOff': {
       const o = (await env.DB.get('oa', 'json')) || {};
@@ -1461,7 +1460,7 @@ function render() {
   }).join('') : '<tr><td class="mute">Chưa có ngày sinh nào.</td></tr>';
   var o = S.oa; $('oaapp').value = o.app_id;
   $('oast').innerHTML = o.connected ? '<span class="tag" style="background:#e3f6ea">✅ Đã kết nối OA' + (o.oa_id ? ' ' + esc(o.oa_id) : '') + '</span>' + (S.customers.oa ? ' <span class="mute">' + S.customers.oa + ' khách đã nhắn OA</span>' : '')
-    : '<span class="tag">Chưa kết nối</span> <span class="mute">' + (o.app_id ? 'App ID đã lưu' : 'Chưa có App ID') + (o.hasSecret ? ', Secret đã lưu' : ', chưa có Secret') + '</span>';
+    : '<span class="tag">Chưa kết nối</span> <span class="mute">' + (o.app_id ? 'App ID đã lưu' : 'Chưa có App ID') + (o.hasSecret ? ', Secret đã lưu (' + o.secretLen + ' ký tự' + (o.secretLen === 20 ? '' : ', CHƯA ĐÚNG') + ')' : ', chưa có Secret') + '</span>';
   if (o.err) $('oast').innerHTML += '<div class="mute" style="color:var(--bad)">Lỗi gần nhất: ' + esc(o.err) + '</div>';
   $('admins').innerHTML ='<tr><td>Chủ tiệm</td><td><span class="tag">chính</span></td><td></td></tr>' + S.admins.map(function (a) {
     return '<tr><td>' + esc(a.n || '') + ' ' + esc(a.ph) + '</td><td>' + (a.id ? '<span class="tag">đã nhận quyền</span>' : '<span class="tag">chờ nhắn SĐT cho bot</span>') +
