@@ -552,7 +552,7 @@ function warrantyCard(r) {
 function lookupCards(list, name) {
   const now = Date.now();
   return (
-    `🛡️ PHIẾU BẢO HÀNH CỦA ANH/CHỊ${name ? ' ' + name.toUpperCase() : ''} – ${SHOP.name.toUpperCase()}\n\n` +
+    `🛡️ PHIẾU BẢO HÀNH – ${SHOP.name.toUpperCase()}\n${name ? `Khách: ${name}\n` : ''}\n` +
     list.map((r, i) => (list.length > 1 ? `${i + 1}) ` : '') + cardBody(r, now)).join('\n\n') +
     `\n\nDạ máy có gì bất thường, anh/chị mang qua tiệm để bên em kiểm tra miễn phí ạ.\n📍 ${SHOP.address} | 📞 ${SHOP.phone}`
   );
@@ -686,6 +686,8 @@ const OWNER_HELP =
 
 async function onOwner(env, chatId, text) {
   const reply = (s) => send(env, chatId, s);
+  // Gõ trên điện thoại hay dính ngoặc, dấu + hoặc dấu phẩy: "(/giao+0937…, iPhone…" => "/giao 0937… iPhone…"
+  text = text.replace(/^[\s("'“]+/, '').replace(/^\/giao[\s+:,]*/i, '/giao ').trim();
   const m = text.match(/^\/tl\s+(\S+)\s+([\s\S]+)/);
   if (m) {
     const r = await send(env, m[1], m[2]);
@@ -737,16 +739,23 @@ async function onOwner(env, chatId, text) {
     } while (cursor);
     return reply(`Có ${total} khách đang được tự nhắc sau sửa máy.`);
   }
-  const g = text.match(/^\/giao\s+(\S+)\s*([\s\S]*)/);
+  const g = text.match(/^\/giao\s+([^\s,;]+)[\s,;]*([\s\S]*)/);
   if (g) {
     // Thầy gõ SĐT khách (0909.123.456) hoặc mã khách trong tin báo đơn
     const digits = g[1].replace(/[^\d]/g, '').replace(/^84/, '0');
     let id = g[1];
+    if (!g[2].replace(/[\s)"”.,;]/g, '')) {
+      return reply(`❌ Thầy ghi thêm tên máy + dịch vụ + số tháng bảo hành giúp em.\nVD: /giao ${digits || '0909123456'} iPhone 13 thay pin 6t`);
+    }
     if (/^[\d.+-]+$/.test(g[1]) && /^0\d{9,10}$/.test(digits)) {
       id = await findByPhone(env, digits);
       if (!id) return reply(`❌ Chưa có khách nào nhắn bot với SĐT ${digits}.\nNhờ khách mở Zalo nhắn bot số điện thoại của mình (VD "${digits}") rồi gõ lại lệnh này.`);
     }
-    const job = parseJob(g[2]);
+    const job = parseJob(g[2].replace(/[\s)"”.,;]+$/, ''));
+    const jt = norm(job.m);
+    if (!findDevice(jt) && !/(^| )(iphone|ipad|ip|apple|samsung|ss|oppo|xiaomi|redmi|vivo|realme|watch|airpods?|macbook|mac|dien thoai|may)( |$)/.test(jt)) {
+      return reply(`❌ Em chưa thấy tên máy trong "${job.m}".\nThầy gõ lại theo mẫu: /giao ${digits || '0909123456'} iPhone 13 thay pin 6t`);
+    }
     const { metadata: c } = await env.DB.getWithMetadata(`c:${id}`);
     const r = await registerWarranty(env, id, c && c.n, job.m, job.mo);
     const s = await addStamp(env, id, c && c.n);
