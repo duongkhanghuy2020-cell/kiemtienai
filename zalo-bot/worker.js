@@ -29,7 +29,7 @@ const STOP_WORDS = /^(huy km|tat km|ngung km|stop|\/stop)$/;
 const START_WORDS = /^(nhan km|bat km|\/start)$/;
 
 // Giá sửa chữa lấy từ https://khanghuyapple.lovable.app/bang-gia-sua-chua bằng sua-chua.ps1 (0 = liên hệ báo giá)
-const SUA = {"updated":"03/11/2026","devices":{"iPhone 18 Pro":{"Thay màn hình zin (Zin TM)":12000000,"Thay kính màn hình":3500000,"Thay kính camera":1000000},"iPhone 18 Pro Max":{"Thay màn hình zin (Zin TM)":13500000,"Thay kính màn hình":3500000,"Thay kính camera":1000000},"iPhone 17":{},"iPhone 17 Pro":{"Thay màn hình zin (Zin TM)":9500000,"Thay kính màn hình":2000000,"Thay kính camera":1000000,"Sửa IC Wi-Fi":1200000,"Sửa IC đèn":1500000,"Sửa USB sạc trên main":1500000},"iPhone 17 Air":{},"iPhone 17 Pro Max":{},"iPhone 16 Pro Max":{"Thay màn hình zin (Zin TM)":6500000,"Thay màn hình linh kiện":2800000,"Thay kính màn hình":1500000,"Thay pin tiêu chuẩn":1500000,"Thay chân sạc":1500000,"Thay pin zin máy / pin zin chuẩn đoán":1900000,"Thay camera trước":1500000,"Thay camera sau":1800000,"Thay kính camera":300000,"Sửa camera rung, mờ":1900000,"Sửa Face ID":1900000,"Thay vỏ iPhone":3500000,"Thay kính lưng":1500000,"Thay loa trong":800000,"Thay loa ngoài":800000,"Sửa lỗi SIM, sóng":1900000,"Thay anten Wi-Fi":1500000,"Thay vỏ / sườn":3500000,"Thay dây nguồn / dây âm lượng":800000,"Thay rung":800000,"Thay dây cảm biến":1200000,"Sửa IC Wi-Fi":1600000,"Sửa IC nguồn":1900000,"Sửa cảm biến trên main":1900000,"Sửa camera trên main":1900000,"Sửa Audio main":1900000,"Sửa hiển thị / cảm ứng trên main":1900000,"Sửa IC đèn":1800000,"Sửa USB sạc trên main":1900000,"Sửa IC sóng / mất IMEI":1900000},"iPhone 16 Pro":{"Thay màn hình zin (Zin TM)":6500000,"Thay màn hình linh kiện":2500000,"Thay kính màn hình":1200000,"Thay pin tiêu chuẩn":1500000,"Thay chân sạc":1500000,"Thay pin zin máy / pin zin chuẩn đoán":1900000,"Thay camera trước":1500000,"Thay camera sau":1800000,"Thay kính camera":300000,"Sửa camera rung, mờ":1900000,"Sửa Face ID":1900000,"Thay vỏ iPhone":3500000,"Thay kính lưng":1200000,"Thay loa trong":800000,"Thay loa ngoài":800000,"Sửa lỗi SIM, sóng":1900000,"Thay anten Wi-Fi":1500000,"Thay dây nguồn / dây âm lượng":800000,"Thay rung":800000,"Thay dây cảm biến":1200000,"Sửa IC Wi-Fi":1600000,"Sửa IC nguồn":1900000,"Sửa cảm biến trên main":1900000,"Sửa Audio main":1900000,"Sửa hiển thị / cảm ứng trên main":1900000,"Sửa IC đèn":1800000,"Sửa USB sạc trên main":1900000},"iPhone 16 Plus":{},"iPhone 16":{},"iPhone 15 Pro Max":{"Thay màn hình zin (Zin TM)":6300000,"Thay màn hình linh kiện":2500000,"Thay kính màn hình":1200000,"Thay pin tiêu chuẩn":1500000,"Thay chân sạc":1500000,"Thay pin zin máy / pin zin chuẩn đoán":1800000,"Thay camera trước":1500000,"Thay camera sau":1800000,"Thay kính camera":300000,"Sửa camera rung, mờ":1900000,"Sửa Face ID":1900000,"Thay vỏ iPhone":3500000,"Thay kính lưng":1500000,"Thay loa trong":800000,"Thay loa ngoài":800000,"Sửa lỗi SIM, sóng":1900000,"Thay anten Wi-Fi":1500000,"Thay vỏ / sườn":3500000,"Thay dây nguồn / dây âm lượng":800000,"Thay rung":800000,"Thay dây cảm biến":1200000,"Sửa IC Wi-Fi":1600000,"Sửa IC nguồn":1900000,"Sửa cảm biến trên main":1900000,"Sửa camera trên main":1900000,"Sửa Audio main":1900000,"Sửa hiển thị / cảm ứng trên main":1900000,"Sửa IC đèn":1800000,"Sửa USB sạc trên main":1900000,"Sửa IC sóng / mất IMEI":1900000},"iPhone 15 Pro":{"Thay màn hình zin (Zin TM)":6300000,"Thay màn hình linh kiện":2200000,"Thay kính màn hình":1200000,"Thay pin tiêu chuẩn":1500000,"Thay chân sạc":1500000,"Thay pin zin máy / pin zin chuẩn đoán":1800000,"Thay camera trước":1500000,"Thay camera sau":1800000,"Thay kính camera":300000,"Sửa camera rung, mờ":1900000,"Sửa Face ID":1900000,"Thay vỏ iPhone":3500000,"Thay kính lưng":1200000,"Thay loa trong":800000,"Thay loa ngoài":800000,"Sửa lỗi SIM, sóng":1900000,"Thay anten Wi-Fi":1500000,"Thay dây nguồn / dây âm lượng":800000,"Thay rung":800000,"Thay dây cảm biến":1200000,"Sửa IC Wi-Fi":1600000,"Sửa IC nguồn":1900000,"Sửa cảm biến trên main":1900000,"Sửa Audio main":1900000,"Sửa hiển thị / cảm ứng trên main":1900000,"Sửa IC đèn":1800000,"Sửa USB sạc trên main":1900000},"iPhone 15 Plus":{},"iPhone 15":{},"iPhone 14 Pro Max":{"Thay màn hình zin (Zin TM)":4900000,"Thay màn hình linh kiện":2200000,"Thay kính màn hình":1000000,"Thay pin tiêu chuẩn":1200000,"Thay chân sạc":1200000,"Thay pin zin máy / pin zin chuẩn đoán":1500000,"Thay camera trước":1200000,"Thay camera sau":1500000,"Thay kính camera":300000,"Sửa camera rung, mờ":1200000,"Sửa Face ID":1500000,"Thay vỏ iPhone":1800000,"Thay kính lưng":800000,"Thay loa trong":700000,"Thay loa ngoài":700000,"Sửa lỗi SIM, sóng":1200000,"Thay anten Wi-Fi":1500000,"Thay vỏ / sườn":1800000,"Thay dây nguồn / dây âm lượng":700000,"Thay rung":700000,"Thay dây cảm biến":900000,"Sửa IC Wi-Fi":1200000,"Sửa IC nguồn":1200000,"Sửa cảm biến trên main":1200000,"Sửa camera trên main":1200000,"Sửa Audio main":1200000,"Sửa hiển thị / cảm ứng trên main":1200000,"Sửa IC đèn":1200000,"Sửa USB sạc trên main":1500000,"Sửa IC sóng / mất IMEI":1200000},"iPhone 14 Pro":{"Thay màn hình zin (Zin TM)":4900000,"Thay màn hình linh kiện":1800000,"Thay kính màn hình":1000000,"Thay pin tiêu chuẩn":1200000,"Thay chân sạc":1200000,"Thay pin zin máy / pin zin chuẩn đoán":1500000,"Thay camera trước":1200000,"Thay camera sau":1500000,"Thay kính camera":300000,"Sửa camera rung, mờ":1200000,"Sửa Face ID":1500000,"Thay vỏ iPhone":1800000,"Thay kính lưng":800000,"Thay loa trong":700000,"Thay loa ngoài":700000,"Sửa lỗi SIM, sóng":1200000,"Thay anten Wi-Fi":1500000,"Thay dây nguồn / dây âm lượng":700000,"Thay rung":700000,"Thay dây cảm biến":900000,"Sửa IC Wi-Fi":1200000,"Sửa IC nguồn":1200000,"Sửa cảm biến trên main":1200000,"Sửa Audio main":1200000,"Sửa hiển thị / cảm ứng trên main":1200000,"Sửa IC đèn":1200000,"Sửa USB sạc trên main":1500000},"iPhone 14 Plus":{},"iPhone 14":{},"iPhone 13 Pro Max":{"Thay màn hình zin (Zin TM)":2500000,"Thay màn hình linh kiện":1900000,"Thay kính màn hình":900000,"Thay pin tiêu chuẩn":900000,"Thay chân sạc":1200000,"Thay pin zin máy / pin zin chuẩn đoán":1200000,"Thay camera trước":1200000,"Thay camera sau":1500000,"Thay kính camera":300000,"Sửa camera rung, mờ":1200000,"Sửa Face ID":1500000,"Thay vỏ iPhone":1800000,"Thay kính lưng":800000,"Thay loa trong":700000,"Thay loa ngoài":700000,"Sửa lỗi SIM, sóng":1200000,"Thay anten Wi-Fi":1500000,"Thay vỏ / sườn":1800000,"Thay dây nguồn / dây âm lượng":700000,"Thay rung":700000,"Thay dây cảm biến":900000,"Sửa IC Wi-Fi":1200000,"Sửa IC nguồn":1200000,"Sửa cảm biến trên main":1200000,"Sửa camera trên main":1200000,"Sửa Audio main":1200000,"Sửa hiển thị / cảm ứng trên main":1200000,"Sửa IC đèn":1200000,"Sửa USB sạc trên main":1500000,"Sửa IC sóng / mất IMEI":1200000},"iPhone 13 Pro":{"Thay màn hình zin (Zin TM)":2800000,"Thay màn hình linh kiện":1800000,"Thay kính màn hình":800000,"Thay pin tiêu chuẩn":800000,"Thay chân sạc":700000,"Thay pin zin máy / pin zin chuẩn đoán":1200000,"Thay camera trước":800000,"Thay camera sau":1200000,"Thay kính camera":200000,"Sửa camera rung, mờ":1000000,"Sửa Face ID":1200000,"Thay vỏ iPhone":1200000,"Thay kính lưng":700000,"Thay loa trong":500000,"Thay loa ngoài":500000,"Sửa lỗi SIM, sóng":1000000,"Thay anten Wi-Fi":800000,"Thay vỏ / sườn":1200000,"Thay dây nguồn / dây âm lượng":500000,"Thay rung":500000,"Thay dây cảm biến":600000,"Sửa IC Wi-Fi":900000,"Sửa IC nguồn":1000000,"Sửa cảm biến trên main":1000000,"Sửa camera trên main":1000000,"Sửa Audio main":1000000,"Sửa hiển thị / cảm ứng trên main":1000000,"Sửa IC đèn":1200000,"Sửa USB sạc trên main":1000000,"Sửa IC sóng / mất IMEI":1000000},"iPhone 13":{"Thay màn hình zin (Zin TM)":2800000,"Thay màn hình linh kiện":1800000,"Thay kính màn hình":800000,"Thay pin tiêu chuẩn":800000,"Thay chân sạc":700000,"Thay pin zin máy / pin zin chuẩn đoán":1200000,"Thay camera trước":800000,"Thay camera sau":1200000,"Thay kính camera":200000,"Sửa camera rung, mờ":1000000,"Sửa Face ID":1200000,"Thay vỏ iPhone":1200000,"Thay kính lưng":700000,"Thay loa trong":500000,"Thay loa ngoài":500000,"Sửa lỗi SIM, sóng":1000000,"Thay anten Wi-Fi":800000,"Thay vỏ / sườn":1200000,"Thay dây nguồn / dây âm lượng":500000,"Thay rung":500000,"Thay dây cảm biến":600000,"Sửa IC Wi-Fi":900000,"Sửa IC nguồn":1000000,"Sửa cảm biến trên main":1000000,"Sửa camera trên main":1000000,"Sửa Audio main":1000000,"Sửa hiển thị / cảm ứng trên main":1000000,"Sửa IC đèn":1200000,"Sửa USB sạc trên main":1000000,"Sửa IC sóng / mất IMEI":1000000},"iPhone 13 mini":{"Thay màn hình zin (Zin TM)":2500000,"Thay kính màn hình":800000,"Thay pin tiêu chuẩn":800000,"Thay chân sạc":800000,"Thay pin zin máy / pin zin chuẩn đoán":1000000,"Thay camera trước":700000,"Thay camera sau":1000000,"Thay kính camera":100000,"Sửa camera rung, mờ":900000,"Sửa Face ID":1200000,"Thay vỏ iPhone":900000,"Thay kính lưng":500000,"Thay loa trong":400000,"Thay loa ngoài":400000,"Sửa lỗi SIM, sóng":900000,"Thay anten Wi-Fi":500000,"Thay vỏ / sườn":900000,"Thay dây nguồn / dây âm lượng":400000,"Thay rung":400000,"Thay dây cảm biến":600000,"Sửa IC Wi-Fi":900000,"Sửa IC nguồn":900000,"Sửa cảm biến trên main":900000,"Sửa camera trên main":900000,"Sửa Audio main":900000,"Sửa hiển thị / cảm ứng trên main":900000,"Sửa IC đèn":1200000,"Sửa USB sạc trên main":1000000,"Sửa IC sóng / mất IMEI":900000},"iPhone 12 Pro Max":{"Thay màn hình zin (Zin TM)":2900000,"Thay màn hình linh kiện":1850000,"Thay kính màn hình":800000,"Thay pin tiêu chuẩn":900000,"Thay chân sạc":800000,"Thay pin zin máy / pin zin chuẩn đoán":1200000,"Thay camera trước":800000,"Thay camera sau":1200000,"Thay kính camera":200000,"Sửa camera rung, mờ":1200000,"Sửa Face ID":1000000,"Thay vỏ iPhone":1200000,"Thay kính lưng":800000,"Thay loa trong":600000,"Thay loa ngoài":600000,"Sửa lỗi SIM, sóng":1200000,"Thay anten Wi-Fi":500000,"Thay vỏ / sườn":1200000,"Thay dây nguồn / dây âm lượng":600000,"Thay rung":600000,"Thay dây cảm biến":800000,"Sửa IC Wi-Fi":1000000,"Sửa IC nguồn":1200000,"Sửa cảm biến trên main":1200000,"Sửa camera trên main":1200000,"Sửa Audio main":1200000,"Sửa hiển thị / cảm ứng trên main":1200000,"Sửa IC đèn":1500000,"Sửa USB sạc trên main":1000000,"Sửa IC sóng / mất IMEI":1200000},"iPhone 12 Pro":{"Thay màn hình zin (Zin TM)":1900000,"Thay màn hình linh kiện":1000000,"Thay kính màn hình":600000,"Thay pin tiêu chuẩn":700000,"Thay chân sạc":700000,"Thay pin zin máy / pin zin chuẩn đoán":900000,"Thay camera trước":600000,"Thay camera sau":900000,"Thay kính camera":200000,"Sửa camera rung, mờ":1000000,"Sửa Face ID":1000000,"Thay vỏ iPhone":700000,"Thay kính lưng":700000,"Thay loa trong":500000,"Thay loa ngoài":500000,"Sửa lỗi SIM, sóng":1000000,"Thay anten Wi-Fi":300000,"Thay vỏ / sườn":700000,"Thay dây nguồn / dây âm lượng":500000,"Thay rung":500000,"Thay dây cảm biến":600000,"Sửa IC Wi-Fi":900000,"Sửa IC nguồn":1000000,"Sửa cảm biến trên main":1000000,"Sửa camera trên main":1000000,"Sửa Audio main":1000000,"Sửa hiển thị / cảm ứng trên main":1000000,"Sửa IC đèn":1200000,"Sửa USB sạc trên main":1000000,"Sửa IC sóng / mất IMEI":1000000},"iPhone 12":{"Thay màn hình zin (Zin TM)":1800000,"Thay màn hình linh kiện":800000,"Thay kính màn hình":600000,"Thay pin tiêu chuẩn":600000,"Thay chân sạc":600000,"Thay pin zin máy / pin zin chuẩn đoán":900000,"Thay camera trước":600000,"Thay camera sau":700000,"Thay kính camera":100000,"Sửa camera rung, mờ":900000,"Sửa Face ID":1000000,"Thay vỏ iPhone":600000,"Thay kính lưng":500000,"Thay loa trong":500000,"Thay loa ngoài":500000,"Sửa lỗi SIM, sóng":900000,"Thay anten Wi-Fi":300000,"Thay vỏ / sườn":600000,"Thay dây nguồn / dây âm lượng":500000,"Thay rung":500000,"Thay dây cảm biến":600000,"Sửa IC Wi-Fi":800000,"Sửa IC nguồn":900000,"Sửa cảm biến trên main":900000,"Sửa camera trên main":900000,"Sửa Audio main":900000,"Sửa hiển thị / cảm ứng trên main":900000,"Sửa IC đèn":1200000,"Sửa USB sạc trên main":900000,"Sửa IC sóng / mất IMEI":900000},"iPhone 12 mini":{"Thay màn hình zin (Zin TM)":1800000,"Thay kính màn hình":600000,"Thay pin tiêu chuẩn":500000,"Thay chân sạc":600000,"Thay pin zin máy / pin zin chuẩn đoán":900000,"Thay camera trước":600000,"Thay camera sau":700000,"Thay kính camera":100000,"Sửa camera rung, mờ":900000,"Sửa Face ID":800000,"Thay vỏ iPhone":600000,"Thay kính lưng":500000,"Thay loa trong":500000,"Thay loa ngoài":500000,"Sửa lỗi SIM, sóng":900000,"Thay anten Wi-Fi":300000,"Thay vỏ / sườn":600000,"Thay dây nguồn / dây âm lượng":500000,"Thay rung":500000,"Thay dây cảm biến":600000,"Sửa IC Wi-Fi":800000,"Sửa IC nguồn":900000,"Sửa cảm biến trên main":900000,"Sửa camera trên main":900000,"Sửa Audio main":900000,"Sửa hiển thị / cảm ứng trên main":900000,"Sửa IC đèn":1200000,"Sửa USB sạc trên main":900000,"Sửa IC sóng / mất IMEI":900000},"iPhone 11 Pro Max":{"Thay màn hình zin":1900000,"Thay màn hình linh kiện":1200000,"Thay kính màn hình":700000,"Thay pin tiêu chuẩn":700000,"Thay chân sạc":800000,"Thay pin zin máy / pin zin chuẩn đoán":1000000,"Thay camera trước":800000,"Thay camera sau":800000,"Thay kính camera":200000,"Sửa camera rung, mờ":900000,"Sửa Face ID":900000,"Thay vỏ iPhone":900000,"Thay kính lưng":600000,"Thay loa trong":400000,"Thay loa ngoài":400000,"Sửa lỗi SIM, sóng":900000,"Thay anten Wi-Fi":300000,"Thay vỏ / sườn":900000,"Thay dây nguồn / dây âm lượng":400000,"Thay rung":400000,"Thay dây cảm biến":600000,"Sửa IC Wi-Fi":800000,"Sửa IC nguồn":900000,"Sửa cảm biến trên main":900000,"Sửa camera trên main":900000,"Sửa Audio main":900000,"Sửa hiển thị / cảm ứng trên main":900000,"Sửa IC đèn":1200000,"Sửa USB sạc trên main":900000,"Sửa IC sóng / mất IMEI":900000},"iPhone 11 Pro":{"Thay màn hình zin":1500000,"Thay màn hình linh kiện":800000,"Thay kính màn hình":600000,"Thay pin tiêu chuẩn":600000,"Thay chân sạc":600000,"Thay pin zin máy / pin zin chuẩn đoán":800000,"Thay camera trước":500000,"Thay camera sau":600000,"Thay kính camera":100000,"Sửa camera rung, mờ":700000,"Sửa Face ID":600000,"Thay vỏ iPhone":800000,"Thay kính lưng":600000,"Thay loa trong":400000,"Thay loa ngoài":400000,"Sửa lỗi SIM, sóng":800000,"Thay anten Wi-Fi":300000,"Thay vỏ / sườn":800000,"Thay dây nguồn / dây âm lượng":400000,"Thay rung":400000,"Thay dây cảm biến":400000,"Sửa IC Wi-Fi":800000,"Sửa IC nguồn":700000,"Sửa cảm biến trên main":600000,"Sửa camera trên main":700000,"Sửa Audio main":700000,"Sửa hiển thị / cảm ứng trên main":700000,"Sửa IC đèn":900000,"Sửa USB sạc trên main":600000,"Sửa IC sóng / mất IMEI":800000},"iPhone 11":{"Thay màn hình zin":950000,"Thay màn hình linh kiện":500000,"Thay kính màn hình":600000,"Thay pin tiêu chuẩn":600000,"Thay chân sạc":500000,"Thay pin zin máy / pin zin chuẩn đoán":800000,"Thay camera trước":500000,"Thay camera sau":500000,"Thay kính camera":100000,"Sửa camera rung, mờ":600000,"Sửa Face ID":500000,"Thay vỏ iPhone":600000,"Thay kính lưng":500000,"Thay loa trong":300000,"Thay loa ngoài":300000,"Sửa lỗi SIM, sóng":800000,"Thay anten Wi-Fi":300000,"Thay vỏ / sườn":600000,"Thay dây nguồn / dây âm lượng":300000,"Thay rung":300000,"Thay dây cảm biến":350000,"Sửa IC Wi-Fi":800000,"Sửa IC nguồn":700000,"Sửa cảm biến trên main":500000,"Sửa camera trên main":600000,"Sửa Audio main":500000,"Sửa hiển thị / cảm ứng trên main":500000,"Sửa IC đèn":900000,"Sửa USB sạc trên main":500000,"Sửa IC sóng / mất IMEI":800000},"iPad Air 4 10.9 (2020)":{"Thay kính màn hình":1500000,"Thay chân sạc":1200000,"Thay pin zin máy / pin zin chuẩn đoán":900000,"Thay camera sau":900000,"Thay kính camera":400000,"Sửa Face ID":900000,"Thay loa trong":800000,"Thay loa ngoài":800000,"Thay anten Wi-Fi":1100000,"Thay dây nguồn":800000,"Thay dây nguồn / dây âm lượng":800000,"Thay rung":800000,"Sửa IC Wi-Fi":1200000,"Sửa IC nguồn":1200000,"Sửa camera trên main":1200000,"Sửa hiển thị / cảm ứng trên main":700000,"Sửa IC đèn":800000,"Sửa USB sạc trên main":1200000},"iPad Pro 11 (2018)":{"Thay kính màn hình":1500000,"Thay chân sạc":1200000,"Thay pin zin máy / pin zin chuẩn đoán":1000000,"Thay camera sau":800000,"Thay kính camera":300000,"Sửa Face ID":1500000,"Thay loa trong":800000,"Thay loa ngoài":800000,"Thay anten Wi-Fi":1200000,"Thay dây nguồn":800000,"Thay dây nguồn / dây âm lượng":800000,"Thay rung":800000,"Sửa IC Wi-Fi":1200000,"Sửa IC nguồn":1200000,"Sửa camera trên main":1600000,"Sửa hiển thị / cảm ứng trên main":1200000,"Sửa IC đèn":900000,"Sửa USB sạc trên main":1200000},"iPad Pro 11 (2020)":{"Thay kính màn hình":1500000,"Thay chân sạc":1200000,"Thay pin zin máy / pin zin chuẩn đoán":1200000,"Thay camera sau":1200000,"Thay kính camera":600000,"Thay loa trong":800000,"Thay loa ngoài":800000,"Thay anten Wi-Fi":1200000,"Thay dây nguồn":800000,"Thay dây nguồn / dây âm lượng":800000,"Thay rung":800000,"Sửa IC Wi-Fi":1200000,"Sửa IC nguồn":1300000,"Sửa hiển thị / cảm ứng trên main":800000,"Sửa IC đèn":900000,"Sửa USB sạc trên main":1200000},"iPad Pro 11 M1/M2":{"Thay kính màn hình":1800000,"Thay chân sạc":1500000,"Thay pin zin máy / pin zin chuẩn đoán":1500000,"Thay camera sau":1200000,"Thay kính camera":600000,"Sửa Face ID":1500000,"Thay loa trong":800000,"Thay loa ngoài":800000,"Thay anten Wi-Fi":1500000,"Thay dây nguồn":1000000,"Thay dây nguồn / dây âm lượng":1000000,"Thay rung":800000,"Sửa IC Wi-Fi":1500000,"Sửa IC nguồn":1500000,"Sửa camera trên main":1200000,"Sửa hiển thị / cảm ứng trên main":900000,"Sửa IC đèn":1500000,"Sửa USB sạc trên main":1200000},"iPad Pro 11 M3/M4":{"Thay kính màn hình":1900000,"Thay chân sạc":1800000,"Thay pin zin máy / pin zin chuẩn đoán":1800000,"Thay camera sau":1500000,"Thay kính camera":800000,"Sửa Face ID":1500000,"Thay loa trong":800000,"Thay loa ngoài":800000,"Thay anten Wi-Fi":1500000,"Thay dây nguồn":1200000,"Thay dây nguồn / dây âm lượng":1200000,"Thay rung":800000,"Sửa IC Wi-Fi":1800000,"Sửa IC nguồn":1500000,"Sửa camera trên main":1200000,"Sửa hiển thị / cảm ứng trên main":1200000,"Sửa IC đèn":1500000,"Sửa USB sạc trên main":1200000},"iPad Pro 12.9 (2017/2018/2019)":{"Thay kính màn hình":1500000,"Thay chân sạc":1200000,"Thay pin zin máy / pin zin chuẩn đoán":1200000,"Thay camera sau":800000,"Thay kính camera":400000,"Thay loa trong":800000,"Thay loa ngoài":800000,"Thay dây nguồn":800000,"Thay dây nguồn / dây âm lượng":800000,"Thay rung":800000,"Sửa IC Wi-Fi":1200000,"Sửa IC nguồn":1200000,"Sửa hiển thị / cảm ứng trên main":1600000,"Sửa USB sạc trên main":1200000},"iPad Pro 12.9 M1/M2":{"Thay kính màn hình":2200000,"Thay chân sạc":1500000,"Thay pin zin máy / pin zin chuẩn đoán":1500000,"Thay camera sau":800000,"Thay kính camera":600000,"Thay loa trong":800000,"Thay loa ngoài":800000,"Thay dây nguồn":1000000,"Thay dây nguồn / dây âm lượng":1000000,"Thay rung":800000,"Sửa IC Wi-Fi":1200000,"Sửa IC nguồn":1500000,"Sửa hiển thị / cảm ứng trên main":1800000,"Sửa USB sạc trên main":1200000},"iPad Pro 12.9 M3/M4":{"Thay kính màn hình":2500000,"Thay chân sạc":1800000,"Thay pin zin máy / pin zin chuẩn đoán":1500000,"Thay camera sau":1200000,"Thay kính camera":800000,"Thay loa trong":800000,"Thay loa ngoài":800000,"Thay dây nguồn":1200000,"Thay dây nguồn / dây âm lượng":1200000,"Thay rung":800000,"Sửa IC Wi-Fi":1500000,"Sửa IC nguồn":1500000,"Sửa hiển thị / cảm ứng trên main":1800000,"Sửa USB sạc trên main":1200000},"iPad Gen 10":{"Thay kính màn hình":1200000,"Thay chân sạc":900000,"Thay pin zin máy / pin zin chuẩn đoán":800000,"Thay camera sau":900000,"Thay kính camera":600000,"Thay loa trong":800000,"Thay loa ngoài":800000,"Thay dây nguồn":800000,"Thay dây nguồn / dây âm lượng":800000,"Thay rung":800000,"Sửa IC Wi-Fi":800000,"Sửa IC nguồn":1200000,"Sửa hiển thị / cảm ứng trên main":1200000,"Sửa USB sạc trên main":1200000},"iPad Gen 11":{"Thay kính màn hình":1200000,"Thay chân sạc":1200000,"Thay pin zin máy / pin zin chuẩn đoán":900000,"Thay camera sau":900000,"Thay kính camera":700000,"Thay loa trong":800000,"Thay loa ngoài":800000,"Thay dây nguồn":800000,"Thay dây nguồn / dây âm lượng":800000,"Thay rung":800000,"Sửa IC Wi-Fi":1200000,"Sửa IC nguồn":1500000,"Sửa hiển thị / cảm ứng trên main":1500000,"Sửa USB sạc trên main":1200000},"iPad mini 6":{"Thay kính màn hình":1200000,"Thay chân sạc":1200000,"Thay pin zin máy / pin zin chuẩn đoán":900000,"Thay camera sau":1200000,"Thay kính camera":600000,"Thay loa trong":800000,"Thay loa ngoài":800000,"Thay dây nguồn":800000,"Thay dây nguồn / dây âm lượng":800000,"Thay rung":800000,"Sửa IC Wi-Fi":800000,"Sửa IC nguồn":1200000,"Sửa hiển thị / cảm ứng trên main":900000,"Sửa USB sạc trên main":1200000},"iPad mini 7":{"Thay kính màn hình":1500000,"Thay chân sạc":1500000,"Thay pin zin máy / pin zin chuẩn đoán":1500000,"Thay camera sau":1500000,"Thay kính camera":800000,"Thay loa trong":800000,"Thay loa ngoài":800000,"Thay dây nguồn":900000,"Thay dây nguồn / dây âm lượng":900000,"Thay rung":800000,"Sửa IC Wi-Fi":1200000,"Sửa IC nguồn":1500000,"Sửa hiển thị / cảm ứng trên main":1500000,"Sửa USB sạc trên main":1200000}}};
+const SUA = {"updated":"03/11/2026","devices":{"iPhone 18 Pro":{"Thay màn hình zin (Zin TM)":12000000,"Thay kính màn hình":3500000,"Thay kính camera":1000000},"iPhone 18 Pro Max":{"Thay màn hình zin (Zin TM)":13500000,"Thay kính màn hình":3500000,"Thay kính camera":1000000},"iPhone 17":{},"iPhone 17 Pro":{"Thay màn hình zin (Zin TM)":9500000,"Thay kính màn hình":2000000,"Thay kính camera":1000000,"Sửa IC Wi-Fi":1200000,"Sửa IC đèn":1500000,"Sửa USB sạc trên main":1500000},"iPhone 17 Air":{},"iPhone 17 Pro Max":{"Thay màn hình zin (Zin TM)":9500000,"Thay kính màn hình":2500000,"Thay kính camera":1000000,"Sửa IC Wi-Fi":1200000,"Sửa IC đèn":1500000,"Sửa USB sạc trên main":1500000},"iPhone 16 Pro Max":{"Thay màn hình zin (Zin TM)":6500000,"Thay màn hình linh kiện":2800000,"Thay kính màn hình":1500000,"Thay pin tiêu chuẩn":1500000,"Thay chân sạc":1500000,"Thay pin zin máy / pin zin chuẩn đoán":1900000,"Thay camera trước":1500000,"Thay camera sau":1800000,"Thay kính camera":300000,"Sửa camera rung, mờ":1900000,"Sửa Face ID":1900000,"Thay vỏ iPhone":3500000,"Thay kính lưng":1500000,"Thay loa trong":800000,"Thay loa ngoài":800000,"Sửa lỗi SIM, sóng":1900000,"Thay anten Wi-Fi":1500000,"Thay vỏ / sườn":3500000,"Thay dây nguồn / dây âm lượng":800000,"Thay rung":800000,"Thay dây cảm biến":1200000,"Sửa IC Wi-Fi":1600000,"Sửa IC nguồn":1900000,"Sửa cảm biến trên main":1900000,"Sửa camera trên main":1900000,"Sửa Audio main":1900000,"Sửa hiển thị / cảm ứng trên main":1900000,"Sửa IC đèn":1800000,"Sửa USB sạc trên main":1900000,"Sửa IC sóng / mất IMEI":1900000},"iPhone 16 Pro":{"Thay màn hình zin (Zin TM)":6500000,"Thay màn hình linh kiện":2500000,"Thay kính màn hình":1200000,"Thay pin tiêu chuẩn":1500000,"Thay chân sạc":1500000,"Thay pin zin máy / pin zin chuẩn đoán":1900000,"Thay camera trước":1500000,"Thay camera sau":1800000,"Thay kính camera":300000,"Sửa camera rung, mờ":1900000,"Sửa Face ID":1900000,"Thay vỏ iPhone":3500000,"Thay kính lưng":1200000,"Thay loa trong":800000,"Thay loa ngoài":800000,"Sửa lỗi SIM, sóng":1900000,"Thay anten Wi-Fi":1500000,"Thay dây nguồn / dây âm lượng":800000,"Thay rung":800000,"Thay dây cảm biến":1200000,"Sửa IC Wi-Fi":1600000,"Sửa IC nguồn":1900000,"Sửa cảm biến trên main":1900000,"Sửa Audio main":1900000,"Sửa hiển thị / cảm ứng trên main":1900000,"Sửa IC đèn":1800000,"Sửa USB sạc trên main":1900000},"iPhone 16 Plus":{},"iPhone 16":{},"iPhone 15 Pro Max":{"Thay màn hình zin (Zin TM)":6300000,"Thay màn hình linh kiện":2500000,"Thay kính màn hình":1200000,"Thay pin tiêu chuẩn":1500000,"Thay chân sạc":1500000,"Thay pin zin máy / pin zin chuẩn đoán":1800000,"Thay camera trước":1500000,"Thay camera sau":1800000,"Thay kính camera":300000,"Sửa camera rung, mờ":1900000,"Sửa Face ID":1900000,"Thay vỏ iPhone":3500000,"Thay kính lưng":1500000,"Thay loa trong":800000,"Thay loa ngoài":800000,"Sửa lỗi SIM, sóng":1900000,"Thay anten Wi-Fi":1500000,"Thay vỏ / sườn":3500000,"Thay dây nguồn / dây âm lượng":800000,"Thay rung":800000,"Thay dây cảm biến":1200000,"Sửa IC Wi-Fi":1600000,"Sửa IC nguồn":1900000,"Sửa cảm biến trên main":1900000,"Sửa camera trên main":1900000,"Sửa Audio main":1900000,"Sửa hiển thị / cảm ứng trên main":1900000,"Sửa IC đèn":1800000,"Sửa USB sạc trên main":1900000,"Sửa IC sóng / mất IMEI":1900000},"iPhone 15 Pro":{"Thay màn hình zin (Zin TM)":6300000,"Thay màn hình linh kiện":2200000,"Thay kính màn hình":1200000,"Thay pin tiêu chuẩn":1500000,"Thay chân sạc":1500000,"Thay pin zin máy / pin zin chuẩn đoán":1800000,"Thay camera trước":1500000,"Thay camera sau":1800000,"Thay kính camera":300000,"Sửa camera rung, mờ":1900000,"Sửa Face ID":1900000,"Thay vỏ iPhone":3500000,"Thay kính lưng":1200000,"Thay loa trong":800000,"Thay loa ngoài":800000,"Sửa lỗi SIM, sóng":1900000,"Thay anten Wi-Fi":1500000,"Thay dây nguồn / dây âm lượng":800000,"Thay rung":800000,"Thay dây cảm biến":1200000,"Sửa IC Wi-Fi":1600000,"Sửa IC nguồn":1900000,"Sửa cảm biến trên main":1900000,"Sửa Audio main":1900000,"Sửa hiển thị / cảm ứng trên main":1900000,"Sửa IC đèn":1800000,"Sửa USB sạc trên main":1900000},"iPhone 15 Plus":{},"iPhone 15":{},"iPhone 14 Pro Max":{"Thay màn hình zin (Zin TM)":4900000,"Thay màn hình linh kiện":2200000,"Thay kính màn hình":1000000,"Thay pin tiêu chuẩn":1200000,"Thay chân sạc":1200000,"Thay pin zin máy / pin zin chuẩn đoán":1500000,"Thay camera trước":1200000,"Thay camera sau":1500000,"Thay kính camera":300000,"Sửa camera rung, mờ":1200000,"Sửa Face ID":1500000,"Thay vỏ iPhone":1800000,"Thay kính lưng":800000,"Thay loa trong":700000,"Thay loa ngoài":700000,"Sửa lỗi SIM, sóng":1200000,"Thay anten Wi-Fi":1500000,"Thay vỏ / sườn":1800000,"Thay dây nguồn / dây âm lượng":700000,"Thay rung":700000,"Thay dây cảm biến":900000,"Sửa IC Wi-Fi":1200000,"Sửa IC nguồn":1200000,"Sửa cảm biến trên main":1200000,"Sửa camera trên main":1200000,"Sửa Audio main":1200000,"Sửa hiển thị / cảm ứng trên main":1200000,"Sửa IC đèn":1200000,"Sửa USB sạc trên main":1500000,"Sửa IC sóng / mất IMEI":1200000},"iPhone 14 Pro":{"Thay màn hình zin (Zin TM)":4900000,"Thay màn hình linh kiện":1800000,"Thay kính màn hình":1000000,"Thay pin tiêu chuẩn":1200000,"Thay chân sạc":1200000,"Thay pin zin máy / pin zin chuẩn đoán":1500000,"Thay camera trước":1200000,"Thay camera sau":1500000,"Thay kính camera":300000,"Sửa camera rung, mờ":1200000,"Sửa Face ID":1500000,"Thay vỏ iPhone":1800000,"Thay kính lưng":800000,"Thay loa trong":700000,"Thay loa ngoài":700000,"Sửa lỗi SIM, sóng":1200000,"Thay anten Wi-Fi":1500000,"Thay dây nguồn / dây âm lượng":700000,"Thay rung":700000,"Thay dây cảm biến":900000,"Sửa IC Wi-Fi":1200000,"Sửa IC nguồn":1200000,"Sửa cảm biến trên main":1200000,"Sửa Audio main":1200000,"Sửa hiển thị / cảm ứng trên main":1200000,"Sửa IC đèn":1200000,"Sửa USB sạc trên main":1500000},"iPhone 14 Plus":{},"iPhone 14":{},"iPhone 13 Pro Max":{"Thay màn hình zin (Zin TM)":2500000,"Thay màn hình linh kiện":1900000,"Thay kính màn hình":900000,"Thay pin tiêu chuẩn":900000,"Thay chân sạc":1200000,"Thay pin zin máy / pin zin chuẩn đoán":1200000,"Thay camera trước":1200000,"Thay camera sau":1500000,"Thay kính camera":300000,"Sửa camera rung, mờ":1200000,"Sửa Face ID":1500000,"Thay vỏ iPhone":1800000,"Thay kính lưng":800000,"Thay loa trong":700000,"Thay loa ngoài":700000,"Sửa lỗi SIM, sóng":1200000,"Thay anten Wi-Fi":1500000,"Thay vỏ / sườn":1800000,"Thay dây nguồn / dây âm lượng":700000,"Thay rung":700000,"Thay dây cảm biến":900000,"Sửa IC Wi-Fi":1200000,"Sửa IC nguồn":1200000,"Sửa cảm biến trên main":1200000,"Sửa camera trên main":1200000,"Sửa Audio main":1200000,"Sửa hiển thị / cảm ứng trên main":1200000,"Sửa IC đèn":1200000,"Sửa USB sạc trên main":1500000,"Sửa IC sóng / mất IMEI":1200000},"iPhone 13 Pro":{"Thay màn hình zin (Zin TM)":2800000,"Thay màn hình linh kiện":1800000,"Thay kính màn hình":800000,"Thay pin tiêu chuẩn":800000,"Thay chân sạc":700000,"Thay pin zin máy / pin zin chuẩn đoán":1200000,"Thay camera trước":800000,"Thay camera sau":1200000,"Thay kính camera":200000,"Sửa camera rung, mờ":1000000,"Sửa Face ID":1200000,"Thay vỏ iPhone":1200000,"Thay kính lưng":700000,"Thay loa trong":500000,"Thay loa ngoài":500000,"Sửa lỗi SIM, sóng":1000000,"Thay anten Wi-Fi":800000,"Thay vỏ / sườn":1200000,"Thay dây nguồn / dây âm lượng":500000,"Thay rung":500000,"Thay dây cảm biến":600000,"Sửa IC Wi-Fi":900000,"Sửa IC nguồn":1000000,"Sửa cảm biến trên main":1000000,"Sửa camera trên main":1000000,"Sửa Audio main":1000000,"Sửa hiển thị / cảm ứng trên main":1000000,"Sửa IC đèn":1200000,"Sửa USB sạc trên main":1000000,"Sửa IC sóng / mất IMEI":1000000},"iPhone 13":{"Thay màn hình zin (Zin TM)":2800000,"Thay màn hình linh kiện":1800000,"Thay kính màn hình":800000,"Thay pin tiêu chuẩn":800000,"Thay chân sạc":700000,"Thay pin zin máy / pin zin chuẩn đoán":1200000,"Thay camera trước":800000,"Thay camera sau":1200000,"Thay kính camera":200000,"Sửa camera rung, mờ":1000000,"Sửa Face ID":1200000,"Thay vỏ iPhone":1200000,"Thay kính lưng":700000,"Thay loa trong":500000,"Thay loa ngoài":500000,"Sửa lỗi SIM, sóng":1000000,"Thay anten Wi-Fi":800000,"Thay vỏ / sườn":1200000,"Thay dây nguồn / dây âm lượng":500000,"Thay rung":500000,"Thay dây cảm biến":600000,"Sửa IC Wi-Fi":900000,"Sửa IC nguồn":1000000,"Sửa cảm biến trên main":1000000,"Sửa camera trên main":1000000,"Sửa Audio main":1000000,"Sửa hiển thị / cảm ứng trên main":1000000,"Sửa IC đèn":1200000,"Sửa USB sạc trên main":1000000,"Sửa IC sóng / mất IMEI":1000000},"iPhone 13 mini":{"Thay màn hình zin (Zin TM)":2500000,"Thay kính màn hình":800000,"Thay pin tiêu chuẩn":800000,"Thay chân sạc":800000,"Thay pin zin máy / pin zin chuẩn đoán":1000000,"Thay camera trước":700000,"Thay camera sau":1000000,"Thay kính camera":100000,"Sửa camera rung, mờ":900000,"Sửa Face ID":1200000,"Thay vỏ iPhone":900000,"Thay kính lưng":500000,"Thay loa trong":400000,"Thay loa ngoài":400000,"Sửa lỗi SIM, sóng":900000,"Thay anten Wi-Fi":500000,"Thay vỏ / sườn":900000,"Thay dây nguồn / dây âm lượng":400000,"Thay rung":400000,"Thay dây cảm biến":600000,"Sửa IC Wi-Fi":900000,"Sửa IC nguồn":900000,"Sửa cảm biến trên main":900000,"Sửa camera trên main":900000,"Sửa Audio main":900000,"Sửa hiển thị / cảm ứng trên main":900000,"Sửa IC đèn":1200000,"Sửa USB sạc trên main":1000000,"Sửa IC sóng / mất IMEI":900000},"iPhone 12 Pro Max":{"Thay màn hình zin (Zin TM)":2900000,"Thay màn hình linh kiện":1850000,"Thay kính màn hình":800000,"Thay pin tiêu chuẩn":900000,"Thay chân sạc":800000,"Thay pin zin máy / pin zin chuẩn đoán":1200000,"Thay camera trước":800000,"Thay camera sau":1200000,"Thay kính camera":200000,"Sửa camera rung, mờ":1200000,"Sửa Face ID":1000000,"Thay vỏ iPhone":1200000,"Thay kính lưng":800000,"Thay loa trong":600000,"Thay loa ngoài":600000,"Sửa lỗi SIM, sóng":1200000,"Thay anten Wi-Fi":500000,"Thay vỏ / sườn":1200000,"Thay dây nguồn / dây âm lượng":600000,"Thay rung":600000,"Thay dây cảm biến":800000,"Sửa IC Wi-Fi":1000000,"Sửa IC nguồn":1200000,"Sửa cảm biến trên main":1200000,"Sửa camera trên main":1200000,"Sửa Audio main":1200000,"Sửa hiển thị / cảm ứng trên main":1200000,"Sửa IC đèn":1500000,"Sửa USB sạc trên main":1000000,"Sửa IC sóng / mất IMEI":1200000},"iPhone 12 Pro":{"Thay màn hình zin (Zin TM)":1900000,"Thay màn hình linh kiện":1000000,"Thay kính màn hình":600000,"Thay pin tiêu chuẩn":700000,"Thay chân sạc":700000,"Thay pin zin máy / pin zin chuẩn đoán":900000,"Thay camera trước":600000,"Thay camera sau":900000,"Thay kính camera":200000,"Sửa camera rung, mờ":1000000,"Sửa Face ID":1000000,"Thay vỏ iPhone":700000,"Thay kính lưng":700000,"Thay loa trong":500000,"Thay loa ngoài":500000,"Sửa lỗi SIM, sóng":1000000,"Thay anten Wi-Fi":300000,"Thay vỏ / sườn":700000,"Thay dây nguồn / dây âm lượng":500000,"Thay rung":500000,"Thay dây cảm biến":600000,"Sửa IC Wi-Fi":900000,"Sửa IC nguồn":1000000,"Sửa cảm biến trên main":1000000,"Sửa camera trên main":1000000,"Sửa Audio main":1000000,"Sửa hiển thị / cảm ứng trên main":1000000,"Sửa IC đèn":1200000,"Sửa USB sạc trên main":1000000,"Sửa IC sóng / mất IMEI":1000000},"iPhone 12":{"Thay màn hình zin (Zin TM)":1800000,"Thay màn hình linh kiện":800000,"Thay kính màn hình":600000,"Thay pin tiêu chuẩn":600000,"Thay chân sạc":600000,"Thay pin zin máy / pin zin chuẩn đoán":900000,"Thay camera trước":600000,"Thay camera sau":700000,"Thay kính camera":100000,"Sửa camera rung, mờ":900000,"Sửa Face ID":1000000,"Thay vỏ iPhone":600000,"Thay kính lưng":500000,"Thay loa trong":500000,"Thay loa ngoài":500000,"Sửa lỗi SIM, sóng":900000,"Thay anten Wi-Fi":300000,"Thay vỏ / sườn":600000,"Thay dây nguồn / dây âm lượng":500000,"Thay rung":500000,"Thay dây cảm biến":600000,"Sửa IC Wi-Fi":800000,"Sửa IC nguồn":900000,"Sửa cảm biến trên main":900000,"Sửa camera trên main":900000,"Sửa Audio main":900000,"Sửa hiển thị / cảm ứng trên main":900000,"Sửa IC đèn":1200000,"Sửa USB sạc trên main":900000,"Sửa IC sóng / mất IMEI":900000},"iPhone 12 mini":{"Thay màn hình zin (Zin TM)":1800000,"Thay kính màn hình":600000,"Thay pin tiêu chuẩn":500000,"Thay chân sạc":600000,"Thay pin zin máy / pin zin chuẩn đoán":900000,"Thay camera trước":600000,"Thay camera sau":700000,"Thay kính camera":100000,"Sửa camera rung, mờ":900000,"Sửa Face ID":800000,"Thay vỏ iPhone":600000,"Thay kính lưng":500000,"Thay loa trong":500000,"Thay loa ngoài":500000,"Sửa lỗi SIM, sóng":900000,"Thay anten Wi-Fi":300000,"Thay vỏ / sườn":600000,"Thay dây nguồn / dây âm lượng":500000,"Thay rung":500000,"Thay dây cảm biến":600000,"Sửa IC Wi-Fi":800000,"Sửa IC nguồn":900000,"Sửa cảm biến trên main":900000,"Sửa camera trên main":900000,"Sửa Audio main":900000,"Sửa hiển thị / cảm ứng trên main":900000,"Sửa IC đèn":1200000,"Sửa USB sạc trên main":900000,"Sửa IC sóng / mất IMEI":900000},"iPhone 11 Pro Max":{"Thay màn hình zin":1900000,"Thay màn hình linh kiện":1200000,"Thay kính màn hình":700000,"Thay pin tiêu chuẩn":700000,"Thay chân sạc":800000,"Thay pin zin máy / pin zin chuẩn đoán":1000000,"Thay camera trước":800000,"Thay camera sau":800000,"Thay kính camera":200000,"Sửa camera rung, mờ":900000,"Sửa Face ID":900000,"Thay vỏ iPhone":900000,"Thay kính lưng":600000,"Thay loa trong":400000,"Thay loa ngoài":400000,"Sửa lỗi SIM, sóng":900000,"Thay anten Wi-Fi":300000,"Thay vỏ / sườn":900000,"Thay dây nguồn / dây âm lượng":400000,"Thay rung":400000,"Thay dây cảm biến":600000,"Sửa IC Wi-Fi":800000,"Sửa IC nguồn":900000,"Sửa cảm biến trên main":900000,"Sửa camera trên main":900000,"Sửa Audio main":900000,"Sửa hiển thị / cảm ứng trên main":900000,"Sửa IC đèn":1200000,"Sửa USB sạc trên main":900000,"Sửa IC sóng / mất IMEI":900000},"iPhone 11 Pro":{"Thay màn hình zin":1500000,"Thay màn hình linh kiện":800000,"Thay kính màn hình":600000,"Thay pin tiêu chuẩn":600000,"Thay chân sạc":600000,"Thay pin zin máy / pin zin chuẩn đoán":800000,"Thay camera trước":500000,"Thay camera sau":600000,"Thay kính camera":100000,"Sửa camera rung, mờ":700000,"Sửa Face ID":600000,"Thay vỏ iPhone":800000,"Thay kính lưng":600000,"Thay loa trong":400000,"Thay loa ngoài":400000,"Sửa lỗi SIM, sóng":800000,"Thay anten Wi-Fi":300000,"Thay vỏ / sườn":800000,"Thay dây nguồn / dây âm lượng":400000,"Thay rung":400000,"Thay dây cảm biến":400000,"Sửa IC Wi-Fi":800000,"Sửa IC nguồn":700000,"Sửa cảm biến trên main":600000,"Sửa camera trên main":700000,"Sửa Audio main":700000,"Sửa hiển thị / cảm ứng trên main":700000,"Sửa IC đèn":900000,"Sửa USB sạc trên main":600000,"Sửa IC sóng / mất IMEI":800000},"iPhone 11":{"Thay màn hình zin":950000,"Thay màn hình linh kiện":500000,"Thay kính màn hình":600000,"Thay pin tiêu chuẩn":600000,"Thay chân sạc":500000,"Thay pin zin máy / pin zin chuẩn đoán":800000,"Thay camera trước":500000,"Thay camera sau":500000,"Thay kính camera":100000,"Sửa camera rung, mờ":600000,"Sửa Face ID":500000,"Thay vỏ iPhone":600000,"Thay kính lưng":500000,"Thay loa trong":300000,"Thay loa ngoài":300000,"Sửa lỗi SIM, sóng":800000,"Thay anten Wi-Fi":300000,"Thay vỏ / sườn":600000,"Thay dây nguồn / dây âm lượng":300000,"Thay rung":300000,"Thay dây cảm biến":350000,"Sửa IC Wi-Fi":800000,"Sửa IC nguồn":700000,"Sửa cảm biến trên main":500000,"Sửa camera trên main":600000,"Sửa Audio main":500000,"Sửa hiển thị / cảm ứng trên main":500000,"Sửa IC đèn":900000,"Sửa USB sạc trên main":500000,"Sửa IC sóng / mất IMEI":800000},"iPad Air 4 10.9 (2020)":{"Thay kính màn hình":1500000,"Thay chân sạc":1200000,"Thay pin zin máy / pin zin chuẩn đoán":900000,"Thay camera sau":900000,"Thay kính camera":400000,"Sửa Face ID":900000,"Thay loa trong":800000,"Thay loa ngoài":800000,"Thay anten Wi-Fi":1100000,"Thay dây nguồn":800000,"Thay dây nguồn / dây âm lượng":800000,"Thay rung":800000,"Sửa IC Wi-Fi":1200000,"Sửa IC nguồn":1200000,"Sửa camera trên main":1200000,"Sửa hiển thị / cảm ứng trên main":700000,"Sửa IC đèn":800000,"Sửa USB sạc trên main":1200000},"iPad Pro 11 (2018)":{"Thay kính màn hình":1500000,"Thay chân sạc":1200000,"Thay pin zin máy / pin zin chuẩn đoán":1000000,"Thay camera sau":800000,"Thay kính camera":300000,"Sửa Face ID":1500000,"Thay loa trong":800000,"Thay loa ngoài":800000,"Thay anten Wi-Fi":1200000,"Thay dây nguồn":800000,"Thay dây nguồn / dây âm lượng":800000,"Thay rung":800000,"Sửa IC Wi-Fi":1200000,"Sửa IC nguồn":1200000,"Sửa camera trên main":1600000,"Sửa hiển thị / cảm ứng trên main":1200000,"Sửa IC đèn":900000,"Sửa USB sạc trên main":1200000},"iPad Pro 11 (2020)":{"Thay kính màn hình":1500000,"Thay chân sạc":1200000,"Thay pin zin máy / pin zin chuẩn đoán":1200000,"Thay camera sau":1200000,"Thay kính camera":600000,"Thay loa trong":800000,"Thay loa ngoài":800000,"Thay anten Wi-Fi":1200000,"Thay dây nguồn":800000,"Thay dây nguồn / dây âm lượng":800000,"Thay rung":800000,"Sửa IC Wi-Fi":1200000,"Sửa IC nguồn":1300000,"Sửa hiển thị / cảm ứng trên main":800000,"Sửa IC đèn":900000,"Sửa USB sạc trên main":1200000},"iPad Pro 11 M1/M2":{"Thay kính màn hình":1800000,"Thay chân sạc":1500000,"Thay pin zin máy / pin zin chuẩn đoán":1500000,"Thay camera sau":1200000,"Thay kính camera":600000,"Sửa Face ID":1500000,"Thay loa trong":800000,"Thay loa ngoài":800000,"Thay anten Wi-Fi":1500000,"Thay dây nguồn":1000000,"Thay dây nguồn / dây âm lượng":1000000,"Thay rung":800000,"Sửa IC Wi-Fi":1500000,"Sửa IC nguồn":1500000,"Sửa camera trên main":1200000,"Sửa hiển thị / cảm ứng trên main":900000,"Sửa IC đèn":1500000,"Sửa USB sạc trên main":1200000},"iPad Pro 11 M3/M4":{"Thay kính màn hình":1900000,"Thay chân sạc":1800000,"Thay pin zin máy / pin zin chuẩn đoán":1800000,"Thay camera sau":1500000,"Thay kính camera":800000,"Sửa Face ID":1500000,"Thay loa trong":800000,"Thay loa ngoài":800000,"Thay anten Wi-Fi":1500000,"Thay dây nguồn":1200000,"Thay dây nguồn / dây âm lượng":1200000,"Thay rung":800000,"Sửa IC Wi-Fi":1800000,"Sửa IC nguồn":1500000,"Sửa camera trên main":1200000,"Sửa hiển thị / cảm ứng trên main":1200000,"Sửa IC đèn":1500000,"Sửa USB sạc trên main":1200000},"iPad Pro 12.9 (2017/2018/2019)":{"Thay kính màn hình":1500000,"Thay chân sạc":1200000,"Thay pin zin máy / pin zin chuẩn đoán":1200000,"Thay camera sau":800000,"Thay kính camera":400000,"Thay loa trong":800000,"Thay loa ngoài":800000,"Thay dây nguồn":800000,"Thay dây nguồn / dây âm lượng":800000,"Thay rung":800000,"Sửa IC Wi-Fi":1200000,"Sửa IC nguồn":1200000,"Sửa hiển thị / cảm ứng trên main":1600000,"Sửa USB sạc trên main":1200000},"iPad Pro 12.9 M1/M2":{"Thay kính màn hình":2200000,"Thay chân sạc":1500000,"Thay pin zin máy / pin zin chuẩn đoán":1500000,"Thay camera sau":800000,"Thay kính camera":600000,"Thay loa trong":800000,"Thay loa ngoài":800000,"Thay dây nguồn":1000000,"Thay dây nguồn / dây âm lượng":1000000,"Thay rung":800000,"Sửa IC Wi-Fi":1200000,"Sửa IC nguồn":1500000,"Sửa hiển thị / cảm ứng trên main":1800000,"Sửa USB sạc trên main":1200000},"iPad Pro 12.9 M3/M4":{"Thay kính màn hình":2500000,"Thay chân sạc":1800000,"Thay pin zin máy / pin zin chuẩn đoán":1500000,"Thay camera sau":1200000,"Thay kính camera":800000,"Thay loa trong":800000,"Thay loa ngoài":800000,"Thay dây nguồn":1200000,"Thay dây nguồn / dây âm lượng":1200000,"Thay rung":800000,"Sửa IC Wi-Fi":1500000,"Sửa IC nguồn":1500000,"Sửa hiển thị / cảm ứng trên main":1800000,"Sửa USB sạc trên main":1200000},"iPad Gen 10":{"Thay kính màn hình":1200000,"Thay chân sạc":900000,"Thay pin zin máy / pin zin chuẩn đoán":800000,"Thay camera sau":900000,"Thay kính camera":600000,"Thay loa trong":800000,"Thay loa ngoài":800000,"Thay dây nguồn":800000,"Thay dây nguồn / dây âm lượng":800000,"Thay rung":800000,"Sửa IC Wi-Fi":800000,"Sửa IC nguồn":1200000,"Sửa hiển thị / cảm ứng trên main":1200000,"Sửa USB sạc trên main":1200000},"iPad Gen 11":{"Thay kính màn hình":1200000,"Thay chân sạc":1200000,"Thay pin zin máy / pin zin chuẩn đoán":900000,"Thay camera sau":900000,"Thay kính camera":700000,"Thay loa trong":800000,"Thay loa ngoài":800000,"Thay dây nguồn":800000,"Thay dây nguồn / dây âm lượng":800000,"Thay rung":800000,"Sửa IC Wi-Fi":1200000,"Sửa IC nguồn":1500000,"Sửa hiển thị / cảm ứng trên main":1500000,"Sửa USB sạc trên main":1200000},"iPad mini 6":{"Thay kính màn hình":1200000,"Thay chân sạc":1200000,"Thay pin zin máy / pin zin chuẩn đoán":900000,"Thay camera sau":1200000,"Thay kính camera":600000,"Thay loa trong":800000,"Thay loa ngoài":800000,"Thay dây nguồn":800000,"Thay dây nguồn / dây âm lượng":800000,"Thay rung":800000,"Sửa IC Wi-Fi":800000,"Sửa IC nguồn":1200000,"Sửa hiển thị / cảm ứng trên main":900000,"Sửa USB sạc trên main":1200000},"iPad mini 7":{"Thay kính màn hình":1500000,"Thay chân sạc":1500000,"Thay pin zin máy / pin zin chuẩn đoán":1500000,"Thay camera sau":1500000,"Thay kính camera":800000,"Thay loa trong":800000,"Thay loa ngoài":800000,"Thay dây nguồn":900000,"Thay dây nguồn / dây âm lượng":900000,"Thay rung":800000,"Sửa IC Wi-Fi":1200000,"Sửa IC nguồn":1500000,"Sửa hiển thị / cảm ứng trên main":1500000,"Sửa USB sạc trên main":1200000}}};
 
 // Từ khóa khách hay dùng -> [tên lỗi, từ khóa, đầu tên dịch vụ trên trang giá sửa]. Cụ thể trước, chung sau.
 const SERVICES = [
@@ -431,7 +431,7 @@ async function pollUpdates(env, budget) {
     const r = await callApi(env, 'getUpdates', { timeout: '10' });
     used++;
     if (r && r.ok && r.result) {
-      used += 3; // tối đa: phiếu bảo hành + voucher + báo chủ tiệm
+      used += 4; // tối đa: phiếu bảo hành + voucher + báo 2 người quản trị
       await onUpdate(env, r.result).catch((e) => console.error(e));
     } else if (Date.now() - started < 8000) {
       // Lỗi trả về ngay (không phải hết giờ chờ): dừng, tránh gọi dồn dập
@@ -483,8 +483,21 @@ const PROMO_PRESETS = [
   ['Đặt lịch trước', '📅 ĐẶT LỊCH TRƯỚC – GIẢM 10%\nĐặt lịch sửa qua Zalo hoặc website, giảm ngay 10% tiền công (tối đa 100.000đ). Không áp dụng cùng ưu đãi khác.'],
 ];
 
-function presetList() {
-  return PROMO_PRESETS.map(([name, body], i) => `${i + 1}. ${name}: ${body.split('\n')[1]}`).join('\n');
+// Mẫu sửa trên trang /admin được lưu ở KV "presets", chưa sửa thì dùng mẫu gốc ở trên
+async function getPresets(env) {
+  return (env.DB && (await env.DB.get('presets', 'json'))) || PROMO_PRESETS;
+}
+
+function presetList(list) {
+  return list.map(([name, body], i) => `${i + 1}. ${name}: ${body.split('\n')[1] || body}`).join('\n');
+}
+
+// Lưu khuyến mãi (bot kèm khi trả lời giá) và bắt đầu gửi cho tất cả khách đã nhắn bot
+async function startBroadcast(env, promo) {
+  await env.DB.put('promo', promo.slice(0, 1500));
+  await env.DB.put('bc', JSON.stringify({ text: promo.slice(0, 1500), cursor: null, sent: 0, failed: 0 }));
+  const { total, off } = await countCustomers(env);
+  return total - off;
 }
 
 // --- Phiếu bảo hành điện tử & tự nhắc khách sau sửa ---
@@ -688,6 +701,79 @@ async function runFollowups(env, limit) {
   return used;
 }
 
+// --- Chúc mừng sinh nhật ---
+// "b:<chatId>" metadata { d: 'dd/mm', n: tên, y: năm đã chúc, ph }; SĐT chưa nhắn bot thì chờ ở "bp:<SĐT>" = 'dd/mm'
+// Lời chúc sửa được trên trang /admin (KV "bday"), {ten} được thay bằng tên Zalo của khách.
+const BDAY_TEXT =
+  `🎂 Dạ ${SHOP.name} chúc anh/chị {ten} sinh nhật thật vui, nhiều sức khỏe và may mắn ạ!\n` +
+  `Nhân dịp sinh nhật, bên em tặng anh/chị ưu đãi giảm 100.000đ khi sửa máy hoặc mua máy trong 7 ngày tới. Anh/chị đưa tin nhắn này cho nhân viên khi thanh toán giúp em ạ.\n📞 ${SHOP.phone}`;
+
+async function getBday(env) {
+  return { on: true, text: BDAY_TEXT, ...((await env.DB.get('bday', 'json')) || {}) };
+}
+
+function bdayMessage(cfg, name) {
+  return cfg.text.replace(/\{ten\}/g, name || '').replace(/ {2,}/g, ' ');
+}
+
+// "15/8", "15-08-1990", "15 8" => "15/08"
+function parseDayMonth(s) {
+  const m = String(s || '').match(/(\d{1,2})\s*[/.\- ]\s*(\d{1,2})/);
+  if (!m || +m[1] < 1 || +m[1] > 31 || +m[2] < 1 || +m[2] > 12) return null;
+  return `${pad(+m[1])}/${pad(+m[2])}`;
+}
+
+async function saveBirthday(env, phone, dm) {
+  const id = await findByPhone(env, phone);
+  if (!id) {
+    await env.DB.put(`bp:${phone}`, dm);
+    return false;
+  }
+  const { metadata: c } = await env.DB.getWithMetadata(`c:${id}`);
+  const { metadata: old } = await env.DB.getWithMetadata(`b:${id}`);
+  await env.DB.put(`b:${id}`, '', { metadata: { d: dm, n: (c && c.n) || '', y: old && old.d === dm ? old.y : 0, ph: phone } });
+  return true;
+}
+
+async function claimBirthday(env, chatId, name, phone) {
+  const dm = await env.DB.get(`bp:${phone}`);
+  if (!dm) return;
+  await env.DB.put(`b:${chatId}`, '', { metadata: { d: dm, n: name || '', y: 0, ph: phone } });
+  await env.DB.delete(`bp:${phone}`);
+}
+
+// Mỗi ngày 9h-20h giờ VN: chúc khách có sinh nhật hôm nay (mỗi năm 1 lần). Trả về số tin đã gửi.
+async function runBirthdays(env, limit) {
+  if (!env.DB || limit < 1) return 0;
+  const now = Date.now();
+  const hourVN = (new Date(now).getUTCHours() + 7) % 24;
+  if (hourVN < 9 || hourVN >= 20) return 0;
+  const today = vnDayStart(now);
+  const state = (await env.DB.get('bdst', 'json')) || {};
+  if (state.day === today && !state.cursor) return 0;
+  const cfg = await getBday(env);
+  if (!cfg.on) return 0;
+  const dm = fmtDate(now).slice(0, 5);
+  const year = new Date(today).getUTCFullYear();
+  const cursor = (state.day === today && state.cursor !== '*' && state.cursor) || undefined; // '*' = đọc lại từ đầu
+  const page = await env.DB.list({ prefix: 'b:', cursor, limit: 500 });
+  let used = 0;
+  for (const k of page.keys) {
+    const b = k.metadata;
+    if (!b || b.d !== dm || b.y === year) continue;
+    if (used >= limit) {
+      // Hết lượt gọi phút này: phút sau đọc lại trang này, khách đã chúc có y = năm nay nên được bỏ qua
+      await env.DB.put('bdst', JSON.stringify({ day: today, cursor: cursor || '*' }));
+      return used;
+    }
+    await send(env, k.name.slice(2), bdayMessage(cfg, b.n));
+    await env.DB.put(k.name, '', { metadata: { ...b, y: year } });
+    used++;
+  }
+  await env.DB.put('bdst', JSON.stringify(page.list_complete ? { day: today } : { day: today, cursor: page.cursor }));
+  return used;
+}
+
 const OWNER_HELP =
   'Chào chủ tiệm 👋\n' +
   '• /kmmau: xem các mẫu khuyến mãi soạn sẵn\n' +
@@ -701,6 +787,9 @@ const OWNER_HELP =
   '• /dung <mã voucher>: kiểm tra và đánh dấu voucher khách quen đã dùng\n' +
   '• /diem <mã khách>: xem điểm tích lũy của khách\n' +
   '• /tl <chat_id> <nội dung>: trả lời 1 khách\n' +
+  '• /sn <SĐT> <ngày/tháng>: lưu sinh nhật khách để bot tự chúc (VD: /sn 0909123456 15/8)\n' +
+  '• /admin: xem, thêm, bỏ người quản trị bot (VD: /admin 0909067474)\n' +
+  'Trang quản lý (soạn khuyến mãi, lời chúc sinh nhật): khanghuyapple-bot.crimson-recipe-0ba6.workers.dev/admin\n' +
   'Các tin báo đơn sẽ gửi về đây.';
 
 async function onOwner(env, chatId, text) {
@@ -712,11 +801,38 @@ async function onOwner(env, chatId, text) {
     const r = await send(env, m[1], m[2]);
     return reply(r && r.ok ? '✅ Đã gửi cho khách.' : `❌ Gửi lỗi: ${JSON.stringify(r)}`);
   }
-  if (!/^\/(km|kmmau|kmxem|kmxoa|khach|giao|nhac|dung|diem)\b/.test(text)) return reply(OWNER_HELP);
-  if (text === '/kmmau') {
-    return reply(`📋 MẪU KHUYẾN MÃI SOẠN SẴN\n\n${presetList()}\n\nGửi cho tất cả khách: /km <số>\nVD: /km 4 hoặc gộp /km 4 5 6`);
-  }
+  if (!/^\/(km|kmmau|kmxem|kmxoa|khach|giao|nhac|dung|diem|admin|sn)\b/.test(text)) return reply(OWNER_HELP);
   if (!env.DB) return reply('❌ Chưa gắn KV "DB" cho worker, xem Bước 5 trong hướng dẫn.');
+  const presets = await getPresets(env);
+  if (text === '/kmmau') {
+    return reply(`📋 MẪU KHUYẾN MÃI SOẠN SẴN\n\n${presetList(presets)}\n\nGửi cho tất cả khách: /km <số>\nVD: /km 4 hoặc gộp /km 4 5 6\nSửa mẫu: trang /admin`);
+  }
+  const sn = text.match(/^\/sn\s+([\d.+\s-]{9,15}?)\s+(\d{1,2}\s*[/.-]\s*\d{1,2})/);
+  if (sn) {
+    const ph = (findPhone(sn[1]) || '').replace(/^\+?84/, '0');
+    const dm = parseDayMonth(sn[2]);
+    if (!ph || !dm) return reply('Gõ: /sn <SĐT> <ngày/tháng>\nVD: /sn 0909123456 15/8');
+    return reply((await saveBirthday(env, ph, dm))
+      ? `🎂 Đã lưu sinh nhật ${dm} cho khách ${ph}. Đến ngày bot tự gửi lời chúc.`
+      : `🎂 Đã lưu sinh nhật ${dm} cho SĐT ${ph}. Khách chưa nhắn bot, khi khách nhắn SĐT này bot sẽ ghi nhận và chúc đúng ngày.`);
+  }
+  if (/^\/sn\b/.test(text)) return reply('Gõ: /sn <SĐT> <ngày/tháng>\nVD: /sn 0909123456 15/8');
+  // /admin: xem; /admin 0909067474: thêm; /admin xoa 0909067474: bỏ
+  const ad = text.match(/^\/admin\s*(xoa|xóa)?\s*([\d.+\s-]*)$/i);
+  if (ad) {
+    const ph = (findPhone(ad[2]) || '').replace(/^\+?84/, '0');
+    if (ad[1] && ph) return reply((await removeAdmin(env, ph)) ? `✅ Đã bỏ quyền quản trị của ${ph}.` : `Không có admin ${ph}.`);
+    if (ph) {
+      const a = await addAdmin(env, ph);
+      return reply(a.id
+        ? `✅ Đã thêm ${a.n || ph} (${ph}) làm quản trị bot. Người này nhận tin báo đơn và dùng được các lệnh.`
+        : `✅ Đã lưu ${ph} làm quản trị. Nhờ người đó vào bot nhắn số ${ph} là có quyền ngay.`);
+    }
+    const list = await getAdmins(env);
+    return reply(`👤 QUẢN TRỊ BOT\n• Chủ tiệm (chat id ${env.OWNER_CHAT_ID})\n` +
+      list.map((a) => `• ${a.n || ''} ${a.ph}${a.id ? '' : ' (chờ nhắn SĐT)'}`).join('\n') +
+      `\n\nThêm: /admin 0909067474\nBỏ: /admin xoa 0909067474`);
+  }
 
   if (text === '/kmxem') {
     const promo = await env.DB.get('promo');
@@ -796,14 +912,12 @@ async function onOwner(env, chatId, text) {
   // Chỉ toàn số (VD "4" hoặc "4 5 6") => dùng mẫu soạn sẵn
   if (/^[\d\s,]+$/.test(promo)) {
     const nums = promo.split(/[\s,]+/).filter(Boolean).map(Number);
-    const bad = nums.filter((n) => !PROMO_PRESETS[n - 1]);
-    if (bad.length) return reply(`❌ Không có mẫu số ${bad.join(', ')}. Có mẫu từ 1 đến ${PROMO_PRESETS.length}, xem: /kmmau`);
-    promo = [...new Set(nums)].map((n) => PROMO_PRESETS[n - 1][1]).join('\n\n');
+    const bad = nums.filter((n) => !presets[n - 1]);
+    if (bad.length) return reply(`❌ Không có mẫu số ${bad.join(', ')}. Có mẫu từ 1 đến ${presets.length}, xem: /kmmau`);
+    promo = [...new Set(nums)].map((n) => presets[n - 1][1]).join('\n\n');
   }
-  await env.DB.put('promo', promo.slice(0, 1500));
-  await env.DB.put('bc', JSON.stringify({ text: promo.slice(0, 1500), cursor: null, sent: 0, failed: 0 }));
-  const { total, off } = await countCustomers(env);
-  return reply(`✅ Đã lưu khuyến mãi. Bot đang gửi cho ${total - off} khách, xong sẽ báo lại (mỗi phút ${BATCH} khách, chỉ gửi 8h-21h).\n\nXem trước tin khách nhận:\n\n${promoMessage(promo)}`);
+  const count = await startBroadcast(env, promo);
+  return reply(`✅ Đã lưu khuyến mãi. Bot đang gửi cho ${count} khách, xong sẽ báo lại (mỗi phút ${BATCH} khách, chỉ gửi 8h-21h).\n\nXem trước tin khách nhận:\n\n${promoMessage(promo)}`);
 }
 
 async function callApi(env, method, body) {
@@ -819,8 +933,53 @@ function send(env, chatId, text) {
   return callApi(env, 'sendMessage', { chat_id: String(chatId), text: text.slice(0, 2000) });
 }
 
-function notifyOwner(env, text) {
-  return env.OWNER_CHAT_ID ? send(env, env.OWNER_CHAT_ID, text) : null;
+// --- Admin: chủ tiệm (OWNER_CHAT_ID) + người được thêm bằng /admin hoặc trang /admin ---
+// KV "admins": [{ id: chatId hoặc null nếu chưa nhắn bot, ph: SĐT, n: tên }]
+async function getAdmins(env) {
+  return (env.DB && (await env.DB.get('admins', 'json'))) || [];
+}
+
+async function adminIds(env) {
+  const ids = (await getAdmins(env)).map((a) => a.id);
+  return [...new Set([env.OWNER_CHAT_ID, ...ids].filter(Boolean).map(String))];
+}
+
+// Thêm admin theo SĐT: khách đã nhắn bot SĐT đó thì có hiệu lực ngay, chưa thì chờ người đó nhắn SĐT
+async function addAdmin(env, phone) {
+  const list = (await getAdmins(env)).filter((a) => a.ph !== phone);
+  const id = await findByPhone(env, phone);
+  let n = '';
+  if (id) n = ((await env.DB.getWithMetadata(`c:${id}`)).metadata || {}).n || '';
+  list.push({ id, ph: phone, n });
+  await env.DB.put('admins', JSON.stringify(list));
+  return { id, ph: phone, n };
+}
+
+async function removeAdmin(env, phone) {
+  const list = await getAdmins(env);
+  const left = list.filter((a) => a.ph !== phone);
+  await env.DB.put('admins', JSON.stringify(left));
+  return list.length - left.length;
+}
+
+// Người được thêm làm admin nhắn SĐT của mình lần đầu => gắn chat id
+async function claimAdmin(env, chatId, name, phone) {
+  const list = await getAdmins(env);
+  const a = list.find((x) => x.ph === phone && x.id !== chatId);
+  if (!a) return false;
+  a.id = chatId;
+  a.n = name || a.n;
+  await env.DB.put('admins', JSON.stringify(list));
+  return true;
+}
+
+async function notifyOwner(env, text) {
+  let first = null;
+  for (const id of await adminIds(env)) {
+    const r = await send(env, id, text);
+    if (!first || (r && r.ok)) first = r;
+  }
+  return first;
 }
 
 async function onUpdate(env, update) {
@@ -832,7 +991,7 @@ async function onUpdate(env, update) {
 
   if (text === '/id') return send(env, chatId, `Chat id của bạn: ${chatId}`);
 
-  if (env.OWNER_CHAT_ID && chatId === String(env.OWNER_CHAT_ID)) return onOwner(env, chatId, text);
+  if ((await adminIds(env)).includes(chatId)) return onOwner(env, chatId, text);
 
   const t = norm(text);
   if (STOP_WORDS.test(t)) {
@@ -847,6 +1006,11 @@ async function onUpdate(env, update) {
   const phoneInText = findPhone(text);
   const ph = phoneInText && phoneInText.replace(/^\+?84/, '0');
   await saveCustomer(env, chatId, sender.name, ph ? { ph } : undefined);
+  if (env.DB && ph && (await claimAdmin(env, chatId, sender.name, ph))) {
+    await notifyOwner(env, `👤 ${sender.name || ph} (${ph}) đã nhận quyền quản trị bot.`);
+    return send(env, chatId, `✅ Dạ anh/chị đã được thêm làm quản trị bot ${SHOP.name}. Nhắn bất kỳ để xem các lệnh ạ.`);
+  }
+  if (env.DB && ph) await claimBirthday(env, chatId, sender.name, ph);
   // Thầy đã ghi phiếu cho SĐT này => gửi phiếu cho khách luôn
   if (env.DB && ph && (await deliverPending(env, chatId, sender.name, ph))) return;
 
@@ -855,6 +1019,15 @@ async function onUpdate(env, update) {
     return send(env, chatId, 'Dạ bên em đã tắt tin nhắc sau sửa máy ạ. Phiếu bảo hành của anh/chị vẫn còn hiệu lực đầy đủ ạ.');
   }
   if (env.DB && POINT_WORDS.test(t)) return send(env, chatId, await pointsInfo(env, chatId));
+  // Khách tự báo ngày sinh: "sinh nhật em 15/8", "ngày sinh 15/08/1990"
+  const sn = env.DB && t.match(/^(sinh nhat|ngay sinh)( (cua )?(em|toi|minh|anh|chi|con))?( la)? (\d{1,2}) (\d{1,2})( |$)/);
+  if (sn) {
+    const dm = parseDayMonth(`${sn[6]}/${sn[7]}`);
+    if (dm) {
+      await env.DB.put(`b:${chatId}`, '', { metadata: { d: dm, n: sender.name || '', y: 0, ph: ph || '' } });
+      return send(env, chatId, `🎂 Dạ em đã lưu sinh nhật ${dm} của anh/chị. Đến ngày ${SHOP.name} có quà tặng anh/chị ạ!`);
+    }
+  }
   // Khách tự tra cứu phiếu bảo hành (học Điện Thoại Vui: tra cứu bảo hành online)
   // Khách có phiếu nhắn bất kỳ câu nào có "bảo hành" => xem ngay ngày bảo hành của mình
   if (env.DB && !WARRANTY_WORDS.test(t) && (LOOKUP_WORDS.test(t) || /(^| )bao hanh( |$)/.test(t))) {
@@ -932,6 +1105,229 @@ async function onOrder(request, env) {
   return json({ ok: true }, 200, h);
 }
 
+// --- Trang quản lý /admin: mật khẩu là ADMIN_KEY (nếu có) hoặc WEBHOOK_SECRET ---
+async function onAdminApi(request, env) {
+  const key = env.ADMIN_KEY || env.WEBHOOK_SECRET;
+  if (!key || request.headers.get('X-Key') !== key) {
+    await new Promise((r) => setTimeout(r, 1000)); // chậm lại để khó dò mật khẩu
+    return json({ ok: false, error: 'Sai mật khẩu' }, 403);
+  }
+  if (!env.DB) return json({ ok: false, error: 'Chưa gắn KV DB' }, 500);
+  const d = await request.json().catch(() => ({}));
+  const phoneOf = (s) => (findPhone(s) || '').replace(/^\+?84/, '0');
+
+  switch (d.action) {
+    case 'state': {
+      const [presets, promo, bc, customers, bday, admins] = await Promise.all([
+        getPresets(env), env.DB.get('promo'), env.DB.get('bc', 'json'), countCustomers(env), getBday(env), getAdmins(env),
+      ]);
+      const births = [];
+      for (const prefix of ['b:', 'bp:']) {
+        let cursor;
+        do {
+          const page = await env.DB.list({ prefix, cursor });
+          for (const k of page.keys) {
+            births.push(prefix === 'b:'
+              ? { key: k.name, d: (k.metadata || {}).d, n: (k.metadata || {}).n, ph: (k.metadata || {}).ph, wait: false }
+              : { key: k.name, ph: k.name.slice(3), wait: true });
+          }
+          cursor = page.list_complete ? null : page.cursor;
+        } while (cursor);
+      }
+      for (const b of births.filter((x) => x.wait)) b.d = await env.DB.get(b.key);
+      return json({ ok: true, presets, promo, bc, customers, bday, admins, births, defaultPresets: PROMO_PRESETS, defaultBday: BDAY_TEXT });
+    }
+    case 'savePresets': {
+      const list = (d.presets || [])
+        .map((p) => [String(p[0] || '').trim().slice(0, 60), String(p[1] || '').trim().slice(0, 1000)])
+        .filter((p) => p[0] && p[1])
+        .slice(0, 30);
+      if (!list.length) return json({ ok: false, error: 'Chưa có mẫu nào' }, 400);
+      await env.DB.put('presets', JSON.stringify(list));
+      return json({ ok: true });
+    }
+    case 'resetPresets':
+      await env.DB.delete('presets');
+      return json({ ok: true });
+    case 'sendPromo': {
+      const text = String(d.text || '').trim();
+      if (!text) return json({ ok: false, error: 'Chưa có nội dung' }, 400);
+      const count = await startBroadcast(env, text);
+      await notifyOwner(env, `📣 Trang quản lý vừa gửi khuyến mãi cho ${count} khách:\n\n${text.slice(0, 500)}`);
+      return json({ ok: true, count });
+    }
+    case 'stopPromo':
+      await env.DB.delete('promo');
+      await env.DB.delete('bc');
+      return json({ ok: true });
+    case 'testPromo': {
+      const text = String(d.text || '').trim();
+      for (const id of await adminIds(env)) await send(env, id, `(Tin thử) ${promoMessage(text)}`);
+      return json({ ok: true });
+    }
+    case 'saveBday':
+      await env.DB.put('bday', JSON.stringify({ on: !!d.on, text: String(d.text || BDAY_TEXT).slice(0, 1500) }));
+      return json({ ok: true });
+    case 'testBday': {
+      const cfg = await getBday(env);
+      for (const id of await adminIds(env)) await send(env, id, `(Tin thử) ${bdayMessage({ ...cfg, text: d.text || cfg.text }, 'Khang')}`);
+      return json({ ok: true });
+    }
+    case 'addBirthdays': {
+      // Mỗi dòng: SĐT và ngày/tháng, VD "0909123456 15/8"
+      let saved = 0, waiting = 0;
+      const bad = [];
+      for (const line of String(d.lines || '').split(/\n+/).map((s) => s.trim()).filter(Boolean).slice(0, 300)) {
+        const ph = phoneOf(line);
+        const dm = parseDayMonth(ph ? line.replace(/(?:\+?84|0)(?:[ .-]?\d){9}(?!\d)/, ' ') : '');
+        if (!ph || !dm) { bad.push(line); continue; }
+        if (await saveBirthday(env, ph, dm)) saved++;
+        else waiting++;
+      }
+      return json({ ok: true, saved, waiting, bad });
+    }
+    case 'delBirthday':
+      if (/^bp?:/.test(d.key || '')) await env.DB.delete(d.key);
+      return json({ ok: true });
+    case 'addAdmin': {
+      const ph = phoneOf(d.phone);
+      if (!ph) return json({ ok: false, error: 'SĐT chưa đúng' }, 400);
+      return json({ ok: true, admin: await addAdmin(env, ph) });
+    }
+    case 'delAdmin':
+      await removeAdmin(env, phoneOf(d.phone));
+      return json({ ok: true });
+  }
+  return json({ ok: false, error: 'Không rõ thao tác' }, 400);
+}
+
+const ADMIN_HTML = `<!doctype html>
+<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex"><title>Quản lý bot ${SHOP.name}</title>
+<style>
+:root{--bg:#f4f6fb;--card:#fff;--ink:#1d2433;--mute:#667085;--line:#e3e7ef;--pri:#0068ff;--ok:#12a150;--bad:#d92d20}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header{background:var(--pri);color:#fff;padding:14px 16px;font-weight:700;font-size:18px}
+main{max-width:860px;margin:0 auto;padding:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:16px}
+h2{font-size:17px;margin:0 0 4px}.mute{color:var(--mute);font-size:13px}
+textarea,input{width:100%;font:inherit;padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink)}
+textarea{min-height:90px;resize:vertical}
+button{font:inherit;border:0;border-radius:8px;padding:9px 14px;cursor:pointer;background:#eef2f8;color:var(--ink)}
+button.pri{background:var(--pri);color:#fff}button.bad{background:#fde8e7;color:var(--bad)}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.row>*{flex:0 0 auto}
+.preset{border:1px solid var(--line);border-radius:10px;padding:10px;margin:10px 0}
+.preset input{font-weight:600;margin-bottom:6px}
+table{width:100%;border-collapse:collapse;font-size:14px}td,th{padding:7px 6px;border-bottom:1px solid var(--line);text-align:left}
+.tag{display:inline-block;font-size:12px;padding:1px 8px;border-radius:99px;background:#eef2f8}
+#msg{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);background:#1d2433;color:#fff;padding:10px 16px;border-radius:10px;display:none;max-width:90vw}
+#login{max-width:360px;margin:40px auto}
+</style></head><body>
+<header>Quản lý bot ${SHOP.name}</header>
+<main>
+<div id="login" class="card"><h2>Đăng nhập</h2><p class="mute">Nhập mật khẩu quản lý bot.</p>
+<input id="key" type="password" placeholder="Mật khẩu"><div class="row"><button class="pri" onclick="login()">Vào trang quản lý</button></div></div>
+<div id="app" style="display:none">
+
+<div class="card"><h2>📣 Gửi khuyến mãi</h2>
+<p class="mute">Gửi cho <b id="cnt">…</b> khách đã nhắn bot (trừ khách đã nhắn "huy km"). Bot gửi 8h–21h, mỗi phút 25 khách. Bot cũng tự kèm khuyến mãi này khi trả lời giá.</p>
+<div id="running" class="mute"></div>
+<textarea id="promo" placeholder="Nội dung khuyến mãi, hoặc bấm 'Dùng mẫu này' ở dưới"></textarea>
+<div class="row"><button onclick="testPromo()">Gửi thử cho admin</button><button class="pri" onclick="sendPromo()">Gửi cho tất cả khách</button><button class="bad" onclick="stopPromo()">Tắt khuyến mãi</button></div></div>
+
+<div class="card"><h2>📋 Mẫu khuyến mãi</h2><p class="mute">Sửa tên và nội dung rồi bấm Lưu mẫu. Dòng đầu nội dung là tiêu đề. Trong chat bot, gõ /km &lt;số&gt; để gửi mẫu đó.</p>
+<div id="presets"></div>
+<div class="row"><button onclick="addPreset()">+ Thêm mẫu</button><button class="pri" onclick="savePresets()">Lưu mẫu</button><button onclick="resetPresets()">Khôi phục mẫu gốc</button></div></div>
+
+<div class="card"><h2>🎂 Chúc mừng sinh nhật</h2>
+<p class="mute">Đúng ngày sinh nhật, khoảng 9h sáng, bot tự gửi lời chúc (mỗi năm 1 lần). Chữ {ten} sẽ được thay bằng tên Zalo của khách. Khách cũng có thể tự nhắn bot "sinh nhật 15/8".</p>
+<label><input id="bon" type="checkbox" style="width:auto"> Bật tự chúc sinh nhật</label>
+<textarea id="btext" style="margin-top:8px;min-height:150px"></textarea>
+<div class="row"><button onclick="testBday()">Gửi thử cho admin</button><button class="pri" onclick="saveBday()">Lưu lời chúc</button><button onclick="resetBday()">Lời chúc gốc</button></div>
+<h2 style="margin-top:16px">Thêm ngày sinh khách</h2><p class="mute">Mỗi dòng 1 khách: SĐT và ngày/tháng. VD: 0909123456 15/8</p>
+<textarea id="blines" placeholder="0909123456 15/8&#10;0981308308 2/9"></textarea>
+<div class="row"><button class="pri" onclick="addBirthdays()">Lưu ngày sinh</button></div>
+<table id="births"></table></div>
+
+<div class="card"><h2>👤 Người quản trị bot</h2><p class="mute">Admin nhận tin báo đơn và dùng được lệnh chủ tiệm trong chat bot. Người được thêm cần nhắn bot SĐT của mình 1 lần để nhận quyền.</p>
+<table id="admins"></table>
+<div class="row" style="flex-wrap:nowrap"><input id="adph" placeholder="SĐT, VD 0909067474" style="flex:1"><button class="pri" onclick="addAdmin()">Thêm admin</button></div></div>
+
+</div></main><div id="msg"></div>
+<script>
+var KEY = '', S = null;
+try { KEY = sessionStorage.getItem('k') || ''; } catch (e) {}
+function $(id) { return document.getElementById(id); }
+function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+function toast(t) { var m = $('msg'); m.textContent = t; m.style.display = 'block'; clearTimeout(toast.t); toast.t = setTimeout(function () { m.style.display = 'none'; }, 3500); }
+function api(action, data) {
+  var body = Object.assign({ action: action }, data || {});
+  return fetch('/admin/api', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Key': KEY }, body: JSON.stringify(body) })
+    .then(function (r) { return r.json(); })
+    .then(function (j) { if (!j.ok) throw new Error(j.error || 'Lỗi'); return j; });
+}
+function login() { KEY = $('key').value.trim(); load(); }
+function load() {
+  if (!KEY) return;
+  api('state').then(function (s) {
+    S = s; try { sessionStorage.setItem('k', KEY); } catch (e) {}
+    $('login').style.display = 'none'; $('app').style.display = 'block'; render();
+  }).catch(function (e) { toast(e.message); try { sessionStorage.removeItem('k'); } catch (x) {} });
+}
+function render() {
+  $('cnt').textContent = S.customers.total - S.customers.off;
+  $('running').innerHTML = S.bc ? '⏳ Đang gửi: ' + S.bc.sent + ' khách đã nhận' + (S.bc.failed ? ', ' + S.bc.failed + ' lỗi' : '') : (S.promo ? '✅ Khuyến mãi đang chạy: ' + esc(S.promo.split('\\n')[0]) : '');
+  renderPresets(S.presets);
+  $('bon').checked = !!S.bday.on; $('btext').value = S.bday.text;
+  var b = S.births.slice().sort(function (x, y) { return (x.d || '').split('/').reverse().join('') < (y.d || '').split('/').reverse().join('') ? -1 : 1; });
+  $('births').innerHTML = b.length ? '<tr><th>Ngày</th><th>Khách</th><th></th></tr>' + b.map(function (x) {
+    return '<tr><td>' + esc(x.d) + '</td><td>' + esc(x.n || '') + ' ' + esc(x.ph || '') + (x.wait ? ' <span class="tag">chờ khách nhắn bot</span>' : '') +
+      '</td><td><button class="bad" onclick="delBirthday(\\'' + esc(x.key) + '\\')">Xóa</button></td></tr>';
+  }).join('') : '<tr><td class="mute">Chưa có ngày sinh nào.</td></tr>';
+  $('admins').innerHTML = '<tr><td>Chủ tiệm</td><td><span class="tag">chính</span></td><td></td></tr>' + S.admins.map(function (a) {
+    return '<tr><td>' + esc(a.n || '') + ' ' + esc(a.ph) + '</td><td>' + (a.id ? '<span class="tag">đã nhận quyền</span>' : '<span class="tag">chờ nhắn SĐT cho bot</span>') +
+      '</td><td><button class="bad" onclick="delAdmin(\\'' + esc(a.ph) + '\\')">Bỏ</button></td></tr>';
+  }).join('');
+}
+function renderPresets(list) {
+  $('presets').innerHTML = list.map(function (p, i) {
+    return '<div class="preset"><input value="' + esc(p[0]) + '" data-i="' + i + '" class="pn"><textarea class="pb">' + esc(p[1]) + '</textarea>' +
+      '<div class="row"><button onclick="usePreset(' + i + ')">Dùng mẫu này</button><button class="bad" onclick="delPreset(' + i + ')">Xóa mẫu</button><span class="mute">Lệnh chat: /km ' + (i + 1) + '</span></div></div>';
+  }).join('');
+}
+function readPresets() {
+  var n = document.querySelectorAll('.pn'), b = document.querySelectorAll('.pb'), out = [];
+  for (var i = 0; i < n.length; i++) out.push([n[i].value, b[i].value]);
+  return out;
+}
+function usePreset(i) { $('promo').value = readPresets()[i][1]; $('promo').scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+function addPreset() { var l = readPresets(); l.push(['Mẫu mới', '🔥 TIÊU ĐỀ\\nNội dung khuyến mãi']); renderPresets(l); }
+function delPreset(i) { var l = readPresets(); l.splice(i, 1); renderPresets(l); }
+function savePresets() { api('savePresets', { presets: readPresets() }).then(function () { toast('Đã lưu mẫu'); load(); }).catch(function (e) { toast(e.message); }); }
+function resetPresets() { if (confirm('Khôi phục 9 mẫu gốc? Mẫu đã sửa sẽ mất.')) api('resetPresets').then(function () { toast('Đã khôi phục'); load(); }); }
+function testPromo() { if (!$('promo').value.trim()) return toast('Chưa có nội dung'); api('testPromo', { text: $('promo').value }).then(function () { toast('Đã gửi thử cho admin'); }).catch(function (e) { toast(e.message); }); }
+function sendPromo() {
+  var t = $('promo').value.trim(); if (!t) return toast('Chưa có nội dung');
+  if (!confirm('Gửi khuyến mãi này cho ' + $('cnt').textContent + ' khách?')) return;
+  api('sendPromo', { text: t }).then(function (j) { toast('Đang gửi cho ' + j.count + ' khách'); load(); }).catch(function (e) { toast(e.message); });
+}
+function stopPromo() { if (confirm('Tắt khuyến mãi và dừng gửi?')) api('stopPromo').then(function () { toast('Đã tắt'); load(); }); }
+function saveBday() { api('saveBday', { on: $('bon').checked, text: $('btext').value }).then(function () { toast('Đã lưu lời chúc'); load(); }).catch(function (e) { toast(e.message); }); }
+function resetBday() { $('btext').value = S.defaultBday; }
+function testBday() { api('testBday', { text: $('btext').value }).then(function () { toast('Đã gửi thử cho admin'); }).catch(function (e) { toast(e.message); }); }
+function addBirthdays() {
+  api('addBirthdays', { lines: $('blines').value }).then(function (j) {
+    toast('Đã lưu ' + (j.saved + j.waiting) + ' khách' + (j.bad.length ? ', ' + j.bad.length + ' dòng chưa đúng' : ''));
+    $('blines').value = j.bad.join('\\n'); load();
+  }).catch(function (e) { toast(e.message); });
+}
+function delBirthday(k) { api('delBirthday', { key: k }).then(load); }
+function addAdmin() { api('addAdmin', { phone: $('adph').value }).then(function (j) { toast(j.admin.id ? 'Đã thêm admin' : 'Đã lưu, chờ người đó nhắn SĐT cho bot'); $('adph').value = ''; load(); }).catch(function (e) { toast(e.message); }); }
+function delAdmin(p) { if (confirm('Bỏ quyền admin của ' + p + '?')) api('delAdmin', { phone: p }).then(load); }
+$('key').addEventListener('keydown', function (e) { if (e.key === 'Enter') login(); });
+load();
+</script></body></html>`;
+
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
@@ -952,6 +1348,11 @@ export default {
       if (request.method === 'OPTIONS') return new Response(null, { headers: cors(env) });
       if (request.method === 'POST') return onOrder(request, env);
     }
+
+    if (url.pathname === '/admin') {
+      return new Response(ADMIN_HTML, { headers: { 'Content-Type': 'text/html; charset=utf-8', 'X-Robots-Tag': 'noindex' } });
+    }
+    if (url.pathname === '/admin/api' && request.method === 'POST') return onAdminApi(request, env);
 
     // Mở 1 lần sau khi deploy: https://<worker>/setup?key=<WEBHOOK_SECRET>
     // Mặc định xóa webhook để bot tự lấy tin (getUpdates). Thêm &mode=webhook khi đã có tên miền riêng không bị chặn.
@@ -976,6 +1377,7 @@ export default {
         // Tối đa ~47 lệnh gọi ra ngoài mỗi lần chạy (gói miễn phí cho 50)
         let left = 46 - (await pollUpdates(env, POLL_BUDGET));
         left -= await runFollowups(env, Math.min(25, left));
+        left -= await runBirthdays(env, Math.min(10, left));
         await runBroadcast(env, Math.min(BATCH, left));
       })().catch((e) => console.error(e))
     );

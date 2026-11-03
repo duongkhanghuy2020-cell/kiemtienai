@@ -204,3 +204,16 @@ Danh sách khách và khuyến mãi nằm trong kho KV nên không bị mất kh
 | Gõ `/km` mà bot báo "Chưa gắn KV" | Làm lại Bước 5, mục 2. Tên biến phải đúng là `DB` |
 | Đã gõ `/km` mà khách không nhận được | Kiểm tra Cron Trigger ở Bước 5, mục 3 |
 | Muốn xem lỗi chi tiết | Cloudflare → worker → **Logs** → **Begin log stream** |
+
+---
+
+## Trang quản lý (soạn khuyến mãi, chúc sinh nhật, thêm admin)
+
+Mở https://khanghuyapple-bot.crimson-recipe-0ba6.workers.dev/admin trên điện thoại hoặc máy tính. Mật khẩu là mã bí mật `WEBHOOK_SECRET` đã điền ở Cloudflare. Muốn dùng mật khẩu riêng thì thêm secret `ADMIN_KEY`.
+
+- **Gửi khuyến mãi:** soạn nội dung, bấm "Gửi thử cho admin" để xem trước, rồi bấm "Gửi cho tất cả khách". Chỉ gửi được cho khách đã từng nhắn bot. Muốn gửi cho cả danh sách KiotViet thì dùng phần "Gửi tin chăm sóc khách hàng" trong KiotViet.
+- **Mẫu khuyến mãi:** sửa, thêm, xóa mẫu rồi bấm "Lưu mẫu". Lệnh `/km <số>` trong chat dùng các mẫu này.
+- **Chúc sinh nhật:** bật hoặc tắt, sửa lời chúc (chữ `{ten}` sẽ được thay bằng tên khách), dán ngày sinh khách theo dạng `0909123456 15/8`, mỗi khách một dòng. Khách cũng có thể tự nhắn bot "sinh nhật 15/8". Đúng ngày, khoảng 9h sáng, bot tự chúc, mỗi năm một lần.
+- **Admin:** thêm SĐT người phụ quản lý. Người đó vào bot nhắn SĐT của mình một lần là nhận quyền: nhận tin báo đơn và dùng được các lệnh chủ tiệm.
+
+Lệnh trong chat bot: `/admin 0909067474` (thêm admin), `/admin xoa 0909067474` (bỏ admin), `/admin` (xem danh sách), `/sn 0909123456 15/8` (lưu sinh nhật).
