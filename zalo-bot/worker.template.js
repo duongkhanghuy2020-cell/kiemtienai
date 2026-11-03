@@ -1269,7 +1269,7 @@ async function onAdminApi(request, env) {
       }
       for (const b of births.filter((x) => x.wait)) b.d = await env.DB.get(b.key);
       const o = (await env.DB.get('oa', 'json')) || {};
-      const oa = { app_id: o.app_id || '', hasSecret: !!o.secret, connected: !!o.refresh_token, exp: o.exp || 0, err: o.err || '', oa_id: o.oa_id || '' };
+      const oa = { app_id: o.app_id || '', hasSecret: !!o.secret, secretLen: (o.secret || '').length, connected: !!o.refresh_token, exp: o.exp || 0, err: o.err || '', oa_id: o.oa_id || '' };
       return json({ ok: true, presets, promo, bc, customers, bday, admins, births, oa, defaultPresets: PROMO_PRESETS, defaultBday: BDAY_TEXT });
     }
     case 'oaSave': {
@@ -1291,6 +1291,11 @@ async function onAdminApi(request, env) {
       if (!rt) return json({ ok: false, error: 'Chưa dán refresh token' }, 400);
       const tok = await oaTokens(env, { refresh_token: rt, grant_type: 'refresh_token' });
       return tok ? json({ ok: true }) : json({ ok: false, error: `Zalo báo lỗi: ${((await env.DB.get('oa', 'json')) || {}).err}` }, 400);
+    }
+    case 'oaEcho': {
+      // Kiểm tra header secret_key (có dấu gạch dưới) có đi qua fetch của Cloudflare không
+      const r = await fetch('https://httpbin.org/headers', { headers: { secret_key: 'test', 'x-test': '1' } });
+      return json({ ok: true, echo: await r.json().catch(() => r.status) });
     }
     case 'oaOff': {
       const o = (await env.DB.get('oa', 'json')) || {};
