@@ -1006,6 +1006,8 @@ async function pollOa(env, budget) {
   if (!env.DB || budget < 3) return 0;
   const token = await oaToken(env, true);
   if (!token) return 0;
+  // Đã nhận tin qua webhook trong 1 ngày qua thì không cần tự đọc tin nữa (chỉ giữ việc đổi token)
+  if (Date.now() - (+(await env.DB.get('oa:hook')) || 0) < 86400000) return 1;
   const res = await fetch(`${OA_API}/v2.0/oa/listrecentchat?data=${encodeURIComponent(JSON.stringify({ offset: 0, count: 10 }))}`, {
     headers: await oaHeaders(env, token),
   });
@@ -1025,23 +1027,59 @@ async function pollOa(env, budget) {
   for (const m of fresh) {
     if (used + 4 > budget) break; // hết lượt: phút sau xử lý tiếp từ tin này
     done = +m.time;
-    const text = (m.message || '').trim();
-    if (+m.src === 1) {
-      if (m.type !== 'text' || !text) continue; // ảnh, sticker: OA admin tự xem trong app
-      await onUpdate(env, { message: { chat: { id: `oa:${m.from_id}` }, from: { display_name: m.from_display_name }, text } }).catch((e) => console.error(e));
-      used += 4;
-    } else if (/^\/(giao|bh)\b/i.test(text)) {
-      const job = parseJob(text.replace(/^\/(giao|bh)[\s+:,]*/i, '').replace(/[\s)"”.,;]+$/, ''));
-      if (!job.m) continue;
-      const id = `oa:${m.to_id}`;
-      const r = await registerWarranty(env, id, m.to_display_name, job.m, job.mo);
-      const s = await addStamp(env, id, m.to_display_name);
-      await send(env, id, `${warrantyCard(r)}\n\n${stampLine(s)}`);
-      used += 2;
-    }
+    if (m.type !== 'text') continue; // ảnh, sticker: OA admin tự xem trong app
+    const fromUser = +m.src === 1;
+    used += (await onOaMessage(env, { fromUser, uid: fromUser ? m.from_id : m.to_id, name: fromUser ? m.from_display_name : m.to_display_name, text: m.message })) ? 4 : 0;
   }
   if (done > last) await env.DB.put('oa:last', String(done));
   return used;
+}
+
+// 1 tin nhắn trong khung chat OA. fromUser: khách gửi => trả lời như bot.
+// OA gửi bắt đầu "/giao" hoặc "/bh" => ghi phiếu bảo hành cho khách đó. Trả về true nếu đã xử lý.
+async function onOaMessage(env, { fromUser, uid, name, text }) {
+  text = String(text || '').trim();
+  if (!uid || !text) return false;
+  const id = `oa:${uid}`;
+  if (fromUser) {
+    await onUpdate(env, { message: { chat: { id }, from: { display_name: name }, text } }).catch((e) => console.error(e));
+    return true;
+  }
+  if (!/^\/(giao|bh)\b/i.test(text)) return false;
+  const job = parseJob(text.replace(/^\/(giao|bh)[\s+:,]*/i, '').replace(/[\s)"”.,;]+$/, ''));
+  if (!job.m) return false;
+  const r = await registerWarranty(env, id, name, job.m, job.mo);
+  const s = await addStamp(env, id, name);
+  await send(env, id, `${warrantyCard(r)}\n\n${stampLine(s)}`);
+  return true;
+}
+
+// Zalo đẩy tin OA (webhook) qua trang Vercel kiemtienai-ws2n.vercel.app/api/oa-hook (nhánh main), trang đó chuyển nguyên văn về đây.
+// Máy chủ Cloudflare không ở Việt Nam nên Zalo không cho đọc tin bằng listrecentchat (lỗi -501); webhook thì không bị chặn.
+// Chữ ký: X-ZEvent-Signature = sha256(app_id + nội dung + timestamp + Khóa bí mật OA), khóa này lấy ở mục Webhook của ứng dụng.
+async function onOaHook(request, env, ctx) {
+  const raw = await request.text();
+  let ev;
+  try { ev = JSON.parse(raw); } catch (e) { return json({ ok: false }, 400); }
+  const cfg = (await env.DB.get('oa', 'json')) || {};
+  if (cfg.whkey) {
+    const got = (request.headers.get('X-ZEvent-Signature') || '').replace(/^mac=/, '');
+    const hash = new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(`${ev.app_id || ''}${raw}${ev.timestamp || ''}${cfg.whkey}`)));
+    if (got !== Array.from(hash, (b) => b.toString(16).padStart(2, '0')).join('')) return json({ ok: false, error: 'bad signature' }, 401);
+  }
+  await env.DB.put('oa:hook', String(Date.now()));
+  const name = ev.event_name || '';
+  if (!/^(user|oa)_send_text$/.test(name)) return json({ ok: true });
+  // Zalo có thể gửi lại cùng 1 tin, chỉ xử lý 1 lần
+  const mid = (ev.message && ev.message.msg_id) || '';
+  if (mid) {
+    if (await env.DB.get(`oa:ev:${mid}`)) return json({ ok: true });
+    await env.DB.put(`oa:ev:${mid}`, '1', { expirationTtl: 86400 });
+  }
+  const fromUser = name === 'user_send_text';
+  const uid = fromUser ? ev.sender && ev.sender.id : ev.recipient && ev.recipient.id;
+  ctx.waitUntil(onOaMessage(env, { fromUser, uid, name: '', text: ev.message && ev.message.text }).catch((e) => console.error(e)));
+  return json({ ok: true });
 }
 
 // Link cấp quyền OA (PKCE): code_verifier 43 ký tự, code_challenge = base64url(sha256(verifier))
@@ -1277,7 +1315,8 @@ async function onAdminApi(request, env) {
       }
       for (const b of births.filter((x) => x.wait)) b.d = await env.DB.get(b.key);
       const o = (await env.DB.get('oa', 'json')) || {};
-      const oa = { app_id: o.app_id || '', hasSecret: !!o.secret, secretLen: (o.secret || '').length, connected: !!o.refresh_token, exp: o.exp || 0, err: o.err || '', oa_id: o.oa_id || '' };
+      const oa = { app_id: o.app_id || '', hasSecret: !!o.secret, secretLen: (o.secret || '').length, connected: !!o.refresh_token, exp: o.exp || 0, err: o.err || '', oa_id: o.oa_id || '',
+        hasWhkey: !!o.whkey, hook: +(await env.DB.get('oa:hook')) || 0 };
       return json({ ok: true, presets, promo, bc, customers, bday, admins, births, oa, defaultPresets: PROMO_PRESETS, defaultBday: BDAY_TEXT });
     }
     case 'oaSave': {
@@ -1288,8 +1327,10 @@ async function onAdminApi(request, env) {
       if (secret && (secret.length < 16 || secret === (env.ADMIN_KEY || env.WEBHOOK_SECRET))) {
         return json({ ok: false, error: 'Khóa bí mật chưa đúng (phải khoảng 20 ký tự). Bấm nút sao chép cạnh ô Khóa bí mật trên trang Zalo rồi dán lại.' }, 400);
       }
+      const whkey = String(d.whkey || '').trim();
       if (appId) o.app_id = appId;
       if (secret) o.secret = secret;
+      if (whkey) o.whkey = whkey;
       await env.DB.put('oa', JSON.stringify(o));
       return json({ ok: true });
     }
@@ -1438,6 +1479,8 @@ table{width:100%;border-collapse:collapse;font-size:14px}td,th{padding:7px 6px;b
 <div id="oast" style="margin:8px 0"></div>
 <input id="oaapp" placeholder="App ID (developers.zalo.me)" style="margin-bottom:6px"><input id="oasec" type="text" autocomplete="off" spellcheck="false" placeholder="Dán Khóa bí mật của ứng dụng (20 ký tự)" oninput="$('oalen').textContent = this.value.trim().length + ' ký tự'"><div id="oalen" class="mute"></div>
 <div class="row"><button onclick="oaSave()">Lưu App ID, Secret</button><button class="pri" onclick="oaConnect()">Cấp quyền OA</button><button class="bad" onclick="oaOff()">Ngắt kết nối</button></div>
+<p class="mute" style="margin-top:10px">Webhook (developers.zalo.me &gt; Webhook): URL <b>https://kiemtienai-ws2n.vercel.app/api/oa-hook</b>. Dán <b>Khóa bí mật OA</b> ở trang Webhook vào đây để bot chỉ nhận tin thật từ Zalo.</p>
+<div class="row" style="flex-wrap:nowrap"><input id="whkey" type="text" autocomplete="off" spellcheck="false" placeholder="Khóa bí mật OA (mục Webhook)" style="flex:1"><button onclick="whSave()">Lưu khóa Webhook</button></div>
 <details style="margin-top:10px"><summary class="mute">Cách khác: dán refresh token từ API Explorer</summary>
 <input id="oart" placeholder="Refresh token" style="margin-top:6px"><div class="row"><button onclick="oaRefresh()">Kết nối bằng refresh token</button></div></details></div>
 
@@ -1479,7 +1522,9 @@ function render() {
   var o = S.oa; $('oaapp').value = o.app_id;
   $('oast').innerHTML = o.connected ? '<span class="tag" style="background:#e3f6ea">✅ Đã kết nối OA' + (o.oa_id ? ' ' + esc(o.oa_id) : '') + '</span>' + (S.customers.oa ? ' <span class="mute">' + S.customers.oa + ' khách đã nhắn OA</span>' : '')
     : '<span class="tag">Chưa kết nối</span> <span class="mute">' + (o.app_id ? 'App ID đã lưu' : 'Chưa có App ID') + (o.hasSecret ? ', Secret đã lưu (' + o.secretLen + ' ký tự' + (o.secretLen === 20 ? '' : ', CHƯA ĐÚNG') + ')' : ', chưa có Secret') + '</span>';
-  if (o.err) $('oast').innerHTML += '<div class="mute" style="color:var(--bad)">Lỗi gần nhất: ' + esc(o.err) + '</div>';
+  if (o.connected) $('oast').innerHTML += '<div class="mute">Nhận tin qua Webhook: ' + (o.hook ? 'lần cuối ' + new Date(o.hook).toLocaleString('vi-VN') : 'chưa nhận tin nào') +
+    (o.hasWhkey ? ', đã có khóa kiểm tra' : ', chưa lưu Khóa bí mật OA') + '</div>';
+  if (o.err) $('oast').innerHTML +='<div class="mute" style="color:var(--bad)">Lỗi gần nhất: ' + esc(o.err) + '</div>';
   $('admins').innerHTML ='<tr><td>Chủ tiệm</td><td><span class="tag">chính</span></td><td></td></tr>' + S.admins.map(function (a) {
     return '<tr><td>' + esc(a.n || '') + ' ' + esc(a.ph) + '</td><td>' + (a.id ? '<span class="tag">đã nhận quyền</span>' : '<span class="tag">chờ nhắn SĐT cho bot</span>') +
       '</td><td><button class="bad" onclick="delAdmin(\\'' + esc(a.ph) + '\\')">Bỏ</button></td></tr>';
@@ -1524,6 +1569,11 @@ function oaSave() {
   if (sec && sec.length < 16) return toast('Khóa bí mật phải khoảng 20 ký tự, thầy chép lại bằng nút sao chép trên trang Zalo');
   api('oaSave', { app_id: $('oaapp').value, secret: sec }).then(function () { $('oasec').value = ''; $('oalen').textContent = ''; toast(sec ? 'Đã lưu Secret' : 'Đã lưu App ID'); load(); }).catch(function (e) { toast(e.message); });
 }
+function whSave() {
+  var k = $('whkey').value.trim();
+  if (!k) return toast('Chưa dán Khóa bí mật OA');
+  api('oaSave', { whkey: k }).then(function () { $('whkey').value = ''; toast('Đã lưu khóa Webhook'); load(); }).catch(function (e) { toast(e.message); });
+}
 function oaConnect() { api('oaConnect').then(function (j) { location.href = j.url; }).catch(function (e) { toast(e.message); }); }
 function oaRefresh() { api('oaRefresh', { refresh_token: $('oart').value }).then(function () { $('oart').value = ''; toast('Đã kết nối OA'); load(); }).catch(function (e) { toast(e.message); }); }
 function oaOff() { if (confirm('Ngắt kết nối OA? Bot sẽ thôi trả lời khách nhắn OA.')) api('oaOff').then(load); }
@@ -1558,6 +1608,7 @@ export default {
     }
     if (url.pathname === '/admin/api' && request.method === 'POST') return onAdminApi(request, env);
     if (url.pathname === '/oa/callback' && env.DB) return onOaCallback(url, env);
+    if (url.pathname === '/oa/hook' && request.method === 'POST' && env.DB) return onOaHook(request, env, ctx);
     // Tệp xác thực tên miền của ứng dụng Zalo "Khang Huy Apple Trợ Lý" (developers.zalo.me > Xác thực domain)
     if (url.pathname === `/zalo_verifier${ZALO_SITE_VERIFY}.html`) {
       return new Response(
