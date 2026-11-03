@@ -1069,6 +1069,7 @@ async function onOaHook(request, env, ctx) {
   }
   await env.DB.put('oa:hook', String(Date.now()));
   const name = ev.event_name || '';
+  console.log('oa hook', name, (ev.sender && ev.sender.id) || '', (ev.message && ev.message.text || '').slice(0, 40));
   if (!/^(user|oa)_send_text$/.test(name)) return json({ ok: true });
   // Zalo có thể gửi lại cùng 1 tin, chỉ xử lý 1 lần
   const mid = (ev.message && ev.message.msg_id) || '';
