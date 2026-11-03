@@ -1308,6 +1308,7 @@ async function onAdminApi(request, env) {
       // Thử đọc 3 tin gần nhất của OA (không gửi gì), để biết token và quyền đã dùng được chưa
       const token = await oaToken(env);
       if (!token) return json({ ok: false, error: 'OA chưa kết nối' }, 400);
+      if (d.send) return json(await sendOa(env, String(d.send), 'test')); // thử gửi tới 1 user_id (có thể không tồn tại)
       const r = await fetch(`${OA_API}/v2.0/oa/listrecentchat?data=${encodeURIComponent(JSON.stringify({ offset: 0, count: 3 }))}`, { headers: await oaHeaders(env, token) });
       const j = await r.json().catch(() => ({ error: r.status }));
       return json({ ok: j.error === 0, error: j.error, message: j.message, count: Array.isArray(j.data) ? j.data.length : 0,
