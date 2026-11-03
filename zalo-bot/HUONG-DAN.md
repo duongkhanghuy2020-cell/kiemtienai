@@ -126,10 +126,16 @@ Thầy nhắn các lệnh sau cho bot, từ Zalo của thầy:
 | 27 ngày | Nhắc còn 3 ngày hết hạn 1 đổi 1, mời ghé kiểm tra miễn phí |
 | 6 tháng | Mời ghé vệ sinh máy, kiểm tra pin (chẩn đoán miễn phí) |
 
-Khách đã từng nhắn bot thì thầy có thể tự bật cho khách, không cần khách nhắn: `/giao <mã khách> iPhone 13`. Mã khách có trong tin báo đơn.
+**Thầy ghi phiếu cho khách (nên dùng cách này):** khách nhắn bot số điện thoại của mình 1 lần, rồi thầy gõ từ Zalo của thầy:
+
+`/giao 0909123456 iPhone 13 thay pin 6t`
+
+- `6t` = bảo hành 6 tháng (`12t` = 12 tháng). Không ghi thì tính 6 tháng.
+- Thay SĐT bằng mã khách (trong tin báo đơn) cũng được.
+- Bot gửi khách phiếu có **ngày hết bảo hành**, lưu lại lâu dài (tối đa 10 phiếu mỗi khách).
 
 - `/nhac`: đếm khách đang được tự nhắc.
-- Khách nhắn `tra cuu bao hanh` để bot gửi lại phiếu bảo hành.
+- Khách nhắn `bảo hành` (hoặc `tra cuu bao hanh`) để xem lại tất cả phiếu và số ngày bảo hành còn lại.
 - Khách nhắn `huy nhac` thì bot thôi nhắc. Phiếu bảo hành vẫn còn hiệu lực.
 - Khách sửa lần nữa thì nhắn lại "nhận máy …", lịch nhắc tính lại từ đầu.
 
