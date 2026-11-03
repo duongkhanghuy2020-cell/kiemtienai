@@ -316,6 +316,35 @@ function saleAnswer(t, raw, sender, service) {
   };
 }
 
+// Thu cũ đổi mới / khách bán máy cũ. Giá thu phải xem máy nên bot hỏi tình trạng, báo chủ tiệm định giá.
+// "đổi 13 pro max lên 17 pro max": phần sau "lên/qua/sang/lấy" là máy muốn đổi, kèm luôn giá máy đó.
+const TRADE_WORDS = /(^| )(doi may|doi dien thoai|doi dt|thu cu|len doi|doi cu|doi moi|doi ngang|bu tien|bu them|ban lai|thu mua|muon ban|can ban|ban may cu|thu may|thu lai)( |$)/;
+const SELL_WORDS = /(^| )(ban lai|thu mua|muon ban|can ban|ban may cu|thu may|thu lai)( |$)/;
+
+function tradeAnswer(t, raw, sender) {
+  // "đổi 13 pro max lên 17 pro max" không có chữ "đổi máy" nhưng vẫn là đổi máy
+  if (!TRADE_WORDS.test(t) && !/(^| )doi .* (len|qua|sang|lay) /.test(t)) return null;
+  // "lên đời 16 pro max": 16 Pro Max là máy muốn lên, không phải máy cũ
+  const m = t.match(/^(.*?)(?:^| )(?:len doi|len|qua|sang|lay) (.+)$/);
+  const oldKey = phoneKey(m ? m[1] : t);
+  const target = m && phoneKey(m[2]) ? saleAnswer(`mua ${m[2]}`, raw, sender, null) : null;
+  const sell = SELL_WORDS.test(t) && !target;
+  const mine = oldKey ? `máy ${labelOf(oldKey)}` : 'máy';
+  const lines = [
+    sell
+      ? `Dạ, bên em có thu mua ${mine} cũ giá tốt, nhận tiền mặt ngay tại tiệm ạ.`
+      : `Dạ, bên em có thu cũ đổi mới ạ: ${mine} cũ của anh/chị được định giá và trừ thẳng vào giá máy mới, anh/chị chỉ bù phần chênh lệch ạ.`,
+    `Để em định giá chính xác, anh/chị nhắn giúp em:\n• Đời máy, dung lượng (VD: 13 Pro Max 256GB)\n• Pin còn bao nhiêu %\n• Máy có trầy, bể, từng sửa hay thay linh kiện chưa\n• Kèm 2 – 3 hình mặt trước, mặt sau ạ`,
+  ];
+  if (target) lines.push(`👉 Máy anh/chị muốn đổi:\n${target.reply.replace(SALE_CTA, '')}`);
+  lines.push(`Hoặc anh/chị mang máy qua tiệm, bên em kiểm tra và báo giá trong 10 phút ạ.\n📍 ${SHOP.address} | 📞 ${SHOP.phone}`);
+  return {
+    reply: lines.join('\n\n'),
+    notify: `🔄 Khách ${sender.name || ''} muốn ${sell ? 'bán' : 'đổi'} máy: "${raw}"\nTrả lời: /tl ${sender.chatId} <nội dung>`,
+    withPromo: true,
+  };
+}
+
 // Quyết định trả lời khách. Trả về { reply, notify } — notify là tin báo cho chủ tiệm (hoặc null).
 // promo: nội dung khuyến mãi đang chạy (hoặc rỗng).
 function handleText(raw, sender, promo) {
@@ -349,6 +378,9 @@ function answer(raw, sender, promo) {
       notify: `🔔 ĐƠN MỚI TỪ ZALO BOT\nKhách: ${sender.name || '(không tên)'}\nSĐT: ${phone}\nNội dung: ${raw}`,
     };
   }
+
+  const trade = service ? null : tradeAnswer(t, raw, sender);
+  if (trade) return trade;
 
   const sale = saleAnswer(t, raw, sender, service);
   if (sale) return sale;
