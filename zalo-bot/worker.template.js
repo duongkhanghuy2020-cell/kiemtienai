@@ -1414,7 +1414,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}td,th{padding:7px 6px;b
 <div class="card"><h2>🏢 Kết nối Zalo OA</h2>
 <p class="mute">Kết nối xong, khách nhắn OA Khanghuyapple cũng được bot tự trả lời (giá sửa, giá máy, bảo hành) trong khoảng 1 phút. Trong khung chat OA với khách, gõ <b>/bh iPhone 13 thay pin 12t</b> là khách nhận phiếu bảo hành điện tử.</p>
 <div id="oast" style="margin:8px 0"></div>
-<input id="oaapp" placeholder="App ID (developers.zalo.me)" style="margin-bottom:6px"><input id="oasec" type="password" placeholder="Secret key (Khóa bí mật của ứng dụng)">
+<input id="oaapp" placeholder="App ID (developers.zalo.me)" style="margin-bottom:6px"><input id="oasec" type="text" autocomplete="off" spellcheck="false" placeholder="Dán Khóa bí mật của ứng dụng (20 ký tự)" oninput="$('oalen').textContent = this.value.trim().length + ' ký tự'"><div id="oalen" class="mute"></div>
 <div class="row"><button onclick="oaSave()">Lưu App ID, Secret</button><button class="pri" onclick="oaConnect()">Cấp quyền OA</button><button class="bad" onclick="oaOff()">Ngắt kết nối</button></div>
 <details style="margin-top:10px"><summary class="mute">Cách khác: dán refresh token từ API Explorer</summary>
 <input id="oart" placeholder="Refresh token" style="margin-top:6px"><div class="row"><button onclick="oaRefresh()">Kết nối bằng refresh token</button></div></details></div>
@@ -1497,7 +1497,11 @@ function addBirthdays() {
 }
 function delBirthday(k) { api('delBirthday', { key: k }).then(load); }
 function addAdmin() { api('addAdmin', { phone: $('adph').value }).then(function (j) { toast(j.admin.id ? 'Đã thêm admin' : 'Đã lưu, chờ người đó nhắn SĐT cho bot'); $('adph').value = ''; load(); }).catch(function (e) { toast(e.message); }); }
-function oaSave() { api('oaSave', { app_id: $('oaapp').value, secret: $('oasec').value }).then(function () { $('oasec').value = ''; toast('Đã lưu'); load(); }).catch(function (e) { toast(e.message); }); }
+function oaSave() {
+  var sec = $('oasec').value.trim();
+  if (sec && sec.length < 16) return toast('Khóa bí mật phải khoảng 20 ký tự, thầy chép lại bằng nút sao chép trên trang Zalo');
+  api('oaSave', { app_id: $('oaapp').value, secret: sec }).then(function () { $('oasec').value = ''; $('oalen').textContent = ''; toast(sec ? 'Đã lưu Secret' : 'Đã lưu App ID'); load(); }).catch(function (e) { toast(e.message); });
+}
 function oaConnect() { api('oaConnect').then(function (j) { location.href = j.url; }).catch(function (e) { toast(e.message); }); }
 function oaRefresh() { api('oaRefresh', { refresh_token: $('oart').value }).then(function () { $('oart').value = ''; toast('Đã kết nối OA'); load(); }).catch(function (e) { toast(e.message); }); }
 function oaOff() { if (confirm('Ngắt kết nối OA? Bot sẽ thôi trả lời khách nhắn OA.')) api('oaOff').then(load); }
