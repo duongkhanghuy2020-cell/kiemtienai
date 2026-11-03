@@ -334,9 +334,10 @@ function tradeAnswer(t, raw, sender) {
     sell
       ? `Dạ, bên em có thu mua ${mine} cũ giá tốt, nhận tiền mặt ngay tại tiệm ạ.`
       : `Dạ, bên em có thu cũ đổi mới ạ: ${mine} cũ của anh/chị được định giá và trừ thẳng vào giá máy mới, anh/chị chỉ bù phần chênh lệch ạ.`,
-    `Để em định giá chính xác, anh/chị nhắn giúp em:\n• Đời máy, dung lượng (VD: 13 Pro Max 256GB)\n• Pin còn bao nhiêu %\n• Máy có trầy, bể, từng sửa hay thay linh kiện chưa\n• Kèm 2 – 3 hình mặt trước, mặt sau ạ`,
+    `Để em định giá chính xác, anh/chị nhắn giúp em:\n${oldKey ? '• Dung lượng máy (VD: 128GB, 256GB)' : '• Đời máy, dung lượng (VD: 13 Pro Max 256GB)'}\n• Pin còn bao nhiêu %\n• Máy có trầy, bể, từng sửa hay thay linh kiện chưa\n• Kèm 2 – 3 hình mặt trước, mặt sau ạ`,
   ];
-  if (target) lines.push(`👉 Máy anh/chị muốn đổi:\n${target.reply.replace(SALE_CTA, '')}`);
+  // Chỉ báo giá máy khách muốn lên đời, bỏ câu mở đầu của phần báo giá
+  if (target) lines.push(`👉 Giá ${labelOf(phoneKey(m[2]))} bên em:\n${target.reply.replace(SALE_CTA, '').replace(/^.*\n+/, '')}`);
   lines.push(`Hoặc anh/chị mang máy qua tiệm, bên em kiểm tra và báo giá trong 10 phút ạ.\n📍 ${SHOP.address} | 📞 ${SHOP.phone}`);
   return {
     reply: lines.join('\n\n'),
