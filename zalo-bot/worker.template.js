@@ -944,6 +944,9 @@ function send(env, chatId, text) {
 // Tin Tư vấn chỉ miễn phí trong 48h sau khi khách nhắn, nên bot chỉ trả lời, không tự gửi khuyến mãi/nhắc/chúc cho khách OA.
 const OA_OAUTH = 'https://oauth.zaloapp.com/v4/oa';
 const ZALO_SITE_VERIFY = 'HVMR0fBH2JPNnQvhjCmhObREkZIwk65lE3Wo';
+// Zalo không vào được tên miền workers.dev (bị chặn ở Cloudflare) nên không xác thực được domain.
+// Callback đăng ký với Zalo là trang GitHub Pages (nhánh main), trang đó chuyển tiếp ?code=... về /oa/callback của bot.
+const OA_CALLBACK = 'https://duongkhanghuy2020-cell.github.io/kiemtienai/oa/callback/';
 const OA_API = 'https://openapi.zalo.me';
 const isOa = (chatId) => String(chatId).startsWith('oa:');
 
@@ -1034,7 +1037,7 @@ async function pollOa(env, budget) {
 }
 
 // Link cấp quyền OA (PKCE): code_verifier 43 ký tự, code_challenge = base64url(sha256(verifier))
-async function oaConnectUrl(env, origin) {
+async function oaConnectUrl(env) {
   const cfg = (await env.DB.get('oa', 'json')) || {};
   if (!cfg.app_id || !cfg.secret) return null;
   const abc = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -1044,7 +1047,7 @@ async function oaConnectUrl(env, origin) {
   const challenge = btoa(String.fromCharCode(...hash)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
   const state = crypto.randomUUID();
   await env.DB.put('oa:pkce', JSON.stringify({ verifier, state }), { expirationTtl: 900 });
-  const q = new URLSearchParams({ app_id: cfg.app_id, redirect_uri: `${origin}/oa/callback`, code_challenge: challenge, state });
+  const q = new URLSearchParams({ app_id: cfg.app_id, redirect_uri: env.OA_CALLBACK || OA_CALLBACK, code_challenge: challenge, state });
   return `${OA_OAUTH}/permission?${q}`;
 }
 
@@ -1279,7 +1282,7 @@ async function onAdminApi(request, env) {
       return json({ ok: true });
     }
     case 'oaConnect': {
-      const u = await oaConnectUrl(env, new URL(request.url).origin);
+      const u = await oaConnectUrl(env);
       return u ? json({ ok: true, url: u }) : json({ ok: false, error: 'Điền App ID và Secret key trước' }, 400);
     }
     case 'oaRefresh': {
