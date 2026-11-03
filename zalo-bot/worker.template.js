@@ -1079,8 +1079,23 @@ async function onOaMessage(env, { fromUser, uid, name, text }) {
     return true;
   }
   if (!/^\/(giao|bh)\b/i.test(text)) return false;
-  const job = parseJob(text.replace(/^\/(giao|bh)[\s+:,]*/i, '').replace(/[\s)"”.,;]+$/, ''));
+  let body = text.replace(/^\/(giao|bh)[\s+:,]*/i, '').replace(/[\s)"”.,;]+$/, '');
+  // "/giao Thuý Trần 0909067474 Thay pin 15 pro max 12t": chữ trước SĐT là tên khách, sau SĐT là máy + dịch vụ.
+  // Webhook không gửi tên khách nên lấy tên đã lưu nếu thầy không ghi.
+  const { metadata: c } = await env.DB.getWithMetadata(`c:${id}`);
+  const ph = findPhone(body);
+  let patch = null;
+  if (ph) {
+    const at = body.search(/(?:\+?84|0)(?:[ .-]?\d){9}(?!\d)/);
+    const given = body.slice(0, at).replace(/[\s,;:-]+$/, '').trim();
+    body = body.slice(at).replace(/^(?:\+?84|0)(?:[ .-]?\d){9}[\s,;:-]*/, '');
+    if (given) name = given;
+    patch = { ph: ph.replace(/^\+?84/, '0') };
+  }
+  name = name || (c && c.n) || '';
+  const job = parseJob(body);
   if (!job.m) return false;
+  if (patch || (name && !(c && c.n))) await saveCustomer(env, id, name, patch || {});
   const r = await registerWarranty(env, id, name, job.m, job.mo);
   const s = await addStamp(env, id, name);
   await send(env, id, `${warrantyCard(r)}\n\n${stampLine(s)}`);
