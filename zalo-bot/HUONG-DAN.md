@@ -217,3 +217,17 @@ Mở https://khanghuyapple-bot.crimson-recipe-0ba6.workers.dev/admin trên đi�
 - **Admin:** thêm SĐT người phụ quản lý. Người đó vào bot nhắn SĐT của mình một lần là nhận quyền: nhận tin báo đơn và dùng được các lệnh chủ tiệm.
 
 Lệnh trong chat bot: `/admin 0909067474` (thêm admin), `/admin xoa 0909067474` (bỏ admin), `/admin` (xem danh sách), `/sn 0909123456 15/8` (lưu sinh nhật).
+
+## Cho OA Khanghuyapple tự trả lời khách
+
+1. Vào https://developers.zalo.me, đăng nhập bằng Zalo admin OA (Cường Seven), bấm **Thêm ứng dụng mới**.
+2. Trong ứng dụng, mở mục **Official Account** và điền:
+   - **Callback URL:** `https://khanghuyapple-bot.crimson-recipe-0ba6.workers.dev/oa/callback`
+   - Chọn quyền **Gửi tin và thông báo qua OA** và **Quản lý tin nhắn người dùng**, rồi bấm Lưu.
+3. Chép **App ID** và **Khóa bí mật (Secret key)** của ứng dụng, dán vào phần "Kết nối Zalo OA" trên trang /admin, bấm **Lưu**.
+4. Bấm **Cấp quyền OA**, chọn OA Khanghuyapple, bấm **Cho phép**.
+
+Kết nối xong:
+- Khách nhắn OA được bot trả lời trong khoảng 1 phút.
+- Muốn gửi phiếu bảo hành, trong khung chat OA với khách, gõ `/bh iPhone 13 thay pin 12t`.
+- Zalo chỉ cho trả lời miễn phí trong 48 giờ sau khi khách nhắn. Vì vậy bot không tự gửi khuyến mãi, tin nhắc hay lời chúc sinh nhật cho khách OA. Những tin này gửi qua KiotViet.

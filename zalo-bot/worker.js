@@ -407,14 +407,16 @@ async function saveCustomer(env, chatId, name, patch) {
 }
 
 async function countCustomers(env) {
-  let cursor, total = 0, off = 0;
+  let cursor, total = 0, off = 0, oa = 0;
   do {
     const page = await env.DB.list({ prefix: 'c:', cursor });
-    total += page.keys.length;
-    off += page.keys.filter((k) => k.metadata && k.metadata.off).length;
+    const bot = page.keys.filter((k) => !isOa(k.name.slice(2))); // khách OA đếm riêng, không nhận khuyến mãi từ bot
+    oa += page.keys.length - bot.length;
+    total += bot.length;
+    off += bot.filter((k) => k.metadata && k.metadata.off).length;
     cursor = page.list_complete ? null : page.cursor;
   } while (cursor);
-  return { total, off };
+  return { total, off, oa };
 }
 
 function promoMessage(text) {
@@ -452,7 +454,7 @@ async function runBroadcast(env, limit) {
   if (!job) return;
   const page = await env.DB.list({ prefix: 'c:', cursor: job.cursor || undefined, limit });
   for (const k of page.keys) {
-    if (k.metadata && k.metadata.off) continue;
+    if ((k.metadata && k.metadata.off) || isOa(k.name.slice(2))) continue; // khách OA: gửi khuyến mãi qua KiotViet
     const r = await send(env, k.name.slice(2), promoMessage(job.text));
     if (r && r.ok) job.sent++;
     else job.failed++;
@@ -556,8 +558,9 @@ function warrantyCard(r) {
   return (
     `🛡️ PHIẾU BẢO HÀNH ĐIỆN TỬ – ${SHOP.name.toUpperCase()}\n` +
     `Khách: ${r.n || '(không tên)'}\n${cardBody(r)}\n\n` +
-    `Dạ anh/chị giữ tin nhắn này làm phiếu bảo hành giúp em ạ. Muốn xem lại ngày bảo hành, anh/chị nhắn "bảo hành" ạ. Bên em sẽ hỏi thăm sau 7 ngày, nhắc trước khi hết hạn 1 đổi 1 và mời kiểm tra máy sau 6 tháng ` +
-    `(nhắn "huy nhac" nếu không muốn nhận).\n📞 ${SHOP.phone}`
+    `Dạ anh/chị giữ tin nhắn này làm phiếu bảo hành giúp em ạ. Muốn xem lại ngày bảo hành, anh/chị nhắn "bảo hành" ạ. ` +
+    (r.oa ? '' : `Bên em sẽ hỏi thăm sau 7 ngày, nhắc trước khi hết hạn 1 đổi 1 và mời kiểm tra máy sau 6 tháng (nhắn "huy nhac" nếu không muốn nhận).`) +
+    `\n📞 ${SHOP.phone}`
   );
 }
 
@@ -583,7 +586,9 @@ async function getCards(env, chatId) {
 async function registerWarranty(env, chatId, name, model, months, day) {
   const r = { n: (name || '').slice(0, 60), m: (model || '').slice(0, 80), d: day || Date.now(), s: 0, mo: months || WARRANTY_MONTHS };
   const list = await getCards(env, chatId); // đọc trước khi ghi f: để phiếu mới không bị tính 2 lần
-  await env.DB.put(`f:${chatId}`, '', { metadata: r });
+  // Khách OA: chỉ trả lời miễn phí trong 48h sau khi khách nhắn, nên không đặt lịch tự nhắc
+  if (isOa(chatId)) r.oa = true;
+  else await env.DB.put(`f:${chatId}`, '', { metadata: r });
   await env.DB.put(`w:${chatId}`, JSON.stringify([{ m: r.m, d: r.d, mo: r.mo }, ...list].slice(0, MAX_CARDS)));
   return r;
 }
@@ -760,7 +765,7 @@ async function runBirthdays(env, limit) {
   let used = 0;
   for (const k of page.keys) {
     const b = k.metadata;
-    if (!b || b.d !== dm || b.y === year) continue;
+    if (!b || b.d !== dm || b.y === year || isOa(k.name.slice(2))) continue;
     if (used >= limit) {
       // Hết lượt gọi phút này: phút sau đọc lại trang này, khách đã chúc có y = năm nay nên được bỏ qua
       await env.DB.put('bdst', JSON.stringify({ day: today, cursor: cursor || '*' }));
@@ -930,7 +935,131 @@ async function callApi(env, method, body) {
 }
 
 function send(env, chatId, text) {
+  if (isOa(chatId)) return sendOa(env, String(chatId).slice(3), text);
   return callApi(env, 'sendMessage', { chat_id: String(chatId), text: text.slice(0, 2000) });
+}
+
+// --- Zalo OA (Khanghuyapple): khách nhắn OA cũng được bot trả lời ---
+// Khách OA mang mã "oa:<user_id>" nên dùng chung mọi tính năng; KV "oa" giữ app_id, secret, token.
+// Tin Tư vấn chỉ miễn phí trong 48h sau khi khách nhắn, nên bot chỉ trả lời, không tự gửi khuyến mãi/nhắc/chúc cho khách OA.
+const OA_OAUTH = 'https://oauth.zaloapp.com/v4/oa';
+const OA_API = 'https://openapi.zalo.me';
+const isOa = (chatId) => String(chatId).startsWith('oa:');
+
+async function oaTokens(env, form) {
+  const cfg = (await env.DB.get('oa', 'json')) || {};
+  const res = await fetch(`${OA_OAUTH}/access_token`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded', secret_key: cfg.secret || '' },
+    body: new URLSearchParams({ app_id: cfg.app_id || '', ...form }),
+  });
+  const j = await res.json().catch(() => ({}));
+  const now = (await env.DB.get('oa', 'json')) || cfg; // đọc lại, không ghi đè token mới hơn
+  if (!j.access_token) {
+    now.err = `${j.error || res.status} ${j.error_description || j.error_name || ''}`.trim();
+    await env.DB.put('oa', JSON.stringify(now));
+    return null;
+  }
+  Object.assign(now, { access_token: j.access_token, refresh_token: j.refresh_token, exp: Date.now() + (+j.expires_in || 90000) * 1000, err: '' });
+  await env.DB.put('oa', JSON.stringify(now));
+  return now.access_token;
+}
+
+// Access token sống 25 giờ. Chỉ lượt chạy mỗi phút (refresh = true) mới đổi token khi còn dưới 1 giờ,
+// vì refresh token chỉ dùng được 1 lần và token cũ hết hiệu lực ngay khi có token mới.
+async function oaToken(env, refresh) {
+  if (!env.DB) return null;
+  const cfg = await env.DB.get('oa', 'json');
+  if (!cfg || !cfg.refresh_token) return null;
+  if (!refresh || cfg.exp - Date.now() > 3600000) return cfg.access_token;
+  return oaTokens(env, { refresh_token: cfg.refresh_token, grant_type: 'refresh_token' });
+}
+
+async function sendOa(env, userId, text) {
+  const token = await oaToken(env);
+  if (!token) return { ok: false, error: 'OA chưa kết nối' };
+  const res = await fetch(`${OA_API}/v3.0/oa/message/cs`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', access_token: token },
+    body: JSON.stringify({ recipient: { user_id: userId }, message: { text: text.slice(0, 2000) } }),
+  });
+  const j = await res.json().catch(() => ({ error: res.status }));
+  if (j.error) console.log('oa send', JSON.stringify(j));
+  return { ok: j.error === 0, ...j };
+}
+
+// Mỗi phút lấy 10 tin gần nhất của OA, xử lý tin mới (cũ trước, mới sau). Trả về số lệnh gọi ra ngoài đã dùng.
+// Tin khách gửi (src 1) => trả lời như bot. Tin OA gửi (src 0) bắt đầu "/giao" hoặc "/bh" => ghi phiếu bảo hành cho khách đó.
+async function pollOa(env, budget) {
+  if (!env.DB || budget < 3) return 0;
+  const token = await oaToken(env, true);
+  if (!token) return 0;
+  const res = await fetch(`${OA_API}/v2.0/oa/listrecentchat?data=${encodeURIComponent(JSON.stringify({ offset: 0, count: 10 }))}`, {
+    headers: { access_token: token },
+  });
+  const j = await res.json().catch(() => ({}));
+  if (j.error || !Array.isArray(j.data)) {
+    console.log('oa list', JSON.stringify(j));
+    return 1;
+  }
+  const last = +(await env.DB.get('oa:last')) || 0;
+  const fresh = j.data.filter((m) => +m.time > last).sort((a, b) => a.time - b.time);
+  if (!last) {
+    // Lần đầu: chỉ đánh dấu mốc, không trả lời tin cũ
+    await env.DB.put('oa:last', String(Math.max(Date.now() - 60000, ...j.data.map((m) => +m.time || 0))));
+    return 1;
+  }
+  let used = 1, done = last;
+  for (const m of fresh) {
+    if (used + 4 > budget) break; // hết lượt: phút sau xử lý tiếp từ tin này
+    done = +m.time;
+    const text = (m.message || '').trim();
+    if (+m.src === 1) {
+      if (m.type !== 'text' || !text) continue; // ảnh, sticker: OA admin tự xem trong app
+      await onUpdate(env, { message: { chat: { id: `oa:${m.from_id}` }, from: { display_name: m.from_display_name }, text } }).catch((e) => console.error(e));
+      used += 4;
+    } else if (/^\/(giao|bh)\b/i.test(text)) {
+      const job = parseJob(text.replace(/^\/(giao|bh)[\s+:,]*/i, '').replace(/[\s)"”.,;]+$/, ''));
+      if (!job.m) continue;
+      const id = `oa:${m.to_id}`;
+      const r = await registerWarranty(env, id, m.to_display_name, job.m, job.mo);
+      const s = await addStamp(env, id, m.to_display_name);
+      await send(env, id, `${warrantyCard(r)}\n\n${stampLine(s)}`);
+      used += 2;
+    }
+  }
+  if (done > last) await env.DB.put('oa:last', String(done));
+  return used;
+}
+
+// Link cấp quyền OA (PKCE): code_verifier 43 ký tự, code_challenge = base64url(sha256(verifier))
+async function oaConnectUrl(env, origin) {
+  const cfg = (await env.DB.get('oa', 'json')) || {};
+  if (!cfg.app_id || !cfg.secret) return null;
+  const abc = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const rnd = crypto.getRandomValues(new Uint8Array(43));
+  const verifier = Array.from(rnd, (b) => abc[b % abc.length]).join('');
+  const hash = new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(verifier)));
+  const challenge = btoa(String.fromCharCode(...hash)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  const state = crypto.randomUUID();
+  await env.DB.put('oa:pkce', JSON.stringify({ verifier, state }), { expirationTtl: 900 });
+  const q = new URLSearchParams({ app_id: cfg.app_id, redirect_uri: `${origin}/oa/callback`, code_challenge: challenge, state });
+  return `${OA_OAUTH}/permission?${q}`;
+}
+
+async function onOaCallback(url, env) {
+  const page = (msg) => new Response(`<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">` +
+    `<body style="font:16px system-ui;padding:24px;max-width:520px;margin:auto"><h2>${msg}</h2><p><a href="/admin">Về trang quản lý</a></p>`,
+  { headers: { 'Content-Type': 'text/html; charset=utf-8' } });
+  const pk = await env.DB.get('oa:pkce', 'json');
+  if (!pk || pk.state !== url.searchParams.get('state') || !url.searchParams.get('code')) return page('❌ Link cấp quyền đã hết hạn. Vào trang quản lý bấm "Cấp quyền OA" lại.');
+  await env.DB.delete('oa:pkce');
+  const tok = await oaTokens(env, { code: url.searchParams.get('code'), grant_type: 'authorization_code', code_verifier: pk.verifier });
+  if (!tok) return page(`❌ Zalo chưa cấp token: ${((await env.DB.get('oa', 'json')) || {}).err}`);
+  const cfg = await env.DB.get('oa', 'json');
+  cfg.oa_id = url.searchParams.get('oa_id') || cfg.oa_id;
+  await env.DB.put('oa', JSON.stringify(cfg));
+  return page('✅ Đã kết nối OA. Từ giờ khách nhắn OA sẽ được bot trả lời trong khoảng 1 phút.');
 }
 
 // --- Admin: chủ tiệm (OWNER_CHAT_ID) + người được thêm bằng /admin hoặc trang /admin ---
@@ -1135,7 +1264,36 @@ async function onAdminApi(request, env) {
         } while (cursor);
       }
       for (const b of births.filter((x) => x.wait)) b.d = await env.DB.get(b.key);
-      return json({ ok: true, presets, promo, bc, customers, bday, admins, births, defaultPresets: PROMO_PRESETS, defaultBday: BDAY_TEXT });
+      const o = (await env.DB.get('oa', 'json')) || {};
+      const oa = { app_id: o.app_id || '', hasSecret: !!o.secret, connected: !!o.refresh_token, exp: o.exp || 0, err: o.err || '', oa_id: o.oa_id || '' };
+      return json({ ok: true, presets, promo, bc, customers, bday, admins, births, oa, defaultPresets: PROMO_PRESETS, defaultBday: BDAY_TEXT });
+    }
+    case 'oaSave': {
+      const o = (await env.DB.get('oa', 'json')) || {};
+      const appId = String(d.app_id || '').trim();
+      const secret = String(d.secret || '').trim();
+      if (appId) o.app_id = appId;
+      if (secret) o.secret = secret;
+      await env.DB.put('oa', JSON.stringify(o));
+      return json({ ok: true });
+    }
+    case 'oaConnect': {
+      const u = await oaConnectUrl(env, new URL(request.url).origin);
+      return u ? json({ ok: true, url: u }) : json({ ok: false, error: 'Điền App ID và Secret key trước' }, 400);
+    }
+    case 'oaRefresh': {
+      // Dán refresh token lấy từ công cụ API Explorer của Zalo
+      const rt = String(d.refresh_token || '').trim();
+      if (!rt) return json({ ok: false, error: 'Chưa dán refresh token' }, 400);
+      const tok = await oaTokens(env, { refresh_token: rt, grant_type: 'refresh_token' });
+      return tok ? json({ ok: true }) : json({ ok: false, error: `Zalo báo lỗi: ${((await env.DB.get('oa', 'json')) || {}).err}` }, 400);
+    }
+    case 'oaOff': {
+      const o = (await env.DB.get('oa', 'json')) || {};
+      delete o.access_token;
+      delete o.refresh_token;
+      await env.DB.put('oa', JSON.stringify(o));
+      return json({ ok: true });
     }
     case 'savePresets': {
       const list = (d.presets || [])
@@ -1249,6 +1407,14 @@ table{width:100%;border-collapse:collapse;font-size:14px}td,th{padding:7px 6px;b
 <div class="row"><button class="pri" onclick="addBirthdays()">Lưu ngày sinh</button></div>
 <table id="births"></table></div>
 
+<div class="card"><h2>🏢 Kết nối Zalo OA</h2>
+<p class="mute">Kết nối xong, khách nhắn OA Khanghuyapple cũng được bot tự trả lời (giá sửa, giá máy, bảo hành) trong khoảng 1 phút. Trong khung chat OA với khách, gõ <b>/bh iPhone 13 thay pin 12t</b> là khách nhận phiếu bảo hành điện tử.</p>
+<div id="oast" style="margin:8px 0"></div>
+<input id="oaapp" placeholder="App ID (developers.zalo.me)" style="margin-bottom:6px"><input id="oasec" type="password" placeholder="Secret key (Khóa bí mật của ứng dụng)">
+<div class="row"><button onclick="oaSave()">Lưu App ID, Secret</button><button class="pri" onclick="oaConnect()">Cấp quyền OA</button><button class="bad" onclick="oaOff()">Ngắt kết nối</button></div>
+<details style="margin-top:10px"><summary class="mute">Cách khác: dán refresh token từ API Explorer</summary>
+<input id="oart" placeholder="Refresh token" style="margin-top:6px"><div class="row"><button onclick="oaRefresh()">Kết nối bằng refresh token</button></div></details></div>
+
 <div class="card"><h2>👤 Người quản trị bot</h2><p class="mute">Admin nhận tin báo đơn và dùng được lệnh chủ tiệm trong chat bot. Người được thêm cần nhắn bot SĐT của mình 1 lần để nhận quyền.</p>
 <table id="admins"></table>
 <div class="row" style="flex-wrap:nowrap"><input id="adph" placeholder="SĐT, VD 0909067474" style="flex:1"><button class="pri" onclick="addAdmin()">Thêm admin</button></div></div>
@@ -1284,7 +1450,11 @@ function render() {
     return '<tr><td>' + esc(x.d) + '</td><td>' + esc(x.n || '') + ' ' + esc(x.ph || '') + (x.wait ? ' <span class="tag">chờ khách nhắn bot</span>' : '') +
       '</td><td><button class="bad" onclick="delBirthday(\\'' + esc(x.key) + '\\')">Xóa</button></td></tr>';
   }).join('') : '<tr><td class="mute">Chưa có ngày sinh nào.</td></tr>';
-  $('admins').innerHTML = '<tr><td>Chủ tiệm</td><td><span class="tag">chính</span></td><td></td></tr>' + S.admins.map(function (a) {
+  var o = S.oa; $('oaapp').value = o.app_id;
+  $('oast').innerHTML = o.connected ? '<span class="tag" style="background:#e3f6ea">✅ Đã kết nối OA' + (o.oa_id ? ' ' + esc(o.oa_id) : '') + '</span>' + (S.customers.oa ? ' <span class="mute">' + S.customers.oa + ' khách đã nhắn OA</span>' : '')
+    : '<span class="tag">Chưa kết nối</span> <span class="mute">' + (o.app_id ? 'App ID đã lưu' : 'Chưa có App ID') + (o.hasSecret ? ', Secret đã lưu' : ', chưa có Secret') + '</span>';
+  if (o.err) $('oast').innerHTML += '<div class="mute" style="color:var(--bad)">Lỗi gần nhất: ' + esc(o.err) + '</div>';
+  $('admins').innerHTML ='<tr><td>Chủ tiệm</td><td><span class="tag">chính</span></td><td></td></tr>' + S.admins.map(function (a) {
     return '<tr><td>' + esc(a.n || '') + ' ' + esc(a.ph) + '</td><td>' + (a.id ? '<span class="tag">đã nhận quyền</span>' : '<span class="tag">chờ nhắn SĐT cho bot</span>') +
       '</td><td><button class="bad" onclick="delAdmin(\\'' + esc(a.ph) + '\\')">Bỏ</button></td></tr>';
   }).join('');
@@ -1323,6 +1493,10 @@ function addBirthdays() {
 }
 function delBirthday(k) { api('delBirthday', { key: k }).then(load); }
 function addAdmin() { api('addAdmin', { phone: $('adph').value }).then(function (j) { toast(j.admin.id ? 'Đã thêm admin' : 'Đã lưu, chờ người đó nhắn SĐT cho bot'); $('adph').value = ''; load(); }).catch(function (e) { toast(e.message); }); }
+function oaSave() { api('oaSave', { app_id: $('oaapp').value, secret: $('oasec').value }).then(function () { $('oasec').value = ''; toast('Đã lưu'); load(); }).catch(function (e) { toast(e.message); }); }
+function oaConnect() { api('oaConnect').then(function (j) { location.href = j.url; }).catch(function (e) { toast(e.message); }); }
+function oaRefresh() { api('oaRefresh', { refresh_token: $('oart').value }).then(function () { $('oart').value = ''; toast('Đã kết nối OA'); load(); }).catch(function (e) { toast(e.message); }); }
+function oaOff() { if (confirm('Ngắt kết nối OA? Bot sẽ thôi trả lời khách nhắn OA.')) api('oaOff').then(load); }
 function delAdmin(p) { if (confirm('Bỏ quyền admin của ' + p + '?')) api('delAdmin', { phone: p }).then(load); }
 $('key').addEventListener('keydown', function (e) { if (e.key === 'Enter') login(); });
 load();
@@ -1353,6 +1527,7 @@ export default {
       return new Response(ADMIN_HTML, { headers: { 'Content-Type': 'text/html; charset=utf-8', 'X-Robots-Tag': 'noindex' } });
     }
     if (url.pathname === '/admin/api' && request.method === 'POST') return onAdminApi(request, env);
+    if (url.pathname === '/oa/callback' && env.DB) return onOaCallback(url, env);
 
     // Mở 1 lần sau khi deploy: https://<worker>/setup?key=<WEBHOOK_SECRET>
     // Mặc định xóa webhook để bot tự lấy tin (getUpdates). Thêm &mode=webhook khi đã có tên miền riêng không bị chặn.
@@ -1375,7 +1550,8 @@ export default {
     ctx.waitUntil(
       (async () => {
         // Tối đa ~47 lệnh gọi ra ngoài mỗi lần chạy (gói miễn phí cho 50)
-        let left = 46 - (await pollUpdates(env, POLL_BUDGET));
+        let left = 46 - (await pollOa(env, 12));
+        left -= await pollUpdates(env, Math.min(POLL_BUDGET, left));
         left -= await runFollowups(env, Math.min(25, left));
         left -= await runBirthdays(env, Math.min(10, left));
         await runBroadcast(env, Math.min(BATCH, left));
