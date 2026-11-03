@@ -943,6 +943,7 @@ function send(env, chatId, text) {
 // Khách OA mang mã "oa:<user_id>" nên dùng chung mọi tính năng; KV "oa" giữ app_id, secret, token.
 // Tin Tư vấn chỉ miễn phí trong 48h sau khi khách nhắn, nên bot chỉ trả lời, không tự gửi khuyến mãi/nhắc/chúc cho khách OA.
 const OA_OAUTH = 'https://oauth.zaloapp.com/v4/oa';
+const ZALO_SITE_VERIFY = 'HVMR0fBH2JPNnQvhjCmhObREkZIwk65lE3Wo';
 const OA_API = 'https://openapi.zalo.me';
 const isOa = (chatId) => String(chatId).startsWith('oa:');
 
@@ -1528,6 +1529,13 @@ export default {
     }
     if (url.pathname === '/admin/api' && request.method === 'POST') return onAdminApi(request, env);
     if (url.pathname === '/oa/callback' && env.DB) return onOaCallback(url, env);
+    // Tệp xác thực tên miền của ứng dụng Zalo "Khang Huy Apple Trợ Lý" (developers.zalo.me > Xác thực domain)
+    if (url.pathname === `/zalo_verifier${ZALO_SITE_VERIFY}.html`) {
+      return new Response(
+        `<!DOCTYPE html>\n<html lang="en">\n\n<head>\n    <meta property="zalo-platform-site-verification" content="${ZALO_SITE_VERIFY}" />\n</head>\n\n<body>\nThere Is No Limit To What You Can Accomplish Using Zalo!\n</body>\n\n</html>`,
+        { headers: { 'Content-Type': 'text/html; charset=utf-8' } }
+      );
+    }
 
     // Mở 1 lần sau khi deploy: https://<worker>/setup?key=<WEBHOOK_SECRET>
     // Mặc định xóa webhook để bot tự lấy tin (getUpdates). Thêm &mode=webhook khi đã có tên miền riêng không bị chặn.
