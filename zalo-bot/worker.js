@@ -979,12 +979,20 @@ async function oaToken(env, refresh) {
   return oaTokens(env, { refresh_token: cfg.refresh_token, grant_type: 'refresh_token' });
 }
 
+// Header gọi OA API: access_token + appsecret_proof = HMAC-SHA256(access_token, khóa bí mật), dạng hex
+async function oaHeaders(env, token) {
+  const cfg = (await env.DB.get('oa', 'json')) || {};
+  const key = await crypto.subtle.importKey('raw', new TextEncoder().encode(cfg.secret || ''), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+  const sig = new Uint8Array(await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(token)));
+  return { access_token: token, appsecret_proof: Array.from(sig, (b) => b.toString(16).padStart(2, '0')).join('') };
+}
+
 async function sendOa(env, userId, text) {
   const token = await oaToken(env);
   if (!token) return { ok: false, error: 'OA chưa kết nối' };
   const res = await fetch(`${OA_API}/v3.0/oa/message/cs`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', access_token: token },
+    headers: { 'Content-Type': 'application/json', ...(await oaHeaders(env, token)) },
     body: JSON.stringify({ recipient: { user_id: userId }, message: { text: text.slice(0, 2000) } }),
   });
   const j = await res.json().catch(() => ({ error: res.status }));
@@ -999,7 +1007,7 @@ async function pollOa(env, budget) {
   const token = await oaToken(env, true);
   if (!token) return 0;
   const res = await fetch(`${OA_API}/v2.0/oa/listrecentchat?data=${encodeURIComponent(JSON.stringify({ offset: 0, count: 10 }))}`, {
-    headers: { access_token: token },
+    headers: await oaHeaders(env, token),
   });
   const j = await res.json().catch(() => ({}));
   if (j.error || !Array.isArray(j.data)) {
@@ -1300,7 +1308,7 @@ async function onAdminApi(request, env) {
       // Thử đọc 3 tin gần nhất của OA (không gửi gì), để biết token và quyền đã dùng được chưa
       const token = await oaToken(env);
       if (!token) return json({ ok: false, error: 'OA chưa kết nối' }, 400);
-      const r = await fetch(`${OA_API}/v2.0/oa/listrecentchat?data=${encodeURIComponent(JSON.stringify({ offset: 0, count: 3 }))}`, { headers: { access_token: token } });
+      const r = await fetch(`${OA_API}/v2.0/oa/listrecentchat?data=${encodeURIComponent(JSON.stringify({ offset: 0, count: 3 }))}`, { headers: await oaHeaders(env, token) });
       const j = await r.json().catch(() => ({ error: r.status }));
       return json({ ok: j.error === 0, error: j.error, message: j.message, count: Array.isArray(j.data) ? j.data.length : 0,
         last: (await env.DB.get('oa:last')) || '' });
