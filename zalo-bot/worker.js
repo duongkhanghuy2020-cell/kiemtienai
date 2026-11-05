@@ -1078,6 +1078,8 @@ async function onOaMessage(env, { fromUser, uid, name, text }) {
   if (!uid || !text) return false;
   const id = `oa:${uid}`;
   if (fromUser) {
+    // Nút trong menu OA gửi cú pháp không dấu cách, đổi lại thành câu bot hiểu
+    text = text.replace(/^#baohanh$/i, 'bảo hành').replace(/^#khuyenmai$/i, 'khuyến mãi');
     await onUpdate(env, { message: { chat: { id }, from: { display_name: name }, text } }).catch((e) => console.error(e));
     return true;
   }
