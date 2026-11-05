@@ -577,6 +577,17 @@ const FOLLOWUPS = [
 ];
 
 // Phần thân 1 phiếu: máy/dịch vụ, ngày sửa, hạn bảo hành (phiếu cũ không có mo thì ghi chung 6 – 12 tháng)
+// "Thay Pin 15 pro max" => dòng "Máy: iPhone 15 Pro Max" và dòng "Dịch vụ: Thay Pin". Không nhận ra máy thì giữ nguyên chữ thầy ghi.
+function cardItem(m) {
+  const text = m || '';
+  const dev = findDevice(norm(text));
+  if (!dev || dev.startsWith('iPad')) return `Máy / dịch vụ: ${text || '(chưa ghi)'}`;
+  const rest = text
+    .replace(/(?:^|\s)(?:iphone|ip)?\s*(?:xs\s*max|xs|xr|x|6s\s*plus|[6-8]\s*plus|\d{1,2}e?)\s*(?:pro\s*max|promax|prm|pm|pro|plus|air|mini)?(?=\s|$)/i, ' ')
+    .replace(/\s+/g, ' ').trim().replace(/^[-–,;:\s]+|[-–,;:\s]+$/g, '');
+  return `Máy: ${dev}${rest ? `\nDịch vụ: ${rest}` : ''}`;
+}
+
 function cardBody(r, now) {
   const end = r.mo ? addMonths(r.d, r.mo) : 0;
   let status = '';
@@ -585,7 +596,7 @@ function cardBody(r, now) {
     status = left >= 0 ? ` (còn ${left} ngày)` : ' (đã hết hạn)';
   }
   return (
-    `Máy / dịch vụ: ${r.m || '(chưa ghi)'}\nNgày sửa: ${fmtDate(r.d)}\n` +
+    `${cardItem(r.m)}\n${/(^| )(mua|ban)( |$)/.test(norm(r.m)) ? 'Ngày mua' : 'Ngày sửa'}: ${fmtDate(r.d)}\n` +
     (end ? `✅ Bảo hành ${r.mo} tháng: đến hết ${fmtDate(end)}${status}\n` : '• Bảo hành 6 – 12 tháng tùy linh kiện\n') +
     `• 1 đổi 1 đến hết ${fmtDate(r.d + 30 * DAY)}`
   );
@@ -594,7 +605,7 @@ function cardBody(r, now) {
 function warrantyCard(r) {
   return (
     `🛡️ PHIẾU BẢO HÀNH ĐIỆN TỬ – ${SHOP.name.toUpperCase()}\n` +
-    `Khách: ${r.n || '(không tên)'}\n${cardBody(r)}\n\n` +
+    `Khách: ${r.n || '(không tên)'}${r.ph ? ` - ${r.ph}` : ''}\n${cardBody(r)}\n\n` +
     `Dạ anh/chị giữ tin nhắn này làm phiếu bảo hành giúp em ạ. Muốn xem lại ngày bảo hành, anh/chị nhắn "bảo hành" ạ. ` +
     (r.oa ? '' : `Bên em sẽ hỏi thăm sau 7 ngày, nhắc trước khi hết hạn 1 đổi 1 và mời kiểm tra máy sau 6 tháng (nhắn "huy nhac" nếu không muốn nhận).`) +
     `\n📞 ${SHOP.phone}`
@@ -602,10 +613,10 @@ function warrantyCard(r) {
 }
 
 // Khách tra cứu: liệt kê các phiếu đã lưu, mới nhất trước
-function lookupCards(list, name) {
+function lookupCards(list, name, phone) {
   const now = Date.now();
   return (
-    `🛡️ PHIẾU BẢO HÀNH – ${SHOP.name.toUpperCase()}\n${name ? `Khách: ${name}\n` : ''}\n` +
+    `🛡️ PHIẾU BẢO HÀNH – ${SHOP.name.toUpperCase()}\n${name || phone ? `Khách: ${[name, phone].filter(Boolean).join(' - ')}\n` : ''}\n` +
     list.map((r, i) => (list.length > 1 ? `${i + 1}) ` : '') + cardBody(r, now)).join('\n\n') +
     `\n\nDạ máy có gì bất thường, anh/chị mang qua tiệm để bên em kiểm tra miễn phí ạ.\n📍 ${SHOP.address} | 📞 ${SHOP.phone}`
   );
@@ -622,6 +633,8 @@ async function getCards(env, chatId) {
 // Lưu phiếu mới + (làm mới) lịch nhắc cho khách, trả về bản ghi
 async function registerWarranty(env, chatId, name, model, months, day) {
   const r = { n: (name || '').slice(0, 60), m: (model || '').slice(0, 80), d: day || Date.now(), s: 0, mo: months || WARRANTY_MONTHS };
+  const { metadata: cust } = await env.DB.getWithMetadata(`c:${chatId}`);
+  if (cust && cust.ph) r.ph = cust.ph; // in SĐT khách trên phiếu
   const list = await getCards(env, chatId); // đọc trước khi ghi f: để phiếu mới không bị tính 2 lần
   // Khách OA: chỉ trả lời miễn phí trong 48h sau khi khách nhắn, nên không đặt lịch tự nhắc
   if (isOa(chatId)) r.oa = true;
@@ -631,16 +644,16 @@ async function registerWarranty(env, chatId, name, model, months, day) {
 }
 
 // Phiếu thầy ghi theo SĐT khi khách chưa nhắn bot: chờ ở "p:<SĐT>", khách nhắn SĐT đó thì bot gửi phiếu
-async function savePending(env, phone, model, months) {
+async function savePending(env, phone, model, months, name) {
   const list = (await env.DB.get(`p:${phone}`, 'json')) || [];
-  await env.DB.put(`p:${phone}`, JSON.stringify([{ m: model.slice(0, 80), d: Date.now(), mo: months }, ...list].slice(0, MAX_CARDS)));
+  await env.DB.put(`p:${phone}`, JSON.stringify([{ m: model.slice(0, 80), d: Date.now(), mo: months, n: name || '' }, ...list].slice(0, MAX_CARDS)));
 }
 
 async function deliverPending(env, chatId, name, phone) {
   const list = await env.DB.get(`p:${phone}`, 'json');
   if (!list || !list.length) return false;
   let r;
-  for (const it of [...list].reverse()) r = await registerWarranty(env, chatId, name, it.m, it.mo, it.d); // cũ trước, mới sau
+  for (const it of [...list].reverse()) r = await registerWarranty(env, chatId, it.n || name, it.m, it.mo, it.d); // cũ trước, mới sau; tên thầy ghi trên phiếu được ưu tiên
   await env.DB.delete(`p:${phone}`);
   const s = await addStamp(env, chatId, name);
   await send(env, chatId, `${warrantyCard(r)}\n\n${stampLine(s)}`);
@@ -824,7 +837,7 @@ const OWNER_HELP =
   '• /kmxem: xem khuyến mãi đang chạy\n' +
   '• /kmxoa: tắt khuyến mãi\n' +
   '• /khach: đếm số khách\n' +
-  '• /giao <SĐT hoặc mã khách> <máy + dịch vụ> <số tháng>t: gửi phiếu bảo hành + bật tự nhắc (VD: /giao 0909123456 iPhone 13 thay pin 6t). Khách chưa nhắn bot thì bot giữ phiếu, khách nhắn SĐT là nhận\n' +
+  '• /giao <Tên khách> <SĐT> <máy + dịch vụ> <số tháng>t: gửi phiếu bảo hành + bật tự nhắc (VD: /giao Thuý Trần 0909123456 iPhone 13 thay pin 6t). Khách chưa nhắn bot thì bot giữ phiếu, khách nhắn SĐT là nhận\n' +
   '• /nhac: đếm khách đang được tự nhắc sau sửa\n' +
   '• /dung <mã voucher>: kiểm tra và đánh dấu voucher khách quen đã dùng\n' +
   '• /diem <mã khách>: xem điểm tích lũy của khách\n' +
@@ -838,6 +851,13 @@ async function onOwner(env, chatId, text) {
   const reply = (s) => send(env, chatId, s);
   // Gõ trên điện thoại hay dính ngoặc, dấu + hoặc dấu phẩy: "(/giao+0937…, iPhone…" => "/giao 0937… iPhone…"
   text = text.replace(/^[\s("'“]+/, '').replace(/^\/giao[\s+:,]*/i, '/giao ').trim();
+  // "/giao Thuý Trần - 0909067474 iPhone 15 Pro Max thay pin 12t": tách tên khách đứng trước SĐT
+  let givenName = '';
+  const named = text.match(/^\/giao\s+([^\d+\s][^\n]*?)[\s,;:-]*((?:\+?84|0)(?:[ .-]?\d){9})(?!\d)[\s,;:-]*([\s\S]*)$/);
+  if (named) {
+    givenName = named[1].trim();
+    text = `/giao ${named[2].replace(/[^\d+]/g, '')} ${named[3]}`.trim();
+  }
   const m = text.match(/^\/tl\s+(\S+)\s+([\s\S]+)/);
   if (m) {
     const r = await send(env, m[1], m[2]);
@@ -932,15 +952,17 @@ async function onOwner(env, chatId, text) {
     if (/^[\d.+-]+$/.test(g[1]) && /^0\d{9,10}$/.test(digits)) {
       id = await findByPhone(env, digits);
       if (!id) {
-        await savePending(env, digits, job.m, job.mo);
+        await savePending(env, digits, job.m, job.mo, givenName);
         return reply(
           `✅ Đã lưu phiếu cho SĐT ${digits}: ${job.m}, bảo hành ${job.mo} tháng đến hết ${fmtDate(addMonths(Date.now(), job.mo))}.\n` +
           `Khách chưa nhắn bot, nên khi khách vào bot Khang Huy Apple nhắn số ${digits}, bot sẽ tự gửi phiếu cho khách.`);
       }
     }
     const { metadata: c } = await env.DB.getWithMetadata(`c:${id}`);
-    const r = await registerWarranty(env, id, c && c.n, job.m, job.mo);
-    const s = await addStamp(env, id, c && c.n);
+    const custName = givenName || (c && c.n);
+    if (givenName) await saveCustomer(env, id, givenName, {});
+    const r = await registerWarranty(env, id, custName, job.m, job.mo);
+    const s = await addStamp(env, id, custName);
     const sent = await send(env, id, `${warrantyCard(r)}\n\n${stampLine(s)}`);
     if (sent && sent.ok && s.voucher) await send(env, id, voucherMessage(s.voucher));
     const pts = s.voucher ? `đủ ${STAMPS_NEEDED}, đã tặng voucher ${s.voucher}` : `${s.p}/${STAMPS_NEEDED}${s.skipped ? ' (không cộng: đã cộng trong 7 ngày qua)' : ''}`;
@@ -1270,7 +1292,7 @@ async function onUpdate(env, update) {
   // Khách có phiếu nhắn bất kỳ câu nào có "bảo hành" => xem ngay ngày bảo hành của mình
   if (env.DB && !WARRANTY_WORDS.test(t) && (LOOKUP_WORDS.test(t) || /(^| )bao hanh( |$)/.test(t))) {
     const list = await getCards(env, chatId);
-    if (list.length) return send(env, chatId, lookupCards(list, sender.name));
+    if (list.length) return send(env, chatId, lookupCards(list, sender.name, ph || (known && known.ph)));
     if (LOOKUP_WORDS.test(t)) {
       return send(env, chatId, `Dạ anh/chị nhắn giúp em số điện thoại ghi trên phiếu bảo hành để em tra phiếu ạ (VD: 0909123456).`);
     }
