@@ -220,6 +220,7 @@ const byPrice = (a, b) => (a.p || Infinity) - (b.p || Infinity);
 const capNum = (c) => (parseInt(c, 10) || 0) * (/TB/.test(c) ? 1024 : 1);
 
 const SALE_CTA = `\nAnh/chị muốn xem hoặc giữ máy, nhắn giúp em "Tên - SĐT" ạ. 📞 ${SHOP.phone}`;
+const ORDER_CTA = `\nAnh/chị muốn đặt máy, nhắn giúp em "Tên - SĐT", bên em kiểm tra nguồn hàng và báo lại ngày có máy ạ. 📞 ${SHOP.phone}`;
 
 function newLines(items, detailed) {
   if (detailed || items.length <= 6) {
@@ -307,12 +308,13 @@ function saleAnswer(t, raw, sender, service) {
   const fresh = list.filter((x) => x.s === 'n');
   const used = list.filter((x) => x.s === 'u');
   const parts = [];
-  if (fresh.length) parts.push(`🆕 MÁY MỚI NGUYÊN SEAL:\n${newLines(fresh, !!(cap && !capNote) || !!cat)}`);
+  // Máy mới nguyên seal phải đặt hàng trước, chỉ "máy có sẵn tại tiệm" mới xem được ngay
+  if (fresh.length) parts.push(`🆕 MÁY MỚI NGUYÊN SEAL (đặt hàng trước):\n${newLines(fresh, !!(cap && !capNote) || !!cat)}`);
   if (used.length) parts.push(`✨ MÁY CÓ SẴN TẠI TIỆM:\n${usedLines(used)}`);
   return {
     reply:
       `${isShorthand(t) ? `${confirmOf(label)}Em gửi giá máy ạ:` : `Dạ, anh/chị quan tâm ${label} ạ. Giá bên em như sau:`}${capNote}\n\n${parts.join('\n\n')}\n\n` +
-      `Giá cập nhật ${KHO.updated}, bên em hỗ trợ trả góp ạ.${SALE_CTA}`,
+      `Giá cập nhật ${KHO.updated}, bên em hỗ trợ trả góp ạ.${used.length ? SALE_CTA : ORDER_CTA}`,
     notify: notify(''),
   };
 }
@@ -338,7 +340,7 @@ function tradeAnswer(t, raw, sender) {
     `Để em định giá chính xác, anh/chị nhắn giúp em:\n${oldKey ? '• Dung lượng máy (VD: 128GB, 256GB)' : '• Đời máy, dung lượng (VD: 13 Pro Max 256GB)'}\n• Pin còn bao nhiêu %\n• Máy có trầy, bể, từng sửa hay thay linh kiện chưa\n• Kèm 2 – 3 hình mặt trước, mặt sau ạ`,
   ];
   // Chỉ báo giá máy khách muốn lên đời, bỏ câu mở đầu của phần báo giá
-  if (target) lines.push(`👉 Giá ${labelOf(phoneKey(m[2]))} bên em:\n${target.reply.replace(SALE_CTA, '').replace(/^.*\n+/, '')}`);
+  if (target) lines.push(`👉 Giá ${labelOf(phoneKey(m[2]))} bên em:\n${target.reply.replace(SALE_CTA, '').replace(ORDER_CTA, '').replace(/^.*\n+/, '')}`);
   lines.push(`Hoặc anh/chị mang máy qua tiệm, kỹ thuật viên kiểm tra trực tiếp và báo giá ngay khi kiểm tra xong ạ.\n📍 ${SHOP.address} | 📞 ${SHOP.phone}`);
   return {
     reply: lines.join('\n\n'),
