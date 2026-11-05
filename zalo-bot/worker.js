@@ -264,7 +264,8 @@ function saleAnswer(t, raw, sender, service) {
   if (service) return null;
   const cat = CATS.find(([, re]) => re.test(t));
   const key = cat ? null : phoneKey(t);
-  const intent = SALE_WORDS.test(t);
+  // "có iphone 16e không" là hỏi có bán không, kể cả khi không có chữ "mua"
+  const intent = SALE_WORDS.test(t) || (/(^| )co (ban |san )?(iphone|ip|may)( |$)/.test(t) && /(^| )khong( |$)/.test(t));
   if (!cat && !key) {
     // "giá máy", "mua máy" chưa nói dòng nào => hỏi lại, kèm các dòng đang có
     if (!/(^| )(gia may|mua may|may nao|con may|ban may|may moi|may 99|may cu)( |$)/.test(t)) return null;
@@ -310,7 +311,7 @@ function saleAnswer(t, raw, sender, service) {
   if (used.length) parts.push(`✨ MÁY CÓ SẴN TẠI TIỆM:\n${usedLines(used)}`);
   return {
     reply:
-      `${isShorthand(t) ? `${confirmOf(label)}Em gửi giá máy ạ:` : `Dạ, ${label} bên em đang có ạ:`}${capNote}\n\n${parts.join('\n\n')}\n\n` +
+      `${isShorthand(t) ? `${confirmOf(label)}Em gửi giá máy ạ:` : `Dạ, anh/chị quan tâm ${label} ạ. Giá bên em như sau:`}${capNote}\n\n${parts.join('\n\n')}\n\n` +
       `Giá cập nhật ${KHO.updated}, bên em hỗ trợ trả góp ạ.${SALE_CTA}`,
     notify: notify(''),
   };
@@ -1221,6 +1222,10 @@ async function onUpdate(env, update) {
 
   if ((await adminIds(env)).includes(chatId)) return onOwner(env, chatId, text);
 
+  // Webhook OA không gửi tên khách: dùng tên đã lưu, để không xóa mất tên khi lưu lại khách
+  const known = env.DB ? (await env.DB.getWithMetadata(`c:${chatId}`)).metadata : null;
+  if (!sender.name && known) sender.name = known.n;
+
   const t = norm(text);
   if (STOP_WORDS.test(t)) {
     await saveCustomer(env, chatId, sender.name, { off: true });
@@ -1284,7 +1289,9 @@ async function onUpdate(env, update) {
     if (!text) return;
     const promo = env.DB ? await env.DB.get('promo') : null;
     const { reply, notify } = handleText(text, sender, promo);
-    await send(env, chatId, reply);
+    // Tin đầu tiên của khách: cảm ơn trước khi trả lời (học FPT Shop). Câu chào chung đã có lời chào sẵn.
+    const thanks = env.DB && !known && !reply.includes('xin chào') ? `Dạ ${SHOP.name} cảm ơn anh/chị${sender.name ? ' ' + sender.name : ''} đã liên hệ ạ!\n\n` : '';
+    await send(env, chatId, thanks + reply);
     if (notify) await notifyOwner(env, notify);
     return;
   }
