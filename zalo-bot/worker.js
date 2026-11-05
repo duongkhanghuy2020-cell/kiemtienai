@@ -420,9 +420,11 @@ function answer(raw, sender, promo) {
   const greeting = /^(hi|hello|alo|chao|xin chao|shop|ad|admin|e|em|a|anh|chi|ok|oke|cam on|thanks)( .*)?$/.test(t) || t.length < 4;
   return {
     reply:
-      `Dạ, ${SHOP.name} xin chào anh/chị ạ! 📱\n` +
-      `Anh/chị nhắn giúp em tên máy và lỗi cần sửa (VD: "màn hình 13 pro max") hoặc máy muốn mua (VD: "giá 17 pro max") để em báo giá ngay ạ.\n` +
-      `📍 ${SHOP.address} | ⏰ ${SHOP.hours} | 📞 ${SHOP.phone}`,
+      `🍎 Dạ, ${SHOP.name} xin chào anh/chị!\nCảm ơn anh/chị đã ghé nhà Táo ❤️\n\n` +
+      `Anh/chị cần mua máy, sửa máy hay lên đời, cứ nhắn ngay tại đây, bên em sẵn sàng tư vấn ạ!\n\n` +
+      `Để được hỗ trợ đúng nhu cầu, anh/chị có thể nhắn:\n` +
+      `🔧 Ví dụ Giá sửa: “Thay pin 12 Pro Max”\n📱 Ví dụ Giá máy: “Giá 17 Pro Max 256GB”\n🔄 Ví dụ Lên đời: “Đổi 12 Pro Max lên 17 Pro Max”\n🛡️ Tra cứu bảo hành: “Bảo hành”\n\n` +
+      `📍 296 Lê Văn Thọ, TP. Hồ Chí Minh\n⏰ Giờ mở cửa: 8h – 21h\n📞 0981.308.308 – 0909.06.7474\n\nAnh/chị đang cần hỗ trợ gì, nhắn em nhé! 😊`,
     notify: greeting ? null : `💬 Khách ${sender.name || ''} hỏi (bot chưa hiểu):\n"${raw}"\nTrả lời: /tl ${sender.chatId} <nội dung>`,
     withPromo: true,
   };
