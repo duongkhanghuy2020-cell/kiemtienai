@@ -321,8 +321,9 @@ function saleAnswer(t, raw, sender, service) {
 
 // Thu cũ đổi mới / khách bán máy cũ. Giá thu phải xem máy nên bot hỏi tình trạng, báo chủ tiệm định giá.
 // "đổi 13 pro max lên 17 pro max": phần sau "lên/qua/sang/lấy" là máy muốn đổi, kèm luôn giá máy đó.
-const TRADE_WORDS = /(^| )(doi may|doi dien thoai|doi dt|thu cu|len doi|doi cu|doi moi|doi ngang|bu tien|bu them|ban lai|thu mua|muon ban|can ban|ban may cu|thu may|thu lai)( |$)/;
-const SELL_WORDS = /(^| )(ban lai|thu mua|muon ban|can ban|ban may cu|thu may|thu lai)( |$)/;
+const TRADE_WORDS = /(^| )(doi may|doi dien thoai|doi dt|thu cu|len doi|doi cu|doi moi|doi ngang|bu tien|bu them|ban lai|thu mua|muon ban|can ban|ban may cu|thu may|thu lai|thu bao nhieu)( |$)/;
+const SELL_WORDS = /(^| )(ban lai|thu mua|muon ban|can ban|ban may cu|thu may|thu lai|thu bao nhieu)( |$)/;
+const TRADE_INFO = /(^| )(\d+ ?(gb|g|tb)|pin( con)? \d+|tray|xuoc|be|mop|nut|da sua|chua sua|con dep|nguyen ban|zin)( |$)/;
 
 function tradeAnswer(t, raw, sender) {
   // "đổi 13 pro max lên 17 pro max" không có chữ "đổi máy" nhưng vẫn là đổi máy
@@ -335,16 +336,16 @@ function tradeAnswer(t, raw, sender) {
   const mine = oldKey ? `máy ${labelOf(oldKey)}` : 'máy';
   const lines = [
     sell
-      ? `Dạ, bên em có thu mua ${mine} cũ ạ. Giá thu được báo rõ ràng theo đúng tình trạng máy, anh/chị đồng ý rồi bên em mới thu ạ.`
-      : `Dạ, bên em có thu cũ đổi mới ạ: ${mine} cũ của anh/chị được định giá và trừ thẳng vào giá máy mới, anh/chị chỉ bù phần chênh lệch ạ.`,
-    `Để em định giá chính xác, anh/chị nhắn giúp em:\n${oldKey ? '• Dung lượng máy (VD: 128GB, 256GB)' : '• Đời máy, dung lượng (VD: 13 Pro Max 256GB)'}\n• Pin còn bao nhiêu %\n• Máy có trầy, bể, từng sửa hay thay linh kiện chưa\n• Kèm 2 – 3 hình mặt trước, mặt sau ạ`,
+      ? `Dạ, em cảm ơn anh/chị đã quan tâm ạ. Bên em có thu mua ${mine} cũ. Giá thu phụ thuộc vào tình trạng thực tế của máy, nên em xin phép báo giá dự kiến trước ạ.`
+      : `Dạ, em cảm ơn anh/chị đã quan tâm ạ. Bên em có thu cũ đổi mới: ${mine} cũ của anh/chị được trừ vào giá máy mới, anh/chị bù phần chênh lệch ạ. Giá thu phụ thuộc vào tình trạng thực tế của máy, nên em xin phép báo giá dự kiến trước ạ.`,
+    `Để bên em báo giá dự kiến, anh/chị nhắn giúp em:\n${oldKey ? '• Dung lượng máy (VD: 128GB, 256GB)' : '• Đời máy, dung lượng (VD: 13 Pro Max 256GB)'}\n• Pin còn bao nhiêu %\n• Máy có trầy, bể, từng sửa hay thay linh kiện chưa\n• Kèm 2 – 3 hình mặt trước, mặt sau ạ`,
   ];
   // Chỉ báo giá máy khách muốn lên đời, bỏ câu mở đầu của phần báo giá
   if (target) lines.push(`👉 Giá ${labelOf(phoneKey(m[2]))} bên em:\n${target.reply.replace(SALE_CTA, '').replace(ORDER_CTA, '').replace(/^.*\n+/, '')}`);
-  lines.push(`Hoặc anh/chị mang máy qua tiệm, kỹ thuật viên kiểm tra trực tiếp và báo giá ngay khi kiểm tra xong ạ.\n📍 ${SHOP.address} | 📞 ${SHOP.phone}`);
+  lines.push(`Giá chính xác sẽ được chốt khi anh/chị mang máy qua tiệm để kỹ thuật viên kiểm tra trực tiếp ạ.\n📍 ${SHOP.address} | 📞 ${SHOP.phone}`);
   return {
     reply: lines.join('\n\n'),
-    notify: `🔄 Khách ${sender.name || ''} muốn ${sell ? 'bán' : 'đổi'} máy: "${raw}"\nTrả lời: /tl ${sender.chatId} <nội dung>`,
+    notify: `🔄 Khách ${sender.name || ''} muốn ${sell ? 'bán' : 'đổi'} máy: "${raw}"\nBot chưa báo giá thu, thầy báo giá dự kiến cho khách.\nTrả lời: /tl ${sender.chatId} <nội dung>`,
     withPromo: true,
   };
 }
@@ -1292,7 +1293,14 @@ async function onUpdate(env, update) {
   if (!update.event_name || update.event_name === 'message.text.received') {
     if (!text) return;
     const promo = env.DB ? await env.DB.get('promo') : null;
+    // Khách vừa hỏi đổi/bán máy rồi gửi tình trạng máy ("256gb pin 85%"): đó là thông tin để thầy báo giá dự kiến, không phải hỏi giá sửa
+    if (env.DB && TRADE_INFO.test(t) && !/(^| )(bao nhieu|gia)( |$)/.test(t) && (await env.DB.get(`tr:${chatId}`))) {
+      await send(env, chatId, 'Dạ em cảm ơn anh/chị, em đã nhận thông tin máy ạ. Bên em sẽ báo giá dự kiến cho anh/chị sớm nhất ạ.');
+      await notifyOwner(env, `🔄 Khách ${sender.name || ''} gửi thông tin máy cũ: "${text}"\nThầy báo giá dự kiến giúp khách.\nTrả lời: /tl ${chatId} <nội dung>`);
+      return;
+    }
     const { reply, notify } = handleText(text, sender, promo);
+    if (env.DB && notify && notify.startsWith('🔄')) await env.DB.put(`tr:${chatId}`, '1', { expirationTtl: 7200 });
     // Tin đầu tiên của khách: cảm ơn trước khi trả lời (học FPT Shop). Câu chào chung đã có lời chào sẵn.
     const thanks = env.DB && !known && !reply.includes('xin chào') ? `Dạ ${SHOP.name} cảm ơn anh/chị${sender.name ? ' ' + sender.name : ''} đã liên hệ ạ!\n\n` : '';
     await send(env, chatId, thanks + reply);
