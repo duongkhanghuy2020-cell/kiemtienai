@@ -620,11 +620,11 @@ function cardBody(r, now) {
 // Phiếu gửi khách: mục 1 – 5, tiếp đến tích điểm (s = kết quả addStamp)
 function warrantyCard(r, s) {
   return (
-    `🛡️ PHIẾU BẢO HÀNH ${isPurchase(r.m) ? 'MUA MÁY' : 'SỬA MÁY'} – ${SHOP.name.toUpperCase()}\n` +
-    `1. Tên khách hàng: ${r.n || '(chưa ghi)'}\n2. Số điện thoại: ${r.ph || '(chưa ghi)'}\n${cardBody(r)}` +
-    (s ? `\n\n${stampLine(s)}` : '') +
-    `\n\nNhắn "bảo hành" để xem lại phiếu. 📞 ${SHOP.phone}` +
-    (isPurchase(r.m) ? '' : `\nBên em sẽ nhắn hỏi thăm máy sau khi sửa (nhắn "huy nhac" nếu không muốn nhận).`)
+    // Đúng mẫu thầy gửi (11/2026): tiêu đề, dòng trống, mục 1 – 5, dòng trống, tích điểm, dòng xem lại phiếu
+    `🛡️ PHIẾU BẢO HÀNH ${isPurchase(r.m) ? 'MUA MÁY' : 'SỬA MÁY'} – ${SHOP.name.toUpperCase()}\n\n` +
+    `1. Tên khách hàng: ${r.n || '(chưa ghi)'}\n2. Số điện thoại: ${r.ph || '(chưa ghi)'}\n${cardBody(r)}\n\n` +
+    (s ? `${stampLine(s)}\n` : '') +
+    `Nhắn “bảo hành” để xem lại phiếu. 📞 ${SHOP.phone}`
   );
 }
 
