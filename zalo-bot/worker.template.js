@@ -574,7 +574,8 @@ function parseJob(raw) {
 // [số ngày sau khi nhận máy, nội dung tin]
 const FOLLOWUPS = [
   [7, (r) => `Dạ ${SHOP.name} xin chào anh/chị${r.n ? ' ' + r.n : ''} ạ! Máy ${r.m || 'của anh/chị'} sửa tại tiệm mình dùng có ổn định không ạ? Nếu có gì bất thường, anh/chị nhắn em ngay để bên em hỗ trợ ạ.\nNếu anh/chị hài lòng, anh/chị đánh giá giúp tiệm trên Google Maps với ạ. Em cảm ơn anh/chị nhiều! 🙏`],
-  [27, (r) => `⏰ Dạ em xin nhắc anh/chị: máy ${r.m || 'của anh/chị'} còn 3 ngày nữa là hết hạn 1 đổi 1 (đến ${fmtDate(r.d + 30 * DAY)}) ạ. Nếu máy có lỗi gì, anh/chị ghé ${SHOP.name} để bên em kiểm tra miễn phí trước ngày này ạ.\n📍 ${SHOP.address} | 📞 ${SHOP.phone}`],
+  // Mốc 27 ngày (nhắc hết hạn 1 đổi 1) thầy đã bỏ. Giữ chỗ trống để số thứ tự mốc (s) của khách đang chờ nhắc không bị lệch.
+  [27, null],
   [180, (r) => `🔧 Dạ đã 6 tháng từ lần anh/chị sửa máy ${r.m || ''} tại ${SHOP.name} ạ. Bên em kính mời anh/chị ghé vệ sinh máy và kiểm tra pin, chẩn đoán máy miễn phí ạ.\n📍 ${SHOP.address} | 📞 ${SHOP.phone} | ${SHOP.hours}`],
 ];
 
@@ -759,8 +760,8 @@ async function runFollowups(env, limit) {
     const days = Math.floor((today - vnDayStart(r.d)) / DAY);
     // Chỉ gửi mốc muộn nhất đã đến hạn (nếu bot ngừng lâu thì bỏ qua mốc cũ, không gửi dồn)
     let due = -1;
-    FOLLOWUPS.forEach(([day], i) => {
-      if (i >= r.s && days >= day) due = i;
+    FOLLOWUPS.forEach(([day, msg], i) => {
+      if (msg && i >= r.s && days >= day) due = i;
     });
     if (due < 0) continue;
     await send(env, k.name.slice(2), FOLLOWUPS[due][1](r));
