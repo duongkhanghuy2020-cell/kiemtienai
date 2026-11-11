@@ -612,8 +612,7 @@ function cardBody(r, now) {
   return (
     `3. Tên máy: ${deviceName(r.m, buy)}\n` +
     `4. ${buy ? 'Ngày mua' : 'Ngày sửa'}: ${fmtDate(r.d)}\n` +
-    `5. Thời gian bảo hành: ${end ? `${r.mo} tháng, đến hết ${fmtDate(end)}${status}` : '6 – 12 tháng tùy linh kiện'}` +
-    (buy ? '' : `\n    • 1 đổi 1 đến hết ${fmtDate(r.d + 30 * DAY)}`)
+    `5. Thời gian bảo hành: ${end ? `${r.mo} tháng, đến hết ${fmtDate(end)}${status}` : '6 – 12 tháng tùy linh kiện'}`
   );
 }
 
@@ -624,7 +623,7 @@ function warrantyCard(r, s) {
     `1. Tên khách hàng: ${r.n || '(chưa ghi)'}\n2. Số điện thoại: ${r.ph || '(chưa ghi)'}\n${cardBody(r)}` +
     (s ? `\n\n${stampLine(s)}` : '') +
     `\n\nNhắn "bảo hành" để xem lại phiếu. 📞 ${SHOP.phone}` +
-    (r.oa || isPurchase(r.m) ? '' : `\nBên em sẽ hỏi thăm sau 7 ngày và nhắc trước khi hết hạn 1 đổi 1 (nhắn "huy nhac" nếu không muốn nhận).`)
+    (r.oa || isPurchase(r.m) ? '' : `\nBên em sẽ nhắn hỏi thăm máy sau khi sửa (nhắn "huy nhac" nếu không muốn nhận).`)
   );
 }
 
