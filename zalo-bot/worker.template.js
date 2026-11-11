@@ -578,19 +578,31 @@ const FOLLOWUPS = [
   [180, (r) => `🔧 Dạ đã 6 tháng từ lần anh/chị sửa máy ${r.m || ''} tại ${SHOP.name} ạ. Bên em kính mời anh/chị ghé vệ sinh máy và kiểm tra pin, chẩn đoán máy miễn phí ạ.\n📍 ${SHOP.address} | 📞 ${SHOP.phone} | ${SHOP.hours}`],
 ];
 
-// Phần thân 1 phiếu: máy/dịch vụ, ngày sửa, hạn bảo hành (phiếu cũ không có mo thì ghi chung 6 – 12 tháng)
-// "Thay Pin 15 pro max" => dòng "Máy: iPhone 15 Pro Max" và dòng "Dịch vụ: Thay Pin". Không nhận ra máy thì giữ nguyên chữ thầy ghi.
-function cardItem(m) {
-  const text = m || '';
+// Hai loại phiếu (thầy dặn): phiếu SỬA MÁY và phiếu MUA MÁY, cùng thứ tự
+// 1 Tên khách hàng, 2 Số điện thoại, 3 Tên máy, 4 Ngày sửa / Ngày mua, 5 Thời gian bảo hành, rồi đến tích điểm.
+// Mua máy: có chữ mua/bán/máy mới/lên đời..., hoặc chỉ ghi máy + dung lượng mà không có dịch vụ sửa. Còn lại là sửa máy.
+function isPurchase(m) {
+  const t = norm(m);
+  if (/(^| )(mua|ban|ban may|may moi|new|seal|like new|99|98|len doi|doi may)( |$)/.test(t)) return true;
+  return /(^| )\d+ ?(gb|g|tb)( |$)/.test(t) && !findService(t);
+}
+
+// "Thay Pin 15 pro max" => "iPhone 15 Pro Max (Thay Pin)"; "Mua 16 pro max 256GB" => "iPhone 16 Pro Max 256GB".
+// Không nhận ra máy (iPad, máy khác) thì giữ nguyên chữ thầy ghi.
+function deviceName(m, buy) {
+  const text = (m || '').replace(buy ? /(^|\s)(mua|bán|ban)(?=\s|$)/gi : /$^/, ' ').replace(/\s+/g, ' ').trim();
   const dev = findDevice(norm(text));
-  if (!dev || dev.startsWith('iPad')) return `Máy / dịch vụ: ${text || '(chưa ghi)'}`;
+  if (!dev || dev.startsWith('iPad')) return text || '(chưa ghi)';
   const rest = text
     .replace(/(?:^|\s)(?:iphone|ip)?\s*(?:xs\s*max|xs|xr|x|6s\s*plus|[6-8]\s*plus|\d{1,2}e?)\s*(?:pro\s*max|promax|prm|pm|pro|plus|air|mini)?(?=\s|$)/i, ' ')
     .replace(/\s+/g, ' ').trim().replace(/^[-–,;:\s]+|[-–,;:\s]+$/g, '');
-  return `Máy: ${dev}${rest ? `\nDịch vụ: ${rest}` : ''}`;
+  if (!rest) return dev;
+  return buy ? `${dev} ${rest}` : `${dev} (${rest})`;
 }
 
+// Mục 3 – 5 của 1 phiếu (phiếu cũ không có mo thì ghi chung 6 – 12 tháng)
 function cardBody(r, now) {
+  const buy = isPurchase(r.m);
   const end = r.mo ? addMonths(r.d, r.mo) : 0;
   let status = '';
   if (now && end) {
@@ -598,19 +610,21 @@ function cardBody(r, now) {
     status = left >= 0 ? ` (còn ${left} ngày)` : ' (đã hết hạn)';
   }
   return (
-    `${cardItem(r.m)}\n${/(^| )(mua|ban)( |$)/.test(norm(r.m)) ? 'Ngày mua' : 'Ngày sửa'}: ${fmtDate(r.d)}\n` +
-    (end ? `✅ Bảo hành ${r.mo} tháng: đến hết ${fmtDate(end)}${status}\n` : '• Bảo hành 6 – 12 tháng tùy linh kiện\n') +
-    `• 1 đổi 1 đến hết ${fmtDate(r.d + 30 * DAY)}`
+    `3. Tên máy: ${deviceName(r.m, buy)}\n` +
+    `4. ${buy ? 'Ngày mua' : 'Ngày sửa'}: ${fmtDate(r.d)}\n` +
+    `5. Thời gian bảo hành: ${end ? `${r.mo} tháng, đến hết ${fmtDate(end)}${status}` : '6 – 12 tháng tùy linh kiện'}` +
+    (buy ? '' : `\n    • 1 đổi 1 đến hết ${fmtDate(r.d + 30 * DAY)}`)
   );
 }
 
-function warrantyCard(r) {
+// Phiếu gửi khách: mục 1 – 5, tiếp đến tích điểm (s = kết quả addStamp)
+function warrantyCard(r, s) {
   return (
-    `🛡️ PHIẾU BẢO HÀNH ĐIỆN TỬ – ${SHOP.name.toUpperCase()}\n` +
-    `Khách: ${r.n || '(không tên)'}${r.ph ? ` - ${r.ph}` : ''}\n${cardBody(r)}\n\n` +
-    `Dạ anh/chị giữ tin nhắn này làm phiếu bảo hành giúp em ạ. Muốn xem lại ngày bảo hành, anh/chị nhắn "bảo hành" ạ. ` +
-    (r.oa ? '' : `Bên em sẽ hỏi thăm sau 7 ngày, nhắc trước khi hết hạn 1 đổi 1 và mời kiểm tra máy sau 6 tháng (nhắn "huy nhac" nếu không muốn nhận).`) +
-    `\n📞 ${SHOP.phone}`
+    `🛡️ PHIẾU BẢO HÀNH ${isPurchase(r.m) ? 'MUA MÁY' : 'SỬA MÁY'} – ${SHOP.name.toUpperCase()}\n` +
+    `1. Tên khách hàng: ${r.n || '(chưa ghi)'}\n2. Số điện thoại: ${r.ph || '(chưa ghi)'}\n${cardBody(r)}` +
+    (s ? `\n\n${stampLine(s)}` : '') +
+    `\n\nNhắn "bảo hành" để xem lại phiếu. 📞 ${SHOP.phone}` +
+    (r.oa || isPurchase(r.m) ? '' : `\nBên em sẽ hỏi thăm sau 7 ngày và nhắc trước khi hết hạn 1 đổi 1 (nhắn "huy nhac" nếu không muốn nhận).`)
   );
 }
 
@@ -618,8 +632,8 @@ function warrantyCard(r) {
 function lookupCards(list, name, phone) {
   const now = Date.now();
   return (
-    `🛡️ PHIẾU BẢO HÀNH – ${SHOP.name.toUpperCase()}\n${name || phone ? `Khách: ${[name, phone].filter(Boolean).join(' - ')}\n` : ''}\n` +
-    list.map((r, i) => (list.length > 1 ? `${i + 1}) ` : '') + cardBody(r, now)).join('\n\n') +
+    `🛡️ PHIẾU BẢO HÀNH – ${SHOP.name.toUpperCase()}\n1. Tên khách hàng: ${name || '(chưa ghi)'}\n2. Số điện thoại: ${phone || '(chưa ghi)'}\n\n` +
+    list.map((r) => `${isPurchase(r.m) ? '📱 PHIẾU MUA MÁY' : '🔧 PHIẾU SỬA MÁY'}\n${cardBody(r, now)}`).join('\n\n') +
     `\n\nDạ máy có gì bất thường, anh/chị mang qua tiệm để bên em kiểm tra miễn phí ạ.\n📍 ${SHOP.address} | 📞 ${SHOP.phone}`
   );
 }
@@ -639,8 +653,9 @@ async function registerWarranty(env, chatId, name, model, months, day) {
   if (cust && cust.ph) r.ph = cust.ph; // in SĐT khách trên phiếu
   const list = await getCards(env, chatId); // đọc trước khi ghi f: để phiếu mới không bị tính 2 lần
   // Khách OA: chỉ trả lời miễn phí trong 48h sau khi khách nhắn, nên không đặt lịch tự nhắc
+  // Phiếu mua máy cũng không đặt lịch nhắc: tin nhắc viết cho khách sửa máy
   if (isOa(chatId)) r.oa = true;
-  else await env.DB.put(`f:${chatId}`, '', { metadata: r });
+  else if (!isPurchase(r.m)) await env.DB.put(`f:${chatId}`, '', { metadata: r });
   await env.DB.put(`w:${chatId}`, JSON.stringify([{ m: r.m, d: r.d, mo: r.mo }, ...list].slice(0, MAX_CARDS)));
   return r;
 }
@@ -658,7 +673,7 @@ async function deliverPending(env, chatId, name, phone) {
   for (const it of [...list].reverse()) r = await registerWarranty(env, chatId, it.n || name, it.m, it.mo, it.d); // cũ trước, mới sau; tên thầy ghi trên phiếu được ưu tiên
   await env.DB.delete(`p:${phone}`);
   const s = await addStamp(env, chatId, name);
-  await send(env, chatId, `${warrantyCard(r)}\n\n${stampLine(s)}`);
+  await send(env, chatId, warrantyCard(r, s));
   if (s.voucher) await send(env, chatId, voucherMessage(s.voucher));
   await notifyOwner(env, `🛡️ Khách ${name || ''} (${phone}) đã nhận phiếu bảo hành điện tử: ${r.m}.\nMã khách: ${chatId}`);
   return true;
@@ -703,8 +718,8 @@ async function addStamp(env, chatId, name) {
 }
 
 function stampLine(s) {
-  if (s.voucher) return `⭐ Tích điểm: đủ ${STAMPS_NEEDED}/${STAMPS_NEEDED} lần sửa – dạ anh/chị được tặng voucher ạ!`;
-  return `⭐ Tích điểm: ${s.p}/${STAMPS_NEEDED} lần sửa. Dạ đủ ${STAMPS_NEEDED} lần anh/chị được ${REWARD} ạ.`;
+  if (s.voucher) return `⭐ Tích điểm: đủ ${STAMPS_NEEDED}/${STAMPS_NEEDED} lần mua/sửa – dạ anh/chị được tặng voucher ạ!`;
+  return `⭐ Tích điểm: ${s.p}/${STAMPS_NEEDED} lần mua/sửa. Dạ đủ ${STAMPS_NEEDED} lần anh/chị được ${REWARD} ạ.`;
 }
 
 function voucherMessage(code) {
@@ -965,7 +980,7 @@ async function onOwner(env, chatId, text) {
     if (givenName) await saveCustomer(env, id, givenName, {});
     const r = await registerWarranty(env, id, custName, job.m, job.mo);
     const s = await addStamp(env, id, custName);
-    const sent = await send(env, id, `${warrantyCard(r)}\n\n${stampLine(s)}`);
+    const sent = await send(env, id, warrantyCard(r, s));
     if (sent && sent.ok && s.voucher) await send(env, id, voucherMessage(s.voucher));
     const pts = s.voucher ? `đủ ${STAMPS_NEEDED}, đã tặng voucher ${s.voucher}` : `${s.p}/${STAMPS_NEEDED}${s.skipped ? ' (không cộng: đã cộng trong 7 ngày qua)' : ''}`;
     return reply(sent && sent.ok
@@ -1128,7 +1143,7 @@ async function onOaMessage(env, { fromUser, uid, name, text }) {
   if (patch || (name && !(c && c.n))) await saveCustomer(env, id, name, patch || {});
   const r = await registerWarranty(env, id, name, job.m, job.mo);
   const s = await addStamp(env, id, name);
-  await send(env, id, `${warrantyCard(r)}\n\n${stampLine(s)}`);
+  await send(env, id, warrantyCard(r, s));
   return true;
 }
 
@@ -1305,7 +1320,7 @@ async function onUpdate(env, update) {
     const rest = text.replace(/^\s*(kích hoạt bảo hành|kich hoat bao hanh|kích hoạt|kich hoat|đã nhận máy|da nhan may|nhận máy|nhan may)\s*/i, '');
     const r = await registerWarranty(env, chatId, sender.name, dev && dev !== 'iPad' ? dev : rest);
     const s = await addStamp(env, chatId, sender.name);
-    await send(env, chatId, `${warrantyCard(r)}\n\n${stampLine(s)}`);
+    await send(env, chatId, warrantyCard(r, s));
     if (s.voucher) await send(env, chatId, voucherMessage(s.voucher));
     const pts = s.voucher ? `đủ ${STAMPS_NEEDED}, đã tặng voucher ${s.voucher}` : `${s.p}/${STAMPS_NEEDED}`;
     await notifyOwner(env,
