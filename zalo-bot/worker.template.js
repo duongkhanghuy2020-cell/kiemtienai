@@ -129,7 +129,8 @@ function repairAnswer(t, raw, sender, svc) {
 }
 
 function findPhone(raw) {
-  const m = String(raw || '').match(/(?:\+?84|0)(?:[ .-]?\d){9}(?!\d)/);
+  // (?<!\d): không lấy nhầm 10 số nằm giữa số IMEI 15 số
+  const m = String(raw || '').match(/(?<!\d)(?:\+?84|0)(?:[ .-]?\d){9}(?!\d)/);
   return m ? m[0].replace(/[^\d+]/g, '') : null;
 }
 
@@ -588,20 +589,35 @@ function isPurchase(m) {
   return /(^| )\d+ ?(gb|g|tb)( |$)/.test(t) && !findService(t);
 }
 
-// "Thay Pin 15 pro max" => "iPhone 15 Pro Max (Thay Pin)"; "Mua 16 pro max 256GB" => "iPhone 16 Pro Max 256GB".
-// Không nhận ra máy (iPad, máy khác) thì giữ nguyên chữ thầy ghi.
-function deviceName(m, buy) {
+// Tách chữ thầy ghi thành tên máy và nội dung: "Thay Pin 15 pro max" => { name: "iPhone 15 Pro Max", job: "Thay Pin" };
+// "Mua 16 pro max 256GB" => { name: "iPhone 16 Pro Max 256GB", job: "" }. Không nhận ra máy thì để nguyên chữ thầy ghi làm tên máy.
+function splitDevice(m, buy) {
   const text = (m || '').replace(buy ? /(^|\s)(mua|bán|ban)(?=\s|$)/gi : /$^/, ' ').replace(/\s+/g, ' ').trim();
   const dev = findDevice(norm(text));
-  if (!dev || dev.startsWith('iPad')) return text || '(chưa ghi)';
+  if (!dev) return { name: text || '(chưa ghi)', job: '' };
+  // Bỏ phần tên máy: kiểu viết tắt ("15prm") rồi từng chữ trùng với tên máy ("ipad", "air", "4")
+  const left = norm(dev).split(' ');
   const rest = text
     .replace(/(?:^|\s)(?:iphone|ip)?\s*(?:xs\s*max|xs|xr|x|6s\s*plus|[6-8]\s*plus|\d{1,2}e?)\s*(?:pro\s*max|promax|prm|pm|pro|plus|air|mini)?(?=\s|$)/i, ' ')
-    .replace(/\s+/g, ' ').trim().replace(/^[-–,;:\s]+|[-–,;:\s]+$/g, '');
-  if (!rest) return dev;
-  return buy ? `${dev} ${rest}` : `${dev} (${rest})`;
+    .split(/\s+/)
+    .filter((w) => {
+      const i = left.indexOf(norm(w));
+      if (i < 0 || !w) return !!w;
+      left.splice(i, 1);
+      return false;
+    })
+    .join(' ').replace(/^[-–,;:\s]+|[-–,;:\s]+$/g, '');
+  return buy ? { name: rest ? `${dev} ${rest}` : dev, job: '' } : { name: dev, job: rest };
 }
 
-// Mục 3 – 5 của 1 phiếu (phiếu cũ không có mo thì ghi chung 6 – 12 tháng)
+// Một dòng tên máy cho tin nhắc: "iPhone 15 Pro Max (Thay Pin)"
+function deviceName(m, buy) {
+  const { name, job } = splitDevice(m, buy);
+  return job ? `${name} (${job})` : name;
+}
+
+// Mục 3 trở đi của 1 phiếu (phiếu cũ không có mo thì ghi chung 6 – 12 tháng)
+// Sửa máy: 3 Tên máy, 4 IMEI, 5 Nội dung, 6 Ngày sửa, 7 Thời gian bảo hành. Mua máy: 3 Tên máy, 4 IMEI, 5 Ngày mua, 6 Thời gian bảo hành.
 function cardBody(r, now) {
   const buy = isPurchase(r.m);
   const end = r.mo ? addMonths(r.d, r.mo) : 0;
@@ -610,11 +626,12 @@ function cardBody(r, now) {
     const left = Math.ceil((vnDayStart(end) - vnDayStart(now)) / DAY);
     status = left >= 0 ? ` (còn ${left} ngày)` : ' (đã hết hạn)';
   }
-  return (
-    `3. Tên máy: ${deviceName(r.m, buy)}\n` +
-    `4. ${buy ? 'Ngày mua' : 'Ngày sửa'}: ${fmtDate(r.d)}\n` +
-    `5. Thời gian bảo hành: ${end ? `${r.mo} tháng, đến hết ${fmtDate(end)}${status}` : '6 – 12 tháng tùy linh kiện'}`
-  );
+  const { name, job } = splitDevice(r.m, buy);
+  const lines = [`Tên máy: ${name}`, `IMEI: ${r.im || '(chưa ghi)'}`];
+  if (!buy) lines.push(`Nội dung: ${job || '(chưa ghi)'}`);
+  lines.push(`${buy ? 'Ngày mua' : 'Ngày sửa'}: ${fmtDate(r.d)}`);
+  lines.push(`Thời gian bảo hành: ${end ? `${r.mo} tháng, đến hết ${fmtDate(end)}${status}` : '6 – 12 tháng tùy linh kiện'}`);
+  return lines.map((l, i) => `${i + 3}. ${l}`).join('\n');
 }
 
 // Phiếu gửi khách: mục 1 – 5, tiếp đến tích điểm (s = kết quả addStamp)
@@ -648,7 +665,13 @@ async function getCards(env, chatId) {
 
 // Lưu phiếu mới + (làm mới) lịch nhắc cho khách, trả về bản ghi
 async function registerWarranty(env, chatId, name, model, months, day) {
-  const r = { n: (name || '').slice(0, 60), m: (model || '').slice(0, 80), d: day || Date.now(), s: 0, mo: months || WARRANTY_MONTHS };
+  const r = { n: (name || '').slice(0, 60), m: (model || '').slice(0, 100), d: day || Date.now(), s: 0, mo: months || WARRANTY_MONTHS };
+  // IMEI 15 số thầy ghi kèm ("imei 356789012345678") => mục IMEI riêng, bỏ khỏi tên máy
+  const im = r.m.match(/(?:imei[\s:.-]*)?(?<!\d)(\d{15})(?!\d)/i);
+  if (im) {
+    r.im = im[1];
+    r.m = r.m.replace(im[0], ' ').replace(/\s+/g, ' ').trim();
+  }
   const { metadata: cust } = await env.DB.getWithMetadata(`c:${chatId}`);
   if (cust && cust.ph) r.ph = cust.ph; // in SĐT khách trên phiếu
   const list = await getCards(env, chatId); // đọc trước khi ghi f: để phiếu mới không bị tính 2 lần
@@ -656,7 +679,7 @@ async function registerWarranty(env, chatId, name, model, months, day) {
   // Phiếu mua máy không đặt lịch nhắc: tin nhắc viết cho khách sửa máy
   if (isOa(chatId)) r.oa = true;
   if (!isPurchase(r.m)) await env.DB.put(`f:${chatId}`, '', { metadata: r });
-  await env.DB.put(`w:${chatId}`, JSON.stringify([{ m: r.m, d: r.d, mo: r.mo }, ...list].slice(0, MAX_CARDS)));
+  await env.DB.put(`w:${chatId}`, JSON.stringify([{ m: r.m, d: r.d, mo: r.mo, im: r.im }, ...list].slice(0, MAX_CARDS)));
   return r;
 }
 
@@ -870,7 +893,7 @@ async function onOwner(env, chatId, text) {
   text = text.replace(/^[\s("'“]+/, '').replace(/^\/giao[\s+:,]*/i, '/giao ').trim();
   // "/giao Thuý Trần - 0909067474 iPhone 15 Pro Max thay pin 12t": tách tên khách đứng trước SĐT
   let givenName = '';
-  const named = text.match(/^\/giao\s+([^\d+\s][^\n]*?)[\s,;:-]*((?:\+?84|0)(?:[ .-]?\d){9})(?!\d)[\s,;:-]*([\s\S]*)$/);
+  const named = text.match(/^\/giao\s+([^\d+\s][^\n]*?)[\s,;:-]*((?<!\d)(?:\+?84|0)(?:[ .-]?\d){9})(?!\d)[\s,;:-]*([\s\S]*)$/);
   if (named) {
     givenName = named[1].trim();
     text = `/giao ${named[2].replace(/[^\d+]/g, '')} ${named[3]}`.trim();
@@ -1131,7 +1154,7 @@ async function onOaMessage(env, { fromUser, uid, name, text }) {
   const ph = findPhone(body);
   let patch = null;
   if (ph) {
-    const at = body.search(/(?:\+?84|0)(?:[ .-]?\d){9}(?!\d)/);
+    const at = body.search(/(?<!\d)(?:\+?84|0)(?:[ .-]?\d){9}(?!\d)/);
     const given = body.slice(0, at).replace(/[\s,;:-]+$/, '').trim();
     body = body.slice(at).replace(/^(?:\+?84|0)(?:[ .-]?\d){9}[\s,;:-]*/, '');
     if (given) name = given;
