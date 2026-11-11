@@ -573,10 +573,10 @@ function parseJob(raw) {
 
 // [số ngày sau khi nhận máy, nội dung tin]
 const FOLLOWUPS = [
-  [7, (r) => `Dạ ${SHOP.name} xin chào anh/chị${r.n ? ' ' + r.n : ''} ạ! Máy ${r.m || 'của anh/chị'} sửa tại tiệm mình dùng có ổn định không ạ? Nếu có gì bất thường, anh/chị nhắn em ngay để bên em hỗ trợ ạ.\nNếu anh/chị hài lòng, anh/chị đánh giá giúp tiệm trên Google Maps với ạ. Em cảm ơn anh/chị nhiều! 🙏`],
+  [7, (r) => `Dạ ${SHOP.name} xin chào anh/chị${r.n ? ' ' + r.n : ''} ạ! Máy ${r.m ? deviceName(r.m, false) : 'của anh/chị'} sửa tại tiệm mình dùng có ổn định không ạ? Nếu có gì bất thường, anh/chị nhắn em ngay để bên em hỗ trợ ạ.\nNếu anh/chị hài lòng, anh/chị đánh giá giúp tiệm trên Google Maps với ạ. Em cảm ơn anh/chị nhiều! 🙏`],
   // Mốc 27 ngày (nhắc hết hạn 1 đổi 1) thầy đã bỏ. Giữ chỗ trống để số thứ tự mốc (s) của khách đang chờ nhắc không bị lệch.
   [27, null],
-  [180, (r) => `🔧 Dạ đã 6 tháng từ lần anh/chị sửa máy ${r.m || ''} tại ${SHOP.name} ạ. Bên em kính mời anh/chị ghé vệ sinh máy và kiểm tra pin, chẩn đoán máy miễn phí ạ.\n📍 ${SHOP.address} | 📞 ${SHOP.phone} | ${SHOP.hours}`],
+  [180, (r) => `🔧 Dạ đã 6 tháng từ lần anh/chị sửa máy ${r.m ? deviceName(r.m, false) : ''} tại ${SHOP.name} ạ. Bên em kính mời anh/chị ghé vệ sinh máy và kiểm tra pin, chẩn đoán máy miễn phí ạ.\n📍 ${SHOP.address} | 📞 ${SHOP.phone} | ${SHOP.hours}`],
 ];
 
 // Hai loại phiếu (thầy dặn): phiếu SỬA MÁY và phiếu MUA MÁY, cùng thứ tự
@@ -624,7 +624,7 @@ function warrantyCard(r, s) {
     `1. Tên khách hàng: ${r.n || '(chưa ghi)'}\n2. Số điện thoại: ${r.ph || '(chưa ghi)'}\n${cardBody(r)}` +
     (s ? `\n\n${stampLine(s)}` : '') +
     `\n\nNhắn "bảo hành" để xem lại phiếu. 📞 ${SHOP.phone}` +
-    (r.oa || isPurchase(r.m) ? '' : `\nBên em sẽ nhắn hỏi thăm máy sau khi sửa (nhắn "huy nhac" nếu không muốn nhận).`)
+    (isPurchase(r.m) ? '' : `\nBên em sẽ nhắn hỏi thăm máy sau khi sửa (nhắn "huy nhac" nếu không muốn nhận).`)
   );
 }
 
@@ -652,10 +652,10 @@ async function registerWarranty(env, chatId, name, model, months, day) {
   const { metadata: cust } = await env.DB.getWithMetadata(`c:${chatId}`);
   if (cust && cust.ph) r.ph = cust.ph; // in SĐT khách trên phiếu
   const list = await getCards(env, chatId); // đọc trước khi ghi f: để phiếu mới không bị tính 2 lần
-  // Khách OA: chỉ trả lời miễn phí trong 48h sau khi khách nhắn, nên không đặt lịch tự nhắc
-  // Phiếu mua máy cũng không đặt lịch nhắc: tin nhắc viết cho khách sửa máy
+  // Khách OA cũng được nhắc (thầy bật 11/2026): tin ngoài 48h tính vào 500 tin tư vấn/tháng của gói Tăng trưởng
+  // Phiếu mua máy không đặt lịch nhắc: tin nhắc viết cho khách sửa máy
   if (isOa(chatId)) r.oa = true;
-  else if (!isPurchase(r.m)) await env.DB.put(`f:${chatId}`, '', { metadata: r });
+  if (!isPurchase(r.m)) await env.DB.put(`f:${chatId}`, '', { metadata: r });
   await env.DB.put(`w:${chatId}`, JSON.stringify([{ m: r.m, d: r.d, mo: r.mo }, ...list].slice(0, MAX_CARDS)));
   return r;
 }
